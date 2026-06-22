@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Judge Sample Audit Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5c6670;
+      --line: #d9e0e7;
+      --soft: #f5f7fa;
+      --accent: #2457d6;
+      --good: #126b3a;
+      --warn: #9a5a00;
+      --bad: #a12222;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      color: var(--ink);
+      background: #ffffff;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 48px 28px 72px;
+    }
+    h1 {
+      font-size: 38px;
+      line-height: 1.1;
+      margin: 0 0 12px;
+      letter-spacing: 0;
+    }
+    h2 {
+      font-size: 22px;
+      margin: 36px 0 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      letter-spacing: 0;
+    }
+    h3 {
+      font-size: 17px;
+      margin: 24px 0 8px;
+      letter-spacing: 0;
+    }
+    p, li {
+      font-size: 15px;
+    }
+    .lede {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .meta, .box {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 18px 0;
+    }
+    .meta p {
+      margin: 4px 0;
+    }
+    blockquote {
+      margin: 18px 0;
+      padding: 12px 16px;
+      border-left: 4px solid var(--accent);
+      background: var(--soft);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background: #eef3fb;
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    pre {
+      overflow: auto;
+      background: #101828;
+      color: #eef3fb;
+      padding: 14px;
+      border-radius: 8px;
+    }
+    .good { color: var(--good); font-weight: 650; }
+    .warn { color: var(--warn); font-weight: 650; }
+    .bad { color: var(--bad); font-weight: 650; }
+    .footer {
+      margin-top: 44px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>AI Judge Sample Audit Report</h1>
+  <p class="lede">A source-isolated audit layer for RAG and LLM-as-judge workflows.</p>
+
+  <section class="meta">
+    <p><strong>Status:</strong> public, sanitized sample. This is a product communication artifact, not a benchmark claim.</p>
+    <p><strong>Audience:</strong> eval framework teams, observability teams, and LLM-as-judge researchers.</p>
+  </section>
+
+  <h2>1. Why This Report Exists</h2>
+  <p>Most evaluation stacks can tell a team whether an output passed a metric. They are less good at explaining why a judge believed the output, which source fragments mattered, where judges disagreed, and whether a confident score was built on weak evidence.</p>
+  <p>AI Judge is designed as a post-evaluation audit/report layer. It does not replace Ragas, Promptfoo, Langfuse, DeepEval, Phoenix, Opik, LangSmith, or TruLens. It sits after a model answer, RAG answer, trace, or evaluator score and turns judge decisions into an inspectable report.</p>
+  <blockquote>If an LLM-as-judge says an answer is faithful, complete, or safe, can a human reviewer inspect the path from source evidence to verdict?</blockquote>
+
+  <h2>2. Sample Scenario</h2>
+  <h3>User Task</h3>
+  <p>Evaluate whether a customer-support RAG answer is grounded in the provided policy sources.</p>
+
+  <h3>Source Packet</h3>
+  <div class="box">
+    <p><strong>Source A: Refund Policy, updated 2026-05-04</strong></p>
+    <ul>
+      <li>Customers may request a refund within 30 days of purchase.</li>
+      <li>Digital subscriptions are refundable only if fewer than 10% of monthly credits have been used.</li>
+      <li>Enterprise contracts follow the signed master service agreement.</li>
+    </ul>
+    <p><strong>Source B: Support SLA, updated 2026-04-12</strong></p>
+    <ul>
+      <li>Standard support response target: 2 business days.</li>
+      <li>Priority support response target: 4 business hours.</li>
+      <li>SLA targets are not guaranteed during scheduled maintenance windows.</li>
+    </ul>
+    <p><strong>Source C: Product Terms, updated 2026-03-29</strong></p>
+    <ul>
+      <li>Beta features are provided as-is.</li>
+      <li>Customers may export account data from the dashboard.</li>
+      <li>Account deletion requests are completed within 14 days.</li>
+    </ul>
+  </div>
+
+  <h3>Candidate RAG Answer</h3>
+  <blockquote>You can get a refund within 30 days, but only if you have used fewer than 10% of your monthly credits. Enterprise customers always follow the same policy. Priority support responds within 4 hours, and the company guarantees this response time even during maintenance. Beta features are fully supported. You can export your data from the dashboard, and deletion requests are usually completed within 14 days.</blockquote>
+
+  <h2>3. Claim Ledger</h2>
+  <table>
+    <thead>
+      <tr><th>Claim</th><th>Candidate Claim</th><th>Source Match</th><th>Status</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>C1</td><td>Refunds are available within 30 days.</td><td>Source A</td><td class="good">Supported</td><td>Directly grounded.</td></tr>
+      <tr><td>C2</td><td>Refunds require fewer than 10% of monthly credits used.</td><td>Source A</td><td class="warn">Partial</td><td>Applies to digital subscriptions, not all purchases.</td></tr>
+      <tr><td>C3</td><td>Enterprise customers always follow the same refund policy.</td><td>Source A</td><td class="bad">Unsupported</td><td>Enterprise contracts follow the signed MSA.</td></tr>
+      <tr><td>C4</td><td>Priority support responds within 4 hours.</td><td>Source B</td><td class="warn">Partial</td><td>Source says 4 business hours, not 4 clock hours.</td></tr>
+      <tr><td>C5</td><td>The company guarantees priority SLA during maintenance.</td><td>Source B</td><td class="bad">Contradicted</td><td>SLA targets are not guaranteed during scheduled maintenance.</td></tr>
+      <tr><td>C6</td><td>Beta features are fully supported.</td><td>Source C</td><td class="bad">Contradicted</td><td>Beta features are provided as-is.</td></tr>
+      <tr><td>C7</td><td>Customers can export account data from dashboard.</td><td>Source C</td><td class="good">Supported</td><td>Directly grounded.</td></tr>
+      <tr><td>C8</td><td>Deletion requests are usually completed within 14 days.</td><td>Source C</td><td class="warn">Mostly supported</td><td>"Usually" softens but changes certainty.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Judge Seat Summary</h2>
+  <table>
+    <thead>
+      <tr><th>Seat</th><th>Score</th><th>Most Important Finding</th><th>Risk Pattern</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Seat 1</td><td>0.58</td><td>Flagged enterprise refund overgeneralization.</td><td>Over-broad policy transfer.</td></tr>
+      <tr><td>Seat 2</td><td>0.63</td><td>Focused on maintenance-window contradiction.</td><td>SLA guarantee drift.</td></tr>
+      <tr><td>Seat 3</td><td>0.51</td><td>Penalized beta feature support claim heavily.</td><td>Unsupported assurance.</td></tr>
+      <tr><td>Seat 4</td><td>0.66</td><td>Treated "4 hours" vs "4 business hours" as material.</td><td>Time-unit compression.</td></tr>
+      <tr><td>Seat 5</td><td>0.60</td><td>Found correct claims but marked answer unsafe overall.</td><td>Mixed grounded/ungrounded response.</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Consensus band:</strong> 0.51-0.66. <strong>Dissent level:</strong> low on final risk, medium on severity. <strong>Primary failure mode:</strong> grounded facts mixed with policy overclaims.</p>
+
+  <h2>5. Final Audit Verdict</h2>
+  <p><strong>Verdict:</strong> Do not ship this answer as-is.</p>
+  <p><strong>Reason:</strong> The answer contains several correct source-grounded statements, but it converts exceptions and scope limits into broad guarantees. This is dangerous in customer support because incorrect statements sound like policy commitments.</p>
+
+  <h3>Safer Rewrite</h3>
+  <blockquote>You may request a refund within 30 days of purchase. For digital subscriptions, refunds are available only if fewer than 10% of monthly credits have been used. Enterprise customers should refer to their signed master service agreement. Priority support has a 4-business-hour response target, but SLA targets are not guaranteed during scheduled maintenance. Beta features are provided as-is. You can export account data from the dashboard, and account deletion requests are completed within 14 days.</blockquote>
+
+  <h2>6. Suggested Integration Surface</h2>
+  <pre>{
+  "question": "...",
+  "answer": "...",
+  "sources": [{"id": "A", "text": "..."}],
+  "judge_scores": [{"judge": "seat_1", "score": 0.58, "rationale": "..."}],
+  "human_verdict": "do_not_ship"
+}</pre>
+
+  <h2>7. Collaboration Ask</h2>
+  <p>Would your team be interested in a small example integration where AI Judge consumes an existing eval result or trace, then outputs a claim-level audit report like this?</p>
+  <p>The goal is not to replace the evaluator. The goal is to make evaluator decisions inspectable enough for product teams, researchers, and reviewers to trust or challenge them.</p>
+
+  <p class="footer">Prepared as a public sample for AI Judge outreach. No private user data, accounts, credentials, or production traces are included.</p>
+</main>
+</body>
+</html>

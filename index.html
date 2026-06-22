@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Judge - Source-Isolated Audit Packets</title>
+  <meta name="description" content="AI Judge turns LLM-as-judge and RAG eval outputs into source-isolated audit packets that humans can inspect, challenge, and sign off.">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f9f6;
+      --surface: #ffffff;
+      --ink: #151a18;
+      --muted: #5d6863;
+      --line: #d7dfd8;
+      --line-strong: #9daf9f;
+      --green: #2f6f59;
+      --green-soft: #e8f1eb;
+      --blue: #315f92;
+      --blue-soft: #e8eef6;
+      --amber: #a56d1f;
+      --amber-soft: #f4eadc;
+      --red: #96382f;
+      --red-soft: #f3e7e4;
+      --shadow: 0 20px 70px rgba(22, 33, 27, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 249, 246, 0.92);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav {
+      width: min(1180px, calc(100% - 40px));
+      min-height: 64px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 750;
+      font-size: 16px;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--ink);
+      color: var(--surface);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .hero {
+      width: min(1180px, calc(100% - 40px));
+      min-height: calc(100svh - 64px);
+      margin: 0 auto;
+      padding: 58px 0 34px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+      gap: 44px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    h1 {
+      margin: 20px 0 18px;
+      max-width: 680px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 62px;
+      line-height: 1.02;
+      font-weight: 680;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 630px;
+      color: var(--muted);
+      font-size: 19px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 30px 0 28px;
+    }
+
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 16px;
+      border-radius: 8px;
+      border: 1px solid var(--ink);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 760;
+      transition: transform 150ms ease, background 150ms ease, border-color 150ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .button.secondary {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--line-strong);
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 620px;
+    }
+
+    .proof {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 12px 14px;
+    }
+
+    .proof strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 18px;
+    }
+
+    .proof span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .demo-frame {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .frame-head {
+      min-height: 42px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--line-strong);
+    }
+
+    .dot:nth-child(1) { background: #c65d52; }
+    .dot:nth-child(2) { background: #c49b39; }
+    .dot:nth-child(3) { background: #5d9d72; }
+
+    .audit-preview {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      min-height: 560px;
+    }
+
+    .packet-left {
+      border-right: 1px solid var(--line);
+      background: #fbfcfa;
+      padding: 24px;
+    }
+
+    .packet-left h2,
+    .packet-right h2 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .packet-left p,
+    .packet-right p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .score {
+      margin: 24px 0;
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .score-ring {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at center, var(--surface) 0 56%, transparent 57%),
+        conic-gradient(var(--red) 0 34%, var(--amber) 34% 68%, var(--green) 68% 100%);
+      border: 1px solid var(--line);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 28px;
+      color: var(--ink);
+    }
+
+    .score-copy strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+
+    .claim-list {
+      margin: 22px 0 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .claim-row {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      gap: 10px;
+      align-items: start;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      font-size: 13px;
+    }
+
+    .claim-row:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .claim-id {
+      color: var(--muted);
+      font-weight: 760;
+    }
+
+    .tag {
+      min-width: 92px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 760;
+    }
+
+    .tag.good { background: var(--green-soft); color: var(--green); }
+    .tag.warn { background: var(--amber-soft); color: var(--amber); }
+    .tag.bad { background: var(--red-soft); color: var(--red); }
+
+    .packet-right {
+      padding: 24px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 18px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--muted);
+      padding: 8px 10px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 760;
+      cursor: pointer;
+    }
+
+    .tab[aria-selected="true"] {
+      color: var(--surface);
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .ledger {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .ledger-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      border-top: 1px solid var(--line);
+      min-height: 54px;
+    }
+
+    .ledger-row:first-child {
+      border-top: 0;
+    }
+
+    .ledger-label {
+      background: #f1f5f0;
+      color: var(--muted);
+      padding: 12px;
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .ledger-value {
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    pre {
+      margin: 0;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #17211d;
+      color: #eef6ef;
+      padding: 16px;
+      font-size: 12px;
+      line-height: 1.6;
+      min-height: 320px;
+    }
+
+    .reviewer-note {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #fbfcfa;
+    }
+
+    .reviewer-note h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .reviewer-note ul {
+      margin: 14px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .section {
+      padding: 78px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-inner {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .section-kicker {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .section h2 {
+      margin: 8px 0 14px;
+      max-width: 760px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 42px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .section-lede {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .step {
+      position: relative;
+      min-height: 210px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 18px;
+    }
+
+    .step-number {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 34px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--surface);
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .step h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .artifact-grid {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .artifact-copy {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 22px;
+    }
+
+    .artifact-copy h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .artifact-copy p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .check-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .check-list li {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 9px;
+      align-items: start;
+    }
+
+    .check-list li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-top: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .client-shot {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .client-shot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .fit-grid {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .fit {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 18px;
+    }
+
+    .fit h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .fit p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .closing {
+      padding: 72px 0;
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .closing .section-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .closing h2 {
+      margin: 0 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 38px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .closing p {
+      margin: 0;
+      color: #cad7cf;
+      max-width: 720px;
+    }
+
+    .closing .button {
+      border-color: #cad7cf;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      background: var(--ink);
+      color: #cad7cf;
+      padding: 18px 0 26px;
+      font-size: 13px;
+    }
+
+    footer .section-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 42px;
+      }
+
+      .audit-preview,
+      .artifact-grid,
+      .closing .section-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .packet-left {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .workflow,
+      .fit-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      h1 {
+        font-size: 48px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        width: calc(100% - 28px);
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero,
+      .section-inner {
+        width: calc(100% - 28px);
+      }
+
+      h1 {
+        font-size: 40px;
+      }
+
+      .section h2,
+      .closing h2 {
+        font-size: 31px;
+      }
+
+      .proof-strip,
+      .workflow,
+      .fit-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score {
+        grid-template-columns: 1fr;
+      }
+
+      .claim-row {
+        grid-template-columns: 32px 1fr;
+      }
+
+      .tag {
+        grid-column: 2;
+        width: fit-content;
+      }
+
+      .ledger-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" aria-label="Main navigation">
+      <div class="brand">
+        <span class="brand-mark">AJ</span>
+        <span>AI Judge</span>
+      </div>
+      <div class="nav-links">
+        <a href="#packet">Audit packet</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#fit">Integration fit</a>
+        <a href="AI_Judge_Audit_Sample_Report.html">Sample report</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="packet">
+      <div>
+        <div class="eyebrow"><span class="pulse" aria-hidden="true"></span> For eval, RAG, and observability teams</div>
+        <h1>Turn judge scores into evidence packets people can inspect.</h1>
+        <p class="lead">AI Judge is a source-isolated audit/report layer that sits after an eval result or trace. It decomposes the answer into claims, maps each claim to sources, records judge disagreement, and gives reviewers a sign-off artifact.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8">Open public sample</a>
+          <a class="button secondary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20design%20partner%20conversation&body=Hi%20Reguorier%2C%0A%0AI%20saw%20the%20AI%20Judge%20sample%20audit%20packet%20and%20would%20like%20to%20discuss%20a%20possible%20workflow%20or%20integration.%0A">Start a design-partner chat</a>
+        </div>
+        <div class="proof-strip" aria-label="Product proof points">
+          <div class="proof"><strong>8</strong><span>claims isolated in the sample packet</span></div>
+          <div class="proof"><strong>5</strong><span>judge seats summarized for dissent</span></div>
+          <div class="proof"><strong>1</strong><span>human-readable verdict to sign off</span></div>
+        </div>
+      </div>
+
+      <div class="demo-frame" aria-label="AI Judge audit packet preview">
+        <div class="frame-head">
+          <div class="dots" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <span>AI_JUDGE_PACKET / customer-support-rag</span>
+        </div>
+        <div class="audit-preview">
+          <div class="packet-left">
+            <h2>Final audit verdict</h2>
+            <p>Do not ship this answer as-is. Correct facts are mixed with policy overclaims.</p>
+            <div class="score">
+              <div class="score-ring">0.60</div>
+              <div class="score-copy">
+                <strong>Consensus band: 0.51-0.66</strong>
+                <p>Low disagreement on final risk, medium disagreement on severity.</p>
+              </div>
+            </div>
+            <div class="claim-list">
+              <div class="claim-row"><span class="claim-id">C1</span><span>Refunds are available within 30 days.</span><span class="tag good">Supported</span></div>
+              <div class="claim-row"><span class="claim-id">C3</span><span>Enterprise customers always follow the same policy.</span><span class="tag bad">Unsupported</span></div>
+              <div class="claim-row"><span class="claim-id">C5</span><span>Priority SLA is guaranteed during maintenance.</span><span class="tag bad">Contradicted</span></div>
+              <div class="claim-row"><span class="claim-id">C8</span><span>Deletion requests are usually completed within 14 days.</span><span class="tag warn">Mostly supported</span></div>
+            </div>
+          </div>
+
+          <div class="packet-right">
+            <div>
+              <h2>Inspectable output, not another score</h2>
+              <p>Select the handoff your team would use after a failed or borderline eval case.</p>
+            </div>
+            <div class="tabs" role="tablist" aria-label="Audit packet views">
+              <button class="tab" type="button" role="tab" aria-selected="true" aria-controls="view-ledger" id="tab-ledger">Claim ledger</button>
+              <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="view-json" id="tab-json">Integration JSON</button>
+              <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="view-review" id="tab-review">Reviewer note</button>
+            </div>
+            <div>
+              <section class="panel active" role="tabpanel" id="view-ledger" aria-labelledby="tab-ledger">
+                <div class="ledger">
+                  <div class="ledger-row"><div class="ledger-label">Evidence</div><div class="ledger-value">Source B says SLA targets are not guaranteed during scheduled maintenance.</div></div>
+                  <div class="ledger-row"><div class="ledger-label">Judge finding</div><div class="ledger-value">The candidate answer turns a response target into a guarantee.</div></div>
+                  <div class="ledger-row"><div class="ledger-label">Risk</div><div class="ledger-value">Customer-facing policy commitment with unsupported certainty.</div></div>
+                  <div class="ledger-row"><div class="ledger-label">Action</div><div class="ledger-value">Rewrite with scope limits before shipping.</div></div>
+                </div>
+              </section>
+              <section class="panel" role="tabpanel" id="view-json" aria-labelledby="tab-json">
+<pre>{
+  "trace_id": "support-rag-042",
+  "verdict": "do_not_ship",
+  "consensus_band": [0.51, 0.66],
+  "claims": [
+    {
+      "id": "C5",
+      "status": "contradicted",
+      "source_id": "support_sla_2026_04_12",
+      "risk": "policy_guarantee_drift"
+    }
+  ],
+  "handoff": "human_review"
+}</pre>
+              </section>
+              <section class="panel" role="tabpanel" id="view-review" aria-labelledby="tab-review">
+                <div class="reviewer-note">
+                  <h3>Reviewer sign-off</h3>
+                  <p>The answer should not be shipped because it converts exceptions and targets into guarantees. The safe rewrite preserves refund scope, business-hour SLA language, maintenance exclusions, and beta limitations.</p>
+                  <ul>
+                    <li>Accept supported refund and export claims.</li>
+                    <li>Reject enterprise refund overgeneralization.</li>
+                    <li>Escalate SLA guarantee language before release.</li>
+                  </ul>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="workflow">
+      <div class="section-inner">
+        <div class="section-kicker">Workflow</div>
+        <h2>Designed to attach after the eval stack you already use.</h2>
+        <p class="section-lede">AI Judge is not positioned as a replacement for Ragas, Promptfoo, DeepEval, Phoenix, Opik, LangSmith, Braintrust, or TruLens. It is the review layer for cases where a score alone is not enough.</p>
+        <div class="workflow">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Import</h3>
+            <p>Bring a model answer, trace, eval result, rubric, and source packet.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Isolate</h3>
+            <p>Split long output into atomic claims and bind each claim to explicit evidence.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Judge</h3>
+            <p>Run independent judge seats and summarize agreement, dissent, and failure mode.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Sign off</h3>
+            <p>Export a human-readable packet for review, regression, or customer-facing audit.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-inner">
+        <div class="section-kicker">Live client</div>
+        <h2>A working local-first client already exists.</h2>
+        <p class="section-lede">The outreach demo focuses on the audit packet because that is what partners need to inspect. The current AI Judge client can still act as the workspace where questions, evidence, judge seats, and verdicts are organized.</p>
+        <div class="artifact-grid">
+          <div class="artifact-copy">
+            <h3>What changed from the rough YouTube demo</h3>
+            <p>The new artifact is less about watching a tool run and more about showing the useful output that a partner can imagine attaching to their stack.</p>
+            <ul class="check-list">
+              <li>English, partner-facing positioning.</li>
+              <li>Concrete RAG support example instead of an abstract product pitch.</li>
+              <li>Direct sample report and design-partner CTA.</li>
+              <li>Clear integration handoff for trace/eval tools.</li>
+            </ul>
+          </div>
+          <figure class="client-shot">
+            <img src="assets/ai-judge-live-client.png" alt="AI Judge local client showing the Grand Judge workspace with active verdict tasks">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="fit">
+      <div class="section-inner">
+        <div class="section-kicker">Integration fit</div>
+        <h2>Best first conversations.</h2>
+        <p class="section-lede">The sharpest wedge is not a broad AI judge platform. It is a source-isolated review packet for high-risk, failed, or borderline eval cases.</p>
+        <div class="fit-grid">
+          <div class="fit">
+            <h3>RAG eval frameworks</h3>
+            <p>Attach claim-level audit reports after faithfulness, context relevance, or groundedness metrics.</p>
+          </div>
+          <div class="fit">
+            <h3>Observability platforms</h3>
+            <p>Attach a verdict packet to selected traces where a team needs human review or regression proof.</p>
+          </div>
+          <div class="fit">
+            <h3>Judge reliability research</h3>
+            <p>Turn judge disagreement and failure modes into reusable, inspectable case studies.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="section-inner">
+        <div>
+          <h2>Give AI Judge one eval result or trace.</h2>
+          <p>I will turn it into a source-isolated audit packet and send back the artifact. The goal is to test whether this belongs inside your review, regression, or human sign-off workflow.</p>
+        </div>
+        <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20sample%20trace&body=Hi%20Reguorier%2C%0A%0AHere%20is%20one%20eval%20result%20or%20trace%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">Send a sample trace</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="section-inner">
+      <span>AI Judge outreach demo. Public sample contains no private user data.</span>
+      <a href="AI_Judge_Audit_Sample_Report.html">Open full sample report</a>
+    </div>
+  </footer>
+
+  <script>
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const panels = Array.from(document.querySelectorAll(".panel"));
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((item) => item.setAttribute("aria-selected", item === tab ? "true" : "false"));
+        panels.forEach((panel) => panel.classList.toggle("active", panel.id === tab.getAttribute("aria-controls")));
+      });
+    });
+  </script>
+</body>
+</html>
