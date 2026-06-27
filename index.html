@@ -29,7 +29,9 @@
       --ink-soft: #202721;
       --muted: #67706a;
       --faint: #8b948e;
+      --hairline: rgba(18, 21, 19, 0.11);
       --hairline: color-mix(in oklab, #121513 11%, transparent);
+      --hairline-strong: rgba(18, 21, 19, 0.20);
       --hairline-strong: color-mix(in oklab, #121513 20%, transparent);
       --surface: #fffffb;
       --surface-soft: #f1f4ef;
@@ -50,6 +52,16 @@
 
     * {
       box-sizing: border-box;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     html {
@@ -85,6 +97,15 @@
         radial-gradient(rgba(18, 21, 19, 0.10) 0.7px, transparent 0.7px);
       background-size: 4px 4px;
       mix-blend-mode: multiply;
+      will-change: transform;
+      transform: translateZ(0);
+      contain: layout style paint;
+    }
+
+    @media (prefers-reduced-data: reduce) {
+      body::before {
+        display: none;
+      }
     }
 
     a {
@@ -126,9 +147,16 @@
       margin: 18px auto 0;
       border: 1px solid rgba(18, 21, 19, 0.08);
       border-radius: 999px;
-      background: rgba(255, 255, 251, 0.78);
+      background: rgba(255, 255, 251, 0.95);
       box-shadow: 0 18px 54px rgba(42, 52, 45, 0.08);
-      backdrop-filter: blur(20px);
+      will-change: transform;
+    }
+
+    @supports (backdrop-filter: blur(1px)) {
+      .topbar {
+        background: rgba(255, 255, 251, 0.78);
+        backdrop-filter: blur(20px);
+      }
     }
 
     .nav {
@@ -233,6 +261,7 @@
     h2,
     h3,
     p {
+      text-wrap: balance;
       text-wrap: pretty;
     }
 
@@ -938,7 +967,7 @@
       *::after {
         scroll-behavior: auto !important;
         animation: none !important;
-        transition-duration: 1ms !important;
+        transition-duration: 0s !important;
       }
     }
 
@@ -1107,7 +1136,13 @@
       .summary-line,
       .claim-list .claim:nth-child(n+2),
       .metrics {
-        display: none;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
       }
 
       .case-header,
@@ -1132,7 +1167,13 @@
 
       .claim span,
       .status {
-        display: none;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
       }
 
       .closing .actions {
@@ -1272,7 +1313,79 @@
       }
 
       .claim-list {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+    }
+
+    @media print {
+      .topbar,
+      .skip-link,
+      body::before {
         display: none;
+      }
+
+      *,
+      *::before,
+      *::after {
+        backdrop-filter: none !important;
+        box-shadow: none !important;
+        mix-blend-mode: normal !important;
+        animation: none !important;
+        transition: none !important;
+      }
+
+      body {
+        background: white;
+        color: black;
+        font-size: 12pt;
+      }
+
+      .closing {
+        background: white;
+        color: black;
+      }
+
+      .closing .button {
+        border: 1px solid black;
+        background: white;
+        color: black;
+      }
+
+      .button {
+        border: 1px solid black;
+        background: white;
+        color: black;
+        box-shadow: none;
+      }
+
+      .product-frame,
+      .shot-frame {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+      }
+
+      img {
+        max-width: 100%;
+        break-inside: avoid;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0 12pt;
+      }
+
+      a {
+        color: black;
+        text-decoration: underline;
       }
     }
   </style>
@@ -1317,9 +1430,9 @@
             <p class="hero-note">Built beside Ragas, Promptfoo, DeepEval, Phoenix, Opik, Braintrust, LangSmith, and TruLens. AI Judge is the review artifact after the score.</p>
           </div>
 
-          <div class="hero-visual reveal delay-1" aria-label="AI Judge audit packet preview">
-            <div class="product-frame">
-              <article class="product-core">
+          <div class="hero-visual reveal delay-1">
+            <div class="product-frame" role="img" aria-label="AI Judge audit packet preview">
+              <div class="product-core">
                 <div class="product-top">
                   <div class="window-dots" aria-hidden="true">
                     <span></span>
@@ -1360,7 +1473,7 @@
                     <div class="metric"><strong>1</strong><span>reviewer-ready verdict</span></div>
                   </div>
                 </div>
-              </article>
+              </div>
             </div>
           </div>
         </div>
@@ -1524,7 +1637,7 @@
               <span>Start with one case</span>
               <span class="arrow" aria-hidden="true">+</span>
             </a>
-            <a class="button" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="external">
+            <a class="button" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">
               <span>Open public gist</span>
               <span class="arrow" aria-hidden="true">-></span>
             </a>
