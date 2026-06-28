@@ -726,6 +726,92 @@
       line-height: 1.66;
     }
 
+    .handoff {
+      margin-top: clamp(46px, 7vw, 74px);
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) auto minmax(0, 1.08fr);
+      gap: clamp(16px, 3vw, 28px);
+      align-items: stretch;
+    }
+
+    .handoff-card {
+      border: 1px solid var(--hairline);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      padding: clamp(22px, 3vw, 30px);
+    }
+
+    .handoff-card.output {
+      background:
+        linear-gradient(160deg, rgba(255,255,255,0.96), rgba(244,244,245,0.86)),
+        var(--surface);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .handoff-card .small-label {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .handoff-card h3 {
+      max-width: 440px;
+      margin: 0 0 18px;
+      color: var(--ink);
+      font-size: clamp(25px, 2.8vw, 38px);
+      line-height: 1.08;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+    }
+
+    .handoff-card ul {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .handoff-card li {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      border-top: 1px solid var(--hairline);
+      padding-top: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .handoff-card li:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .handoff-card code {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .handoff-arrow {
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
     .workflow {
       margin-top: clamp(48px, 7vw, 78px);
       display: grid;
@@ -1044,6 +1130,7 @@
       .hero-grid,
       .section-head,
       .split,
+      .handoff,
       .workflow,
       .artifact,
       .client-shot,
@@ -1063,6 +1150,10 @@
         min-height: 320px;
       }
 
+      .handoff-arrow {
+        min-height: 40px;
+      }
+
       .shot-frame {
         transform: none;
       }
@@ -1071,7 +1162,54 @@
     @media (max-width: 720px) {
       .topbar,
       .wrap {
-        width: calc(100% - 28px);
+        width: calc(100% - 48px);
+      }
+
+      .hero-grid,
+      .section-head,
+      .split,
+      .handoff,
+      .workflow,
+      .artifact,
+      .client-shot,
+      .closing-grid,
+      .hero-copy,
+      .hero-visual,
+      .questions,
+      .question,
+      .answer-panel,
+      .handoff-card,
+      .workflow-lead,
+      .steps,
+      .step,
+      .report-panel,
+      .notes,
+      .note,
+      .shot-copy,
+      .shot-frame,
+      .fit,
+      .fit-row {
+        min-width: 0;
+      }
+
+      .section-lede,
+      .question span,
+      .answer-panel p,
+      .handoff-card li,
+      .step p,
+      .report-panel p,
+      .note span,
+      .shot-copy p,
+      .fit-row span {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        text-wrap: wrap;
       }
 
       .topbar {
@@ -1096,7 +1234,7 @@
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-end;
+        justify-content: flex-start;
         gap: 5px;
         overflow: visible;
         padding-top: 0;
@@ -1123,8 +1261,13 @@
       h1 {
         margin-top: 14px;
         margin-bottom: 14px;
-        font-size: clamp(36px, 9.4vw, 44px);
+        font-size: clamp(34px, 9vw, 42px);
         line-height: 1.02;
+      }
+
+      .section h2 {
+        font-size: clamp(30px, 8vw, 38px);
+        line-height: 1.08;
       }
 
       .lead {
@@ -1139,14 +1282,15 @@
       }
 
       .actions {
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         gap: 10px;
         margin-top: 18px;
       }
 
       .button {
-        flex: 1 1 0;
-        width: auto;
+        flex: 1 1 100%;
+        min-width: 0;
+        width: 100%;
         justify-content: space-between;
         min-height: 46px;
         padding: 7px 7px 7px 15px;
@@ -1155,6 +1299,7 @@
       }
 
       .button .arrow {
+        flex: 0 0 auto;
         width: 30px;
         height: 30px;
       }
@@ -1168,6 +1313,7 @@
       }
 
       .product-frame {
+        width: 100%;
         max-height: 220px;
         overflow: hidden;
         border-radius: 26px;
@@ -1265,6 +1411,7 @@
 
       .question,
       .answer-panel,
+      .handoff-card,
       .workflow-lead,
       .step,
       .report-panel,
@@ -1276,12 +1423,17 @@
       .closing {
         padding-top: 78px;
       }
+
+      .handoff-card li {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
     }
 
     @media (max-width: 360px) {
       .topbar,
       .wrap {
-        width: calc(100% - 24px);
+        width: calc(100% - 40px);
       }
 
       .topbar {
@@ -1475,9 +1627,8 @@
         </a>
         <div class="nav-links">
           <a href="#problem">Why</a>
-          <a href="#workflow">Workflow</a>
+          <a href="#handoff">Handoff</a>
           <a href="#packet">Packet</a>
-          <a href="#direction">Direction</a>
           <a href="#fit">Fit</a>
           <a href="AI_Judge_Audit_Sample_Report.html">Sample</a>
         </div>
@@ -1492,13 +1643,13 @@
             <h1>AI Judge makes eval failures <span class="accent">readable.</span></h1>
             <p class="lead">It turns borderline RAG and LLM-as-judge runs into audit packets: claim ledger, source support, judge disagreement, verdict, and safer rewrite.</p>
             <div class="actions">
-              <a class="button primary" href="AI_Judge_Audit_Sample_Report.html">
+              <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20design%20partner%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20eval%20result%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">
+                <span>Send case</span>
+                <span class="arrow" aria-hidden="true">+</span>
+              </a>
+              <a class="button" href="AI_Judge_Audit_Sample_Report.html">
                 <span>Open sample</span>
                 <span class="arrow" aria-hidden="true">-></span>
-              </a>
-              <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20sample%20trace&body=Hi%2C%0A%0AI%20have%20one%20eval%20result%20or%20trace%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">
-                <span>Send trace</span>
-                <span class="arrow" aria-hidden="true">+</span>
               </a>
             </div>
             <p class="hero-note">Built beside Ragas, Promptfoo, DeepEval, Phoenix, Opik, Braintrust, LangSmith, and TruLens. AI Judge is the review artifact after the score.</p>
@@ -1598,12 +1749,45 @@
         </div>
       </section>
 
+      <section class="section" id="handoff">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <div>
+              <div class="eyebrow">Input to output</div>
+              <h2>Send one failed trace. Get a packet a reviewer can act on.</h2>
+            </div>
+            <p class="section-lede">AI Judge turns the raw middle of an eval run into an artifact that can move through product, research, support, or compliance review.</p>
+          </div>
+          <div class="handoff">
+            <article class="handoff-card reveal delay-1">
+              <span class="small-label">Input</span>
+              <h3>The messy eval case</h3>
+              <ul>
+                <li><code>answer</code><span>Candidate response from a RAG, agent, or LLM-as-judge run.</span></li>
+                <li><code>sources</code><span>Evidence packet, retrieved chunks, policy docs, or selected trace context.</span></li>
+                <li><code>scores</code><span>Judge scores, rationales, rubric notes, and disagreement signals.</span></li>
+              </ul>
+            </article>
+            <div class="handoff-arrow" aria-hidden="true">-></div>
+            <article class="handoff-card output reveal delay-2">
+              <span class="small-label">Output</span>
+              <h3>The reviewer handoff</h3>
+              <ul>
+                <li><code>ledger</code><span>Claim-by-claim support, contradiction, partial support, and missing evidence.</span></li>
+                <li><code>verdict</code><span>Human-readable risk decision with the reason the answer should ship or stop.</span></li>
+                <li><code>export</code><span>Markdown, JSON, and GitHub-issue shaped payloads for downstream teams.</span></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section class="section" id="workflow">
         <div class="wrap">
           <div class="section-head reveal">
             <div>
               <div class="eyebrow">Product workflow</div>
-              <h2>One narrow job: convert a trace into a case file.</h2>
+              <h2>One narrow job: convert a failed trace into a case file.</h2>
             </div>
             <p class="section-lede">The output is intentionally portable: forward it to a PM, attach it to a regression, or use it as a design-partner artifact.</p>
           </div>
@@ -1617,7 +1801,7 @@
                 <span class="num">01</span>
                 <div>
                   <h3>Bring the case</h3>
-                  <p>Import a model answer, RAG source packet, rubric, judge scores, or selected trace.</p>
+                  <p>Import one failed or borderline model answer, RAG source packet, rubric, judge scores, or selected trace.</p>
                 </div>
               </div>
               <div class="step">
@@ -1631,7 +1815,7 @@
                 <span class="num">03</span>
                 <div>
                   <h3>Hand off the verdict</h3>
-                  <p>Export a readable report for review queues, regression notes, research cases, or design-partner feedback.</p>
+                  <p>Export a readable report, JSON payload, Markdown note, or GitHub issue body for review queues and regression notes.</p>
                 </div>
               </div>
             </div>
@@ -1675,10 +1859,10 @@
           <div class="shot-copy reveal">
             <span class="small-label">Product direction</span>
             <h2>Designed to feel like a review workspace, not a metrics wall.</h2>
-            <p>The public packet can stay lightweight, while the product surface grows into a case-review client for teams that already have eval data and need human signoff.</p>
+            <p>The public brand stays AI Judge. The product surface can grow into an AI Judge review client for teams that already have eval data and need human signoff.</p>
           </div>
           <div class="shot-frame reveal delay-1">
-            <img src="assets/ai-judge-live-client.png" width="1420" height="920" alt="Early AI Judge client showing a review workspace with active cases and a prompt composer">
+            <img src="assets/ai-judge-live-client.png" width="1420" height="920" alt="Early AI Judge review client showing active cases and a prompt composer">
           </div>
         </div>
       </section>

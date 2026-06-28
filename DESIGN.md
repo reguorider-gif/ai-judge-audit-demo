@@ -65,9 +65,12 @@ Use Vercel-like black/white precision for the developer-platform layer and Mintl
 ## Layout Rules
 
 - Keep the hero split: product promise on the left, audit packet preview on the right.
+- Keep the primary CTA focused on design-partner conversion: send one failed or borderline eval case. The sample report is the secondary proof path.
+- Use an input/output handoff section to make the raw-trace-to-review-packet transformation obvious before the workflow explanation.
 - Favor tight internal rhythm inside cards and generous spacing between major sections.
 - Use table-like rows for integrations and fit statements, not decorative feature cards.
 - On mobile, protect touch targets and hide only secondary mockup details, never the core claim/verdict.
+- Sample reports should expose portable actions: JSON shape, Markdown review note, GitHub issue body, and email-based design partner handoff.
 
 ## Don't
 

@@ -64,6 +64,30 @@
     .meta p {
       margin: 4px 0;
     }
+    .report-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0 28px;
+    }
+    .report-button {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--ink);
+      padding: 8px 13px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 650;
+    }
+    .report-button.primary {
+      background: var(--ink);
+      color: #ffffff;
+      border-color: var(--ink);
+    }
     blockquote {
       margin: 18px 0;
       padding: 12px 16px;
@@ -96,6 +120,25 @@
       padding: 14px;
       border-radius: 8px;
     }
+    .export-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 16px 0 24px;
+    }
+    .export-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 14px 16px;
+    }
+    .export-card h3 {
+      margin-top: 0;
+    }
+    .export-card p {
+      color: var(--muted);
+      margin-bottom: 0;
+    }
     .good { color: var(--good); font-weight: 650; }
     .warn { color: var(--warn); font-weight: 650; }
     .bad { color: var(--bad); font-weight: 650; }
@@ -103,6 +146,21 @@
       margin-top: 44px;
       color: var(--muted);
       font-size: 13px;
+    }
+    @media (max-width: 720px) {
+      main {
+        padding: 34px 18px 56px;
+      }
+      h1 {
+        font-size: 32px;
+      }
+      .export-grid {
+        grid-template-columns: 1fr;
+      }
+      table {
+        display: block;
+        overflow-x: auto;
+      }
     }
   </style>
 </head>
@@ -115,6 +173,12 @@
     <p><strong>Status:</strong> public, sanitized sample. This is a product communication artifact, not a benchmark claim.</p>
     <p><strong>Audience:</strong> eval framework teams, observability teams, and LLM-as-judge researchers.</p>
   </section>
+
+  <nav class="report-actions" aria-label="Report actions">
+    <a class="report-button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20design%20partner%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20eval%20result%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">Send one case</a>
+    <a class="report-button" href="index.html">Back to demo</a>
+    <a class="report-button" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Open public gist</a>
+  </nav>
 
   <h2>1. Why This Report Exists</h2>
   <p>Most evaluation stacks can tell a team whether an output passed a metric. They are less good at explaining why a judge believed the output, which source fragments mattered, where judges disagreed, and whether a confident score was built on weak evidence.</p>
@@ -198,7 +262,33 @@
   "human_verdict": "do_not_ship"
 }</pre>
 
-  <h2>7. Collaboration Ask</h2>
+  <h2>7. Portable Export Targets</h2>
+  <div class="export-grid">
+    <div class="export-card">
+      <h3>Markdown review note</h3>
+      <p>Forward the verdict, claim ledger, and safer rewrite to a PM, researcher, or support reviewer without asking them to open the full trace stack.</p>
+    </div>
+    <div class="export-card">
+      <h3>GitHub issue body</h3>
+      <p>Turn the failed eval case into a regression issue with source IDs, contradicted claims, owner, severity, and acceptance criteria for the fix.</p>
+    </div>
+  </div>
+  <pre>## AI Judge Audit Packet
+
+Verdict: Do not ship this answer as-is.
+Primary failure mode: grounded facts mixed with policy overclaims.
+
+Blocking claims:
+- C3: Enterprise refund policy overgeneralized.
+- C5: Priority SLA guarantee contradicts maintenance exception.
+- C6: Beta support claim contradicts as-is terms.
+
+Reviewer action:
+- Rewrite with enterprise-contract scope.
+- Preserve business-hour SLA language.
+- Keep maintenance and beta-feature limitations explicit.</pre>
+
+  <h2>8. Collaboration Ask</h2>
   <p>Would your team be interested in a small example integration where AI Judge consumes an existing eval result or trace, then outputs a claim-level audit report like this?</p>
   <p>The goal is not to replace the evaluator. The goal is to make evaluator decisions inspectable enough for product teams, researchers, and reviewers to trust or challenge them.</p>
 
