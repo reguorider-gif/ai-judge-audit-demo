@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge — 你的 AI 回答，到底能不能发给用户？</title>
+  <title>AI Judge：你的 AI 回答，到底能不能发给用户？</title>
   <meta name="description" content="不是评分工具。把你的 RAG 回答拆成逐条核验：哪句有依据、哪句是瞎编的、能不能放行。">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
-  <meta property="og:title" content="AI Judge — 可签字的 AI 审计包">
-  <meta property="og:description" content="你的 AI 回答拆成逐条核验：有依据、缺证据、还是被源文档推翻——附带能不能发的结论。">
+  <meta property="og:title" content="AI Judge：可签字的 AI 审计包">
+  <meta property="og:description" content="你的 AI 回答拆成逐条核验：有依据、缺证据、还是被源文档推翻，附带能不能发的结论。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Judge — 可签字的 AI 审计包">
+  <meta name="twitter:title" content="AI Judge：可签字的 AI 审计包">
   <meta name="twitter:description" content="RAG 回答进来，逐条核验报告出去。附带能不能发的结论和签字位。">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,7 +54,7 @@
     .hero-copy{padding-top:30px}
     .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(0,0,0,0.08);border-radius:999px;background:rgba(255,255,255,0.7);padding:8px 13px 8px 10px;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:20px}
     .hero .eyebrow::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(13,143,114,0.12)}
-    .hero h1{max-width:760px;margin:0 0 18px;font-size:clamp(52px,5.7vw,82px);line-height:1.06;font-weight:780;letter-spacing:0;overflow-wrap:anywhere}
+    .hero h1{max-width:760px;margin:0 0 18px;font-size:clamp(46px,4.1vw,58px);line-height:1.1;font-weight:780;letter-spacing:0;overflow-wrap:anywhere}
     .hero p{max-width:620px;margin:0;color:#54545c;font-size:18px;line-height:1.72}
     .hero .stats{margin-top:clamp(28px,4vw,42px);display:flex;justify-content:center;gap:clamp(32px,6vw,72px)}
     .hero .stats .st{text-align:center}
@@ -369,17 +369,17 @@
           <aside class="audit-console" aria-label="AI Judge verdict preview">
             <div class="console-head">
               <span>support-policy-reply</span>
-              <span class="status-pill">reviewer required</span>
+              <span class="status-pill">需人工签字</span>
             </div>
             <div class="decision-card">
-              <small>final verdict</small>
+              <small>裁决结果</small>
               <strong>暂不放行</strong>
               <p>8 条主张里有 3 条阻断项。自动回复暂停，交给政策 owner 签字。</p>
             </div>
             <div class="metric-grid" aria-label="Audit summary">
-              <div class="metric"><b>8</b><span>claims checked</span></div>
-              <div class="metric"><b>3</b><span>release blockers</span></div>
-              <div class="metric"><b>1</b><span>human signer</span></div>
+              <div class="metric"><b>8</b><span>已核验主张</span></div>
+              <div class="metric"><b>3</b><span>阻断项</span></div>
+              <div class="metric"><b>1</b><span>签字人</span></div>
             </div>
             <div class="claim-stack">
               <div class="evidence-row"><code>C1</code><b>30 天退款窗口</b><span>有依据</span></div>
@@ -394,8 +394,8 @@
         </div>
         <div class="proof-strip" aria-label="AI Judge packet stages">
           <div class="proof-card"><b>01 · 筛选</b><strong>不是什么都要审</strong><span>错了会赔钱的、会被客户升级投诉的 case 才进来。</span></div>
-          <div class="proof-card"><b>02 · 拆解</b><strong>把回答拆成一条条主张</strong><span>"退款 30 天内可申请"——是真的吗？源文档在哪？</span></div>
-          <div class="proof-card"><b>03 · 对账</b><strong>每条主张对回源文档</strong><span>有依据、部分有、缺证据、还是被源文档推翻——逐条标出来。</span></div>
+          <div class="proof-card"><b>02 · 拆解</b><strong>把回答拆成一条条主张</strong><span>"退款 30 天内可申请"：是真的吗？源文档在哪？</span></div>
+          <div class="proof-card"><b>03 · 对账</b><strong>每条主张对回源文档</strong><span>有依据、部分有、缺证据，还是被源文档推翻，逐条标出来。</span></div>
           <div class="proof-card"><b>04 · 裁决</b><strong>给出能不能发的结论</strong><span>暂停自动回复等人签字，还是可以直接放行。</span></div>
         </div>
       </div>
@@ -429,7 +429,7 @@
         <div class="verdict-strip">
           <div class="vs"><b>暂不放行</b><span>三条主张缺少源文档依据</span></div>
           <div class="vs"><b>8 条逐项核验</b><span>每条都对了退款政策、SLA 和产品条款</span></div>
-          <div class="vs"><b>3 条不能发</b><span>企业退款、维护期保障、Beta 功能承诺——源文档没写或写的是相反的</span></div>
+          <div class="vs"><b>3 条不能发</b><span>企业退款、维护期保障、Beta 功能承诺，源文档没写或写的是相反的</span></div>
         </div>
       </div>
     </section>
@@ -440,9 +440,9 @@
         <h2>从一条失败的 AI 回答，到一份能签字的核验报告。</h2>
         <p>eval 工具告诉你"这条不行"。AI Judge 接手，把"哪里不行、为什么、谁来看"变成一份可以转发的文件。</p>
         <div class="steps-grid">
-          <div class="sc"><span class="n">01 · 来一条问题回答</span><h4>客服 RAG / agent 回复 / eval 判了不合格的</h4><p>只要错了会赔钱、会被投诉、会被合规盯上——就值得审。</p></div>
-          <div class="sc"><span class="n">02 · 拆成逐条主张</span><h4>不是笼统打分，是逐句拆开</h4><p>"退款 30 天内可申请"拆成一条，"企业客户一样适用"拆成另一条——每条单独核实。</p></div>
-          <div class="sc"><span class="n">03 · 对回源文档查证</span><h4>每条主张落在源文档上</h4><p>源文档写"4 个工作小时"，回答写"4 小时"——差两个字就是两种承诺。</p></div>
+          <div class="sc"><span class="n">01 · 来一条问题回答</span><h4>客服 RAG / agent 回复 / eval 判了不合格的</h4><p>只要错了会赔钱、会被投诉、会被合规盯上，就值得审。</p></div>
+          <div class="sc"><span class="n">02 · 拆成逐条主张</span><h4>不是笼统打分，是逐句拆开</h4><p>"退款 30 天内可申请"拆成一条，"企业客户一样适用"拆成另一条，每条单独核实。</p></div>
+          <div class="sc"><span class="n">03 · 对回源文档查证</span><h4>每条主张落在源文档上</h4><p>源文档写"4 个工作小时"，回答写"4 小时"，差两个字就是两种承诺。</p></div>
           <div class="sc"><span class="n">04 · 输出签字报告</span><h4>交给一个人看过再决定</h4><p>报告里有什么能发、什么不能、为什么、谁签字。能贴进工单或 GitHub issue。</p></div>
         </div>
       </div>
@@ -456,12 +456,12 @@
         <div class="ledger-grid" aria-label="Claim ledger sample">
           <div class="claim"><div class="cid">C1 <span class="status">有依据</span></div><p>"30 天内可申请退款"直接对应退款政策原文。</p></div>
           <div class="claim"><div class="cid">C2 <span class="status warn">有前提</span></div><p>"用掉不到 10% credits 才能退"只适用于数字订阅，不能对所有购买说这句话。</p></div>
-          <div class="claim"><div class="cid">C3 <span class="status bad">缺依据</span></div><p>"企业客户也走同样退款政策"——源文档写的是"按签署的 MSA 执行"。</p></div>
-          <div class="claim"><div class="cid">C4 <span class="status warn">有偏差</span></div><p>源文档写 4 个工作小时，回答写成 4 个小时——差两个字是两种承诺。</p></div>
-          <div class="claim"><div class="cid">C5 <span class="status bad">矛盾</span></div><p>"维护期内 SLA 保障不变"——源文档明确排除维护窗口。</p></div>
-          <div class="claim"><div class="cid">C6 <span class="status bad">矛盾</span></div><p>"Beta 功能完整支持"——源文档写的是 as-is 提供，不承诺支持。</p></div>
+          <div class="claim"><div class="cid">C3 <span class="status bad">缺依据</span></div><p>"企业客户也走同样退款政策"，源文档写的是"按签署的 MSA 执行"。</p></div>
+          <div class="claim"><div class="cid">C4 <span class="status warn">有偏差</span></div><p>源文档写 4 个工作小时，回答写成 4 个小时，差两个字是两种承诺。</p></div>
+          <div class="claim"><div class="cid">C5 <span class="status bad">矛盾</span></div><p>"维护期内 SLA 保障不变"，源文档明确排除维护窗口。</p></div>
+          <div class="claim"><div class="cid">C6 <span class="status bad">矛盾</span></div><p>"Beta 功能完整支持"，源文档写的是 as-is 提供，不承诺支持。</p></div>
           <div class="claim"><div class="cid">C7 <span class="status">有依据</span></div><p>"可在 dashboard 导出账号数据"有明确的政策条款对应。</p></div>
-          <div class="claim"><div class="cid">C8 <span class="status warn">有偏差</span></div><p>多了一个"usually"，承诺强度变了——源文档是"14 天内完成"，不是"通常 14 天"。</p></div>
+          <div class="claim"><div class="cid">C8 <span class="status warn">有偏差</span></div><p>多了一个"usually"，承诺强度变了。源文档是"14 天内完成"，不是"通常 14 天"。</p></div>
         </div>
       </div>
     </section>
@@ -501,7 +501,7 @@
     <section class="engine" id="engine">
       <div class="wrap">
         <h2>不是又一个评分工具。是坐在评分工具后面，做它们不做的事。</h2>
-        <p>你已经在用 Ragas、DeepEval、Langfuse。AI Judge 接在它们后面，只处理错了会出事的那一类——不是扫全量。</p>
+        <p>你已经在用 Ragas、DeepEval、Langfuse。AI Judge 接在它们后面，只处理错了会出事的那一类，不扫全量。</p>
         <div class="engine-grid">
           <div class="eg"><span class="elabel">01 · 只审值得审的</span><h4>不扫全量，只处理高风险</h4><p>大多数 AI 回答错了也无所谓。只有错了会赔钱、会升级投诉、会被合规盯上的才值得审。</p></div>
           <div class="eg"><span class="elabel">02 · 只看源文档</span><h4>模型说什么不重要，源文档才重要</h4><p>每条主张必须对回源文档。没写的标缺依据，写相反的标矛盾。不能模糊过去。</p></div>
@@ -514,7 +514,7 @@
     <section class="closing">
       <div class="wrap">
         <h2>给我一条你感觉"不太对"的 AI 回答，<br>我还你一份核验报告。</h2>
-        <p>一条 RAG 客服回复、一段 agent 的自动结论、一条 eval 刚判不及格的输出。给我现有材料，我还你报告——里面有哪句对、哪句错、为什么、能不能发、谁需要签字。</p>
+        <p>一条 RAG 客服回复、一段 agent 的自动结论、一条 eval 刚判不及格的输出。给我现有材料，我还你报告：里面有哪句对、哪句错、为什么、能不能发、谁需要签字。</p>
         <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
       </div>
     </section>

@@ -60,6 +60,8 @@ The current homepage borrows one transferable move from FigCraft-style AI tool p
 
 2026-06-29 module auto-match note: treat the homepage as Landing/marketing primary and Data-viz/report secondary. The first viewport must explain "risky AI output in, signed audit packet out" before showing multi-seat theater. Use the four product artifacts as the story spine: Radar Card, Problem Contract, Verdict Packet, and Final Report. Finance/investment examples can appear only as secondary cases; the primary buyer path is eval/RAG/agent teams sending one failed or borderline output for review.
 
+2026-06-29 taste-layer validation note: keep the homepage hybrid but state-first. Use Landing/marketing primary with Data-viz/report as the first-viewport proof layer. Effective dials for this demo are `DESIGN_VARIANCE 4`, `MOTION_INTENSITY 2`, and `VISUAL_DENSITY 7`. The first viewport must include a compact verdict panel with decision, claim count, blockers, signer, and evidence rows before the user reaches the deeper OpenCouncil stage. On mobile, order the content as product promise, verdict panel, primary actions, then the four-step flow cards. Visible labels should be Chinese by default; keep English only for technical metadata such as loop IDs, JSON keys, or external tool names. Do not use visible em dashes as copy styling, and do not use `word-break: break-all` for CJK UI text.
+
 ## Component Rules
 
 - Primary CTA: black pill with white text.
