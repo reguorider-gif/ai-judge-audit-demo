@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge：多个 AI 模型同时审议，一份可签字的裁决</title>
-  <meta name="description" content="不是评分工具。N 个独立 AI 模型围着同一个问题审议，分歧、互评、共振，最后一份可签字可转发的审计报告。">
+  <title>AI Judge：把 LLM 评测变成可签字的审计包</title>
+  <meta name="description" content="AI Judge 是 LLM-as-judge、RAG 和 agent 评测后的责任审计层。把分数、claim、证据、分歧和人工签字合成可追溯的审计包。">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
-  <meta property="og:title" content="AI Judge：多个 AI 模型同时审议，一份可签字的裁决">
-  <meta property="og:description" content="N 个独立 AI 模型围着同一个问题审议。分歧、互评、共振，最后一份可签字可转发的审计报告。">
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23171717"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
+  <meta property="og:title" content="AI Judge：把 LLM 评测变成可签字的审计包">
+  <meta property="og:description" content="Your eval says PASS. AI Judge shows whether a reviewer can sign it: claims, evidence, dissent, and human verdict.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Judge：多个 AI 模型同时审议，一份可签字的裁决">
-  <meta name="twitter:description" content="N 个独立 AI 模型围着同一个问题审议。分歧、互评、共振，最后一份可签字可转发的审计报告。">
+  <meta name="twitter:title" content="AI Judge：把 LLM 评测变成可签字的审计包">
+  <meta name="twitter:description" content="把 LLM-as-judge 的分数变成可追溯、可签字、可归档的审计证据包。">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,98 +23,544 @@
   <style>
     :root {
       color-scheme: light;
-      --canvas: #f5f5f7;
+      --canvas: #fafafa;
+      --canvas-soft: #f4f4f5;
       --surface: #ffffff;
-      --ink: #1d1d1f;
-      --muted: #6e6e73;
-      --hairline: rgba(0,0,0,0.08);
-      --accent: #0d8f72;
+      --ink: #171717;
+      --body: #3f3f46;
+      --muted: #71717a;
+      --line: #e4e4e7;
+      --line-strong: #d4d4d8;
+      --primary: #171717;
+      --on-primary: #ffffff;
+      --accent: #0f8f6f;
+      --accent-soft: #ddf7ee;
+      --warn: #8a5b2e;
+      --warn-soft: #f4eadf;
       --danger: #96363d;
+      --danger-soft: #f3dfe2;
+      --dark: #090a0a;
       --sans: "Inter","Noto Sans SC","PingFang SC","Hiragino Sans GB","Aptos","SF Pro Text","Segoe UI",system-ui,sans-serif;
       --mono: "JetBrains Mono","SFMono-Regular",Menlo,Consolas,monospace;
     }
-    *{box-sizing:border-box}
-    html{background:var(--canvas);scroll-behavior:smooth}
-    body{min-width:320px;margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.68;-webkit-font-smoothing:antialiased;font-synthesis:none;overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-    :focus-visible{outline:3px solid var(--accent);outline-offset:4px}
-    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap}
-    .wrap{width:min(1040px,calc(100% - 48px));margin-inline:auto}
 
-    .topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(245,245,247,0.72);border-bottom:1px solid var(--hairline)}
-    .nav{min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-    .brand{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:720}
-    .mark{width:28px;height:28px;display:grid;place-items:center;border-radius:7px;background:var(--ink);color:#fff;font-family:var(--mono);font-size:10px;font-weight:700}
-    .nav-links{display:flex;align-items:center;gap:28px;color:var(--muted);font-size:13px;font-weight:620}
-    .nav-links a:hover{color:var(--ink)}
-
-    .hero{padding:clamp(72px,12vw,130px) 0 clamp(56px,9vw,90px);text-align:center}
-    .hero .tag{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(0,0,0,0.07);border-radius:999px;background:rgba(255,255,255,0.7);padding:7px 12px 7px 9px;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:20px}
-    .hero .tag::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(13,143,114,0.12)}
-    .hero h1{max-width:720px;margin:0 auto 16px;font-size:clamp(40px,6.2vw,68px);line-height:1.08;font-weight:780;letter-spacing:0}
-    .hero p{max-width:560px;margin:0 auto;color:#54545c;font-size:17px;line-height:1.72}
-
-    .cases{padding:0 0 clamp(56px,9vw,88px)}
-    .case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .case-card{border:1px solid var(--hairline);border-radius:16px;background:var(--surface);padding:22px;transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 1px 1px rgba(0,0,0,0.02)}
-    .case-card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,0.07)}
-    .case-card .cc-domain{display:inline-block;padding:3px 8px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;margin-bottom:14px}
-    .cc-domain.fin{background:#e8f5f0;color:#0a745d}
-    .cc-domain.sports{background:#fef3c7;color:#92400e}
-    .cc-domain.legal{background:#f3e8ff;color:#6b21a8}
-    .case-card .cc-question{display:block;font-size:16px;font-weight:720;line-height:1.42;color:var(--ink);margin-bottom:8px}
-    .case-card .cc-verdict{display:block;color:var(--muted);font-size:13px;line-height:1.55}
-    .case-card .cc-meta{display:block;margin-top:12px;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0}
-
-    .how{padding:clamp(56px,8vw,88px) 0;border-top:1px solid var(--hairline);background:var(--surface);text-align:center}
-    .how h2{max-width:560px;margin:0 auto 10px;font-size:clamp(26px,3.6vw,42px);line-height:1.1;font-weight:760;letter-spacing:0}
-    .how>p{max-width:480px;margin:0 auto clamp(36px,5vw,50px);color:var(--muted);font-size:15px;line-height:1.7}
-    .how-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;text-align:left}
-    .how-card{border:1px solid rgba(0,0,0,0.06);border-radius:14px;background:var(--canvas);padding:24px}
-    .how-card .hc-num{display:block;color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;margin-bottom:12px}
-    .how-card h4{margin:0 0 6px;font-size:17px;font-weight:680}
-    .how-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
-
-    .delib{position:relative;background:#08090a;color:#fff;padding:clamp(64px,9vw,100px) 0;text-align:center}
-    .delib .stage{position:relative;max-width:840px;margin:0 auto;border:1px solid rgba(255,255,255,0.1);border-radius:18px;overflow:hidden;box-shadow:0 40px 100px -32px rgba(0,0,0,0.65)}
-    .delib .stage img{display:block;width:100%;height:auto}
-    .delib .stage-text{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(8,9,10,0.9));display:flex;align-items:flex-end;padding:clamp(24px,3.5vw,40px)}
-    .delib .stage-text p{max-width:640px;margin:0;font-size:clamp(16px,2vw,20px);font-weight:720;line-height:1.45;text-align:left}
-
-    .closing{padding:clamp(56px,8vw,90px) 0;background:var(--ink);color:#fff;text-align:center}
-    .closing h2{max-width:560px;margin:0 auto 12px;font-size:clamp(26px,3.8vw,40px);line-height:1.12;font-weight:760;letter-spacing:0}
-    .closing p{max-width:440px;margin:0 auto clamp(26px,4vw,36px);color:rgba(255,255,255,0.6);font-size:15px;line-height:1.7}
-    .closing .btn{border-color:rgba(255,255,255,0.2);background:transparent;color:#fff}
-    .closing .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
-    .closing .meta-links{margin-top:22px;font-size:12px;color:rgba(255,255,255,0.35)}
-    .closing .meta-links a{color:rgba(255,255,255,0.5)}
-
-    footer{padding:16px 0 22px;background:var(--ink);color:rgba(255,255,255,0.3);font-size:11px;text-align:center}
-    footer a{color:rgba(255,255,255,0.4)}
-    .btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(0,0,0,0.1);border-radius:999px;background:var(--surface);color:var(--ink);padding:10px 20px;font-size:14px;font-weight:700;white-space:nowrap;transition:transform .16s ease,box-shadow .16s ease}
-    .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
-    .btn:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,0,0,.11)}
-
-    @media(max-width:640px){
-      .wrap{width:calc(100% - 32px)}
-      .nav-links{display:none}
-      .hero{text-align:left;padding:44px 0 36px}
-      .hero h1{font-size:2rem;line-height:1.12}
-      .hero p{font-size:15px}
-      .case-grid,.how-grid{grid-template-columns:1fr}
-      .case-card,.how-card{padding:18px}
-      .delib .stage-text{padding:18px}
-      .delib .stage-text p{font-size:14px}
-      .btn{width:100%;white-space:normal;text-align:center}
+    * { box-sizing: border-box; }
+    html { background: var(--canvas); scroll-behavior: smooth; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.68;
+      letter-spacing: 0;
+      -webkit-font-smoothing: antialiased;
+      font-synthesis: none;
+      overflow-x: hidden;
     }
-    @media print{
-      .topbar{display:none}
-      body{background:#fff;color:#000;font-size:12pt}
-      .delib,.closing,footer{background:#fff;color:#000}
-      .closing .btn{border:1px solid #000;color:#000}
-      img{max-width:100%;page-break-inside:avoid}
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    :focus-visible { outline: 3px solid rgba(15, 143, 111, 0.45); outline-offset: 4px; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .eyebrow,
+    .meta,
+    .chip,
+    .btn,
+    .step-id,
+    .code-label {
+      font-family: var(--mono);
+      letter-spacing: 0;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      background: rgba(250, 250, 250, 0.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .nav {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 760; }
+    .mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--ink);
+      color: var(--surface);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .nav-links { display: flex; align-items: center; gap: 26px; color: var(--muted); font-size: 13px; font-weight: 660; }
+    .nav-links a:hover { color: var(--ink); }
+
+    .hero { padding: clamp(54px, 9vw, 96px) 0 38px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+      align-items: center;
+      gap: clamp(28px, 5vw, 64px);
+    }
+    .eyebrow {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 8px 11px 8px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 760;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(15, 143, 111, 0.12);
+    }
+    h1 {
+      max-width: 650px;
+      margin: 0 0 18px;
+      font-size: clamp(38px, 5.2vw, 64px);
+      line-height: 1.12;
+      font-weight: 790;
+      letter-spacing: 0;
+    }
+    .lede {
+      max-width: 590px;
+      margin: 0;
+      color: var(--body);
+      font-size: 17px;
+      line-height: 1.76;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink);
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 760;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+    .btn.primary { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,0,0,0.10); }
+    .hero-note { margin-top: 18px; color: var(--muted); font-size: 13px; line-height: 1.62; }
+
+    .artifact-panel {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: 0 26px 80px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .panel-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fcfcfc;
+    }
+    .panel-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 0 4px rgba(150,54,61,0.11); flex: 0 0 auto; }
+    .panel-title strong { display: block; font-size: 14px; line-height: 1.35; }
+    .panel-title span { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: var(--canvas-soft);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+    .chip.good { background: var(--accent-soft); color: var(--accent); }
+    .chip.bad { background: var(--danger-soft); color: var(--danger); }
+    .panel-body { padding: 18px; }
+    .verdict-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--line);
+    }
+    .metric {
+      min-height: 86px;
+      padding: 14px;
+      background: var(--surface);
+    }
+    .metric .meta { color: var(--muted); font-size: 10px; font-weight: 760; text-transform: uppercase; }
+    .metric strong { display: block; margin-top: 8px; font-size: 17px; line-height: 1.3; }
+    .metric.danger strong { color: var(--danger); }
+    .claim-ledger { margin-top: 16px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .claim-row {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) 116px;
+      align-items: center;
+      gap: 12px;
+      min-height: 50px;
+      padding: 10px 12px;
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+    }
+    .claim-row:first-child { border-top: 0; }
+    .claim-id { font-family: var(--mono); font-size: 12px; font-weight: 760; color: var(--muted); }
+    .claim-text { min-width: 0; color: var(--body); font-size: 13px; line-height: 1.48; }
+    .claim-state { justify-content: center; }
+    .packet-flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .flow-item {
+      min-height: 74px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px;
+      background: var(--canvas-soft);
+    }
+    .flow-item strong { display: block; margin-bottom: 4px; font-size: 13px; }
+    .flow-item span { display: block; color: var(--muted); font-size: 12px; line-height: 1.45; }
+
+    .proof-strip { padding: 24px 0 54px; }
+    .strip-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--line);
+    }
+    .strip-item { min-height: 128px; padding: 20px; background: var(--surface); }
+    .strip-item .meta { color: var(--accent); font-size: 11px; font-weight: 760; text-transform: uppercase; }
+    .strip-item strong { display: block; margin: 10px 0 6px; font-size: 17px; line-height: 1.35; }
+    .strip-item p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.62; }
+
+    section.band { padding: clamp(56px, 8vw, 86px) 0; border-top: 1px solid var(--line); background: var(--surface); }
+    section.band.soft { background: var(--canvas); }
+    .section-head { max-width: 690px; margin-bottom: 32px; }
+    .section-head.center { margin-inline: auto; text-align: center; }
+    h2 { margin: 0 0 12px; font-size: clamp(28px, 3.8vw, 44px); line-height: 1.14; font-weight: 760; letter-spacing: 0; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.72; }
+
+    .io-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+    .io-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      padding: 20px;
+    }
+    .io-card h3 { margin: 0 0 14px; font-size: 18px; line-height: 1.3; }
+    .io-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+    .io-list li {
+      display: flex;
+      gap: 10px;
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .io-list li::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex: 0 0 auto;
+    }
+    .arrow {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      min-height: 52px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-weight: 760;
+      align-self: center;
+    }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .workflow-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      padding: 20px;
+      min-height: 178px;
+    }
+    .step-id { display: block; margin-bottom: 18px; color: var(--accent); font-size: 11px; font-weight: 760; text-transform: uppercase; }
+    .workflow-card h3 { margin: 0 0 8px; font-size: 17px; line-height: 1.35; }
+    .workflow-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.62; }
+
+    .report-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(380px, .98fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .table-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .table-row {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr) 116px;
+      gap: 12px;
+      align-items: center;
+      min-height: 52px;
+      padding: 10px 14px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+    .table-row:first-child { border-top: 0; background: var(--canvas-soft); color: var(--muted); font-family: var(--mono); font-size: 11px; font-weight: 760; text-transform: uppercase; }
+    .table-row span:nth-child(2) { color: var(--body); line-height: 1.48; }
+
+    .code-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #101211;
+      color: #edf7f3;
+      overflow: hidden;
+    }
+    .code-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+    }
+    .code-label { color: rgba(255,255,255,0.58); font-size: 11px; font-weight: 760; text-transform: uppercase; }
+    .copy-btn {
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 999px;
+      background: transparent;
+      color: #ffffff;
+      padding: 6px 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 760;
+      cursor: pointer;
+    }
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.58;
+      white-space: pre-wrap;
+    }
+
+    .council {
+      background: var(--dark);
+      color: #ffffff;
+      padding: clamp(58px, 8vw, 92px) 0;
+    }
+    .council-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .86fr) minmax(440px, 1.14fr);
+      gap: clamp(22px, 4vw, 46px);
+      align-items: center;
+    }
+    .council h2 { color: #ffffff; }
+    .council p { color: rgba(255,255,255,0.64); }
+    .stage {
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 40px 100px -32px rgba(0,0,0,0.75);
+      background: #060707;
+    }
+    .stage img { display: block; width: 100%; height: auto; }
+    .stage-caption {
+      position: absolute;
+      inset: auto 16px 16px 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: end;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      background: rgba(5,7,7,0.82);
+      backdrop-filter: blur(12px);
+    }
+    .stage-caption strong { display: block; font-size: 14px; line-height: 1.4; }
+    .stage-caption span { display: block; color: rgba(255,255,255,0.62); font-size: 12px; line-height: 1.45; }
+
+    .closing {
+      padding: clamp(56px, 8vw, 88px) 0;
+      background: var(--ink);
+      color: #ffffff;
+      text-align: center;
+    }
+    .closing h2 { max-width: 720px; margin-inline: auto; color: #ffffff; }
+    .closing p { max-width: 560px; margin: 0 auto 28px; color: rgba(255,255,255,0.64); font-size: 16px; line-height: 1.72; }
+    .closing .btn { border-color: rgba(255,255,255,0.2); background: transparent; color: #ffffff; }
+    .closing .btn.primary { background: #ffffff; color: var(--ink); border-color: #ffffff; }
+    .closing .meta-links { margin-top: 22px; color: rgba(255,255,255,0.42); font-size: 12px; line-height: 1.7; }
+    .closing .meta-links a { color: rgba(255,255,255,0.68); text-decoration: underline; text-decoration-color: rgba(255,255,255,0.28); text-underline-offset: 4px; }
+    footer {
+      padding: 16px 0 22px;
+      background: var(--ink);
+      color: rgba(255,255,255,0.34);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .report-grid,
+      .council-grid {
+        grid-template-columns: 1fr;
+      }
+      .io-grid {
+        grid-template-columns: 1fr;
+      }
+      .arrow {
+        width: 44px;
+        min-height: 44px;
+        transform: rotate(90deg);
+        justify-self: center;
+      }
+      .workflow-grid,
+      .strip-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 32px); }
+      .nav-links { display: none; }
+      .hero { padding: 42px 0 28px; }
+      h1 { font-size: 2.18rem; line-height: 1.14; }
+      .lede { font-size: 15px; line-height: 1.72; }
+      .hero-actions { display: grid; }
+      .btn { width: 100%; min-height: 46px; white-space: normal; text-align: center; }
+      .artifact-panel { border-radius: 14px; }
+      .panel-top { align-items: flex-start; }
+      .panel-top > .chip { display: none; }
+      .panel-body { padding: 14px; }
+      .verdict-row,
+      .packet-flow,
+      .workflow-grid,
+      .strip-grid {
+        grid-template-columns: 1fr;
+      }
+      .metric { min-height: auto; }
+      .claim-row,
+      .table-row {
+        grid-template-columns: 42px minmax(0, 1fr);
+      }
+      .claim-state,
+      .table-row span:last-child {
+        grid-column: 2;
+        justify-self: start;
+      }
+      section.band { padding: 46px 0; }
+      .io-card,
+      .workflow-card,
+      .strip-item { padding: 17px; }
+      .report-grid { gap: 16px; }
+      .stage-caption {
+        position: static;
+        grid-template-columns: 1fr;
+        margin: 0;
+        border-width: 1px 0 0 0;
+        border-radius: 0;
+      }
+      .council { padding: 48px 0; }
+    }
+
+    @media print {
+      .topbar,
+      .hero-actions,
+      .copy-btn { display: none; }
+      body { background: #ffffff; color: #000000; font-size: 12pt; }
+      .artifact-panel,
+      .io-card,
+      .workflow-card,
+      .table-card,
+      .code-card,
+      .strip-grid { box-shadow: none; break-inside: avoid; }
+      .council,
+      .closing,
+      footer { background: #ffffff; color: #000000; }
+      .council h2,
+      .closing h2 { color: #000000; }
+      .council p,
+      .closing p { color: #333333; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -123,8 +569,9 @@
     <div class="wrap nav">
       <a class="brand" href="#main"><span class="mark" aria-hidden="true">AJ</span><span>AI Judge</span></a>
       <nav class="nav-links" aria-label="主要导航">
-        <a href="#cases">案例</a>
-        <a href="#how">原理</a>
+        <a href="#packet">审计包</a>
+        <a href="#workflow">流程</a>
+        <a href="#schema">Schema</a>
         <a href="AI_Judge_Audit_Sample_Report.html">报告</a>
         <a href="sample-loop-packet.json">JSON</a>
       </nav>
@@ -132,69 +579,248 @@
   </header>
 
   <main id="main">
-    <section class="hero">
-      <div class="wrap">
-        <span class="tag">多模型审议</span>
-        <h1>多个 AI 模型同时审议，<br>一份可签字的裁决。</h1>
-        <p>不是单模型打分。是 13 个独立 AI 围着一个问题各说各的：有人同意、有人反对、有人找到别人漏掉的证据。最后汇成一份报告，人类看一眼就能签字。</p>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Eval audit layer</span>
+          <h1 id="hero-title">你的评测说 PASS， reviewer 能签字吗？</h1>
+          <p class="lede">AI Judge 不是另一个打分器。它把 LLM-as-judge、RAG 和 agent 的评测结果拆成 claim、证据、分歧和人工签字状态，最后输出一份可追溯、可归档的审计包。</p>
+          <div class="hero-actions" aria-label="主要行动">
+            <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个 failed eval</a>
+            <a class="btn" href="AI_Judge_Audit_Sample_Report.html">查看完整报告</a>
+            <a class="btn" href="sample-loop-packet.json">打开 JSON 包</a>
+          </div>
+          <p class="hero-note">最适合：RAG faithfulness、客服政策回答、agent 自动操作审批、LLM-as-judge 分数复核。</p>
+        </div>
+
+        <aside class="artifact-panel" aria-label="AI Judge 审计包预览">
+          <div class="panel-top">
+            <div class="panel-title">
+              <span class="status-dot" aria-hidden="true"></span>
+              <div>
+                <strong>AJR-2026-06-29-001</strong>
+                <span>customer-support policy claim</span>
+              </div>
+            </div>
+            <span class="chip bad">hold until signed</span>
+          </div>
+          <div class="panel-body">
+            <div class="verdict-row" aria-label="审计包摘要">
+              <div class="metric">
+                <span class="meta">route</span>
+                <strong>judge</strong>
+              </div>
+              <div class="metric">
+                <span class="meta">audit score</span>
+                <strong>9 / 10</strong>
+              </div>
+              <div class="metric danger">
+                <span class="meta">blockers</span>
+                <strong>3 claims</strong>
+              </div>
+              <div class="metric">
+                <span class="meta">signer</span>
+                <strong>pending</strong>
+              </div>
+            </div>
+
+            <div class="claim-ledger" aria-label="关键 claim ledger">
+              <div class="claim-row">
+                <span class="claim-id">C3</span>
+                <span class="claim-text">Enterprise customers always follow the same refund policy.</span>
+                <span class="chip bad claim-state">unsupported</span>
+              </div>
+              <div class="claim-row">
+                <span class="claim-id">C5</span>
+                <span class="claim-text">Priority SLA is guaranteed during maintenance windows.</span>
+                <span class="chip bad claim-state">contradicted</span>
+              </div>
+              <div class="claim-row">
+                <span class="claim-id">C6</span>
+                <span class="claim-text">Beta features are fully supported.</span>
+                <span class="chip bad claim-state">contradicted</span>
+              </div>
+            </div>
+
+            <div class="packet-flow" aria-label="审计包字段">
+              <div class="flow-item">
+                <strong>Radar Card</strong>
+                <span>先判断是否值得审。</span>
+              </div>
+              <div class="flow-item">
+                <strong>Problem Contract</strong>
+                <span>锁定 owner、风险和 signer。</span>
+              </div>
+              <div class="flow-item">
+                <strong>Verdict Packet</strong>
+                <span>记录证据链和分歧。</span>
+              </div>
+              <div class="flow-item">
+                <strong>Final Report</strong>
+                <span>给 reviewer 签字归档。</span>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
 
-    <section class="cases" id="cases">
+    <section class="proof-strip" aria-label="产品证据">
       <div class="wrap">
-        <div class="case-grid">
-          <article class="case-card">
-            <span class="cc-domain fin">金融决策</span>
-            <span class="cc-question">“现在贷款 100 万抄底纳斯达克合适吗？”</span>
-            <span class="cc-verdict">11/11 席位反对。55% 纳指仓位已经偏高，优先降集中度、不加杠杆。输出三档再平衡方案。</span>
-            <span class="cc-meta">13 seats · 2 rounds · 11 valid</span>
+        <div class="strip-grid">
+          <div class="strip-item">
+            <span class="meta">for eval stacks</span>
+            <strong>不是替代 Ragas、Promptfoo、Langfuse。</strong>
+            <p>它坐在评测之后，把 pass/fail 变成 reviewer 能检查的证据包。</p>
+          </div>
+          <div class="strip-item">
+            <span class="meta">for reviewers</span>
+            <strong>分数旁边必须有证据和责任人。</strong>
+            <p>每个 blocker 都能回到 source line、judge finding 和人工签字状态。</p>
+          </div>
+          <div class="strip-item">
+            <span class="meta">for operators</span>
+            <strong>一次失败回答会变成下一轮规则。</strong>
+            <p>归档的不只是结论，还有 overclaim pattern 和 safer rewrite。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="packet">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>高风险 AI 输出进来，可签字审计包出去。</h2>
+          <p>首页只讲一个核心转换：从一条可能越权的 RAG/agent 回答，到一份带 claim ledger、source evidence、dissent 和 human verdict 的审计记录。</p>
+        </div>
+        <div class="io-grid">
+          <div class="io-card">
+            <h3>Input：已有评测和原始材料</h3>
+            <ul class="io-list">
+              <li>用户问题、候选回答、RAG source packet。</li>
+              <li>已有 judge score、trace span 或测试结果。</li>
+              <li>业务 owner、错误代价、是否需要人工签字。</li>
+            </ul>
+          </div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="io-card">
+            <h3>Output：可归档的责任链</h3>
+            <ul class="io-list">
+              <li>8 个原子 claim，逐条标记 supported、partial、unsupported、contradicted。</li>
+              <li>3 个 blocker 明确拦截自动回复。</li>
+              <li>最终状态：hold automatic reply until reviewer approval。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band soft" id="workflow">
+      <div class="wrap">
+        <div class="section-head center">
+          <h2>四个产物，撑住一次可审计判断。</h2>
+          <p>不要把多模型投票当魔法。AI Judge 的价值在于把判断拆成能被人检查、签字、复盘的结构。</p>
+        </div>
+        <div class="workflow-grid">
+          <article class="workflow-card">
+            <span class="step-id">01 / Radar Card</span>
+            <h3>先问是否值得审</h3>
+            <p>命中真实损失、高频、边界模糊、证据链和明确 owner，才进入 judge route。</p>
           </article>
-          <article class="case-card">
-            <span class="cc-domain sports">体育预测</span>
-            <span class="cc-question">“2026 NBA 总决赛尼克斯 vs 马刺，谁夺冠？”</span>
-            <span class="cc-verdict">8/11 席位选尼克斯 4-2，Brunson FMVP。2 席押马刺逆转。逐场预测命中率等候复盘验证。</span>
-            <span class="cc-meta">13 seats · 11 valid · G4 当晚开打</span>
+          <article class="workflow-card">
+            <span class="step-id">02 / Problem Contract</span>
+            <h3>锁定错误代价</h3>
+            <p>把 whose problem、wrong-decision cost、acceptance 和 signer 写进同一份 contract。</p>
           </article>
-          <article class="case-card">
-            <span class="cc-domain legal">法律分析</span>
-            <span class="cc-question">“宅基地拆迁补偿，非集体成员能否主张权利？”</span>
-            <span class="cc-verdict">10/11 席位推荐甲+丙为共同被告，立即申请诉前财产保全。窗口期：补偿款尚未发放。</span>
-            <span class="cc-meta">11 seats · 6 页正式法律文书</span>
+          <article class="workflow-card">
+            <span class="step-id">03 / Verdict Packet</span>
+            <h3>拆 claim 对证据</h3>
+            <p>每个 judge seat 只负责找风险模式，最后汇总 blocker、warning、dissent 和 safer rewrite。</p>
+          </article>
+          <article class="workflow-card">
+            <span class="step-id">04 / Final Report</span>
+            <h3>等待人工签字</h3>
+            <p>报告不是模型结论的装饰，而是客服、合规、QA 或产品 owner 能归档的签字材料。</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="how" id="how">
-      <div class="wrap">
-        <h2>三个步骤，从问题到裁决。</h2>
-        <p>每份报告背后都是同一套流程。不挑领域，不挑模型。</p>
-        <div class="how-grid">
-          <div class="how-card">
-            <span class="hc-num">01 · 提交一个决策问题</span>
-            <h4>附带背景材料</h4>
-            <p>贷款抄底、NBA 预测、法律纠纷，任何需要多方意见的决策，加上持仓数据、赛程、案情。</p>
+    <section class="band" id="schema">
+      <div class="wrap report-grid">
+        <div>
+          <div class="section-head">
+            <h2>把“看起来正确”的回答，拆成 reviewer 能追责的 ledger。</h2>
+            <p>这个样例里，候选回答混入了 3 个会制造客户承诺风险的 blocker。AI Judge 的目标不是给高分，而是告诉你为什么不能自动发出。</p>
           </div>
-          <div class="how-card">
-            <span class="hc-num">02 · 多个 AI 独立审议</span>
-            <h4>互不串通，各说各的</h4>
-            <p>Gemini 看宏观、DeepSeek 拆期望值、Kimi 盯数据。有人赞成、有人反对，分歧越大的地方越要看。</p>
+          <div class="table-card" aria-label="Claim ledger 摘要">
+            <div class="table-row">
+              <span>claim</span>
+              <span>finding</span>
+              <span>status</span>
+            </div>
+            <div class="table-row">
+              <span>C3</span>
+              <span>Enterprise refund policy was overgeneralized.</span>
+              <span class="chip bad">blocker</span>
+            </div>
+            <div class="table-row">
+              <span>C5</span>
+              <span>Maintenance exception was removed from the SLA claim.</span>
+              <span class="chip bad">blocker</span>
+            </div>
+            <div class="table-row">
+              <span>C6</span>
+              <span>Beta features were described as fully supported.</span>
+              <span class="chip bad">blocker</span>
+            </div>
+            <div class="table-row">
+              <span>C4</span>
+              <span>4 business hours was compressed into 4 hours.</span>
+              <span class="chip">warning</span>
+            </div>
           </div>
-          <div class="how-card">
-            <span class="hc-num">03 · 输出可签字的报告</span>
-            <h4>不是分数，是结论 + 理由 + 行动</h4>
-            <p>谁说了什么、为什么、能不能放行、谁需要签字。一份报告可以直接贴进工单或放进合规记录。</p>
+        </div>
+
+        <div class="code-card">
+          <div class="code-top">
+            <span class="code-label">minimum integration shape</span>
+            <button class="copy-btn" type="button" data-copy-schema>复制 JSON</button>
           </div>
+<pre id="schema-snippet">{
+  "question": "...",
+  "answer": "...",
+  "sources": [
+    { "id": "A", "text": "..." }
+  ],
+  "judge_scores": [
+    { "judge": "seat_1", "score": 0.58 }
+  ],
+  "human_verdict": "do_not_ship"
+}</pre>
         </div>
       </div>
     </section>
 
-    <section class="delib">
-      <div class="wrap">
+    <section class="council" aria-labelledby="council-title">
+      <div class="wrap council-grid">
+        <div>
+          <span class="eyebrow">OpenCouncil evidence</span>
+          <h2 id="council-title">多席位审议是输入，不是产品终点。</h2>
+          <p>圆桌让分歧暴露出来。AI Judge 的工作是把这些分歧变成审计结构：哪些 claim 被支持，哪些 claim 被反驳，谁需要签字，下一轮自动化应该学到什么。</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">阅读报告样例</a>
+            <a class="btn" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">打开 Public Gist</a>
+          </div>
+        </div>
         <div class="stage">
-          <img src="assets/openspark-council.png" alt="多个 AI 模型在 OpenCouncil 圆桌同时审议同一个决策问题">
-          <div class="stage-text">
-            <p>每个席位独立审议同一个问题。不串通、不混票。<br>分歧比共识更有价值。</p>
+          <img src="assets/openspark-council.png" alt="OpenCouncil 多模型审议圆桌界面截图">
+          <div class="stage-caption">
+            <div>
+              <strong>13 seats review the same risky output.</strong>
+              <span>AI Judge converts seat findings into a signed audit packet.</span>
+            </div>
+            <span class="chip good">evidence first</span>
           </div>
         </div>
       </div>
@@ -202,9 +828,12 @@
 
     <section class="closing">
       <div class="wrap">
-        <h2>给我一个决策问题，<br>我还你一份审计报告。</h2>
-        <p>任何需要多方意见的决策：一条 RAG 回答、一次投资判断、一份法律纠纷。给我背景材料，我还你多席位审议结果。</p>
-        <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
+        <h2>发我一条失败或边界模糊的 eval，我还你一份审计包。</h2>
+        <p>最小合作方式：给一条 RAG 回答、source packet、已有 judge 分数或 trace。AI Judge 返回 claim ledger、blockers、safer rewrite 和 human-signature report。</p>
+        <div class="hero-actions" style="justify-content:center">
+          <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
+          <a class="btn" href="sample-loop-packet.json">下载 JSON 样例</a>
+        </div>
         <p class="meta-links">
           <a href="AI_Judge_Audit_Sample_Report.html">完整审计报告样例</a> · <a href="sample-loop-packet.json">JSON 数据包</a> · <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Public Gist</a>
         </p>
@@ -213,20 +842,46 @@
   </main>
 
   <footer>
-    <span>AI Judge 公开演示 · 不含私有数据或生产 trace</span>
+    <span>AI Judge 公开演示。不含私有数据、凭证或生产 trace。</span>
   </footer>
 
   <script>
-  (function(){
-    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-    const sw=document.querySelector('.stage');
-    if(sw){
-      sw.style.transition='transform .6s cubic-bezier(.16,1,.3,1)';
-      let f=setInterval(()=>{sw.style.transform=`translateY(${-0.8+Math.sin(Date.now()/2400)*0.8}px)`},60);
-      sw.addEventListener('mouseenter',()=>{clearInterval(f);sw.style.transform='translateY(-2px) scale(1.003)'});
-      sw.addEventListener('mouseleave',()=>{sw.style.transform='translateY(0) scale(1)'});
-    }
-  })();
+    (function () {
+      var copyButton = document.querySelector("[data-copy-schema]");
+      var schema = document.getElementById("schema-snippet");
+      if (!copyButton || !schema) return;
+
+      function fallbackCopy(text) {
+        var area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        document.body.removeChild(area);
+      }
+
+      copyButton.addEventListener("click", function () {
+        var text = schema.textContent.trim();
+        var done = function () {
+          copyButton.textContent = "已复制";
+          window.setTimeout(function () {
+            copyButton.textContent = "复制 JSON";
+          }, 1800);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () {
+            fallbackCopy(text);
+            done();
+          });
+        } else {
+          fallbackCopy(text);
+          done();
+        }
+      });
+    })();
   </script>
 </body>
 </html>
