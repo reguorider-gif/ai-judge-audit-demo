@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge Sample Audit Report</title>
+  <title>AI Judge Sample Loop QA Report</title>
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121513"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23fffffb">AJ</text></svg>'>
   <style>
     :root {
       color-scheme: light;
@@ -166,28 +167,36 @@
 </head>
 <body>
 <main>
-  <h1>AI Judge Sample Audit Report</h1>
-  <p class="lede">A source-isolated audit layer for RAG and LLM-as-judge workflows.</p>
+  <h1>AI Judge Sample Loop QA Report</h1>
+  <p class="lede">A source-isolated Loop QA layer for agent, RAG, and LLM-as-judge workflows.</p>
 
   <section class="meta">
     <p><strong>Status:</strong> public, sanitized sample. This is a product communication artifact, not a benchmark claim.</p>
-    <p><strong>Audience:</strong> eval framework teams, observability teams, and LLM-as-judge researchers.</p>
+    <p><strong>Audience:</strong> agent teams, eval framework teams, observability teams, and LLM-as-judge researchers.</p>
   </section>
 
   <nav class="report-actions" aria-label="Report actions">
-    <a class="report-button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20design%20partner%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20eval%20result%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">Send one case</a>
+    <a class="report-button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%20or%20eval%20loop%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20Loop%20QA%20packet%3A%0A">Send one loop</a>
     <a class="report-button" href="index.html">Back to demo</a>
+    <a class="report-button" href="sample-loop-packet.json">Open JSON packet</a>
     <a class="report-button" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Open public gist</a>
   </nav>
 
   <h2>1. Why This Report Exists</h2>
-  <p>Most evaluation stacks can tell a team whether an output passed a metric. They are less good at explaining why a judge believed the output, which source fragments mattered, where judges disagreed, and whether a confident score was built on weak evidence.</p>
-  <p>AI Judge is designed as a post-evaluation audit/report layer. It does not replace Ragas, Promptfoo, Langfuse, DeepEval, Phoenix, Opik, LangSmith, or TruLens. It sits after a model answer, RAG answer, trace, or evaluator score and turns judge decisions into an inspectable report.</p>
-  <blockquote>If an LLM-as-judge says an answer is faithful, complete, or safe, can a human reviewer inspect the path from source evidence to verdict?</blockquote>
+  <p>Most evaluation stacks can tell a team whether one output passed a metric. Agent teams also need to know whether the loop that produced it is safe to run again.</p>
+  <p>AI Judge is designed as a post-run Loop QA layer. It does not replace Ragas, Promptfoo, Langfuse, DeepEval, Phoenix, Opik, LangSmith, TruLens, or a coding agent. It sits after a model answer, RAG answer, trace, PR, support reply, or evaluator score and turns the run into an inspectable review record.</p>
+  <blockquote>If an agent loop says an answer is faithful, complete, or safe, can a human reviewer inspect the path from trigger to evidence to verdict to next-run decision?</blockquote>
 
   <h2>2. Sample Scenario</h2>
+  <h3>Loop Context</h3>
+  <div class="box">
+    <p><strong>Trigger:</strong> a customer asks whether enterprise refunds, priority support, and beta features are guaranteed.</p>
+    <p><strong>Handoff:</strong> a support agent retrieves policy sources, drafts a reply, and sends it to an evaluator before customer delivery.</p>
+    <p><strong>Human gate:</strong> enterprise-policy answers require reviewer signoff before the loop is allowed to reply automatically.</p>
+  </div>
+
   <h3>User Task</h3>
-  <p>Evaluate whether a customer-support RAG answer is grounded in the provided policy sources.</p>
+  <p>Evaluate whether a customer-support agent reply is grounded in the provided policy sources, and decide whether this class of loop can continue automatically.</p>
 
   <h3>Source Packet</h3>
   <div class="box">
@@ -211,7 +220,7 @@
     </ul>
   </div>
 
-  <h3>Candidate RAG Answer</h3>
+  <h3>Candidate Agent Reply</h3>
   <blockquote>You can get a refund within 30 days, but only if you have used fewer than 10% of your monthly credits. Enterprise customers always follow the same policy. Priority support responds within 4 hours, and the company guarantees this response time even during maintenance. Beta features are fully supported. You can export your data from the dashboard, and deletion requests are usually completed within 14 days.</blockquote>
 
   <h2>3. Claim Ledger</h2>
@@ -246,37 +255,45 @@
   </table>
   <p><strong>Consensus band:</strong> 0.51-0.66. <strong>Dissent level:</strong> low on final risk, medium on severity. <strong>Primary failure mode:</strong> grounded facts mixed with policy overclaims.</p>
 
-  <h2>5. Final Audit Verdict</h2>
-  <p><strong>Verdict:</strong> Do not ship this answer as-is.</p>
-  <p><strong>Reason:</strong> The answer contains several correct source-grounded statements, but it converts exceptions and scope limits into broad guarantees. This is dangerous in customer support because incorrect statements sound like policy commitments.</p>
+  <h2>5. Final Loop QA Verdict</h2>
+  <p><strong>Verdict:</strong> Hold automatic replies for this class of ticket until a human reviewer approves the rewrite.</p>
+  <p><strong>Reason:</strong> The answer contains several correct source-grounded statements, but it converts exceptions and scope limits into broad guarantees. This is dangerous in customer support because incorrect statements sound like policy commitments, and the same loop could repeat the mistake at scale.</p>
 
   <h3>Safer Rewrite</h3>
   <blockquote>You may request a refund within 30 days of purchase. For digital subscriptions, refunds are available only if fewer than 10% of monthly credits have been used. Enterprise customers should refer to their signed master service agreement. Priority support has a 4-business-hour response target, but SLA targets are not guaranteed during scheduled maintenance. Beta features are provided as-is. You can export account data from the dashboard, and account deletion requests are completed within 14 days.</blockquote>
 
   <h2>6. Suggested Integration Surface</h2>
   <pre>{
+  "loop_id": "support-policy-enterprise-refund",
+  "trigger": "customer_support_ticket",
+  "candidate_output": "...",
   "question": "...",
-  "answer": "...",
   "sources": [{"id": "A", "text": "..."}],
   "judge_scores": [{"judge": "seat_1", "score": 0.58, "rationale": "..."}],
-  "human_verdict": "do_not_ship"
+  "human_verdict": "hold_loop_until_reviewer_approval",
+  "next_run": {
+    "action": "rerun_after_rewrite",
+    "requires_human_gate": true,
+    "budget": "one reviewer pass before customer delivery"
+  }
 }</pre>
 
   <h2>7. Portable Export Targets</h2>
   <div class="export-grid">
     <div class="export-card">
       <h3>Markdown review note</h3>
-      <p>Forward the verdict, claim ledger, and safer rewrite to a PM, researcher, or support reviewer without asking them to open the full trace stack.</p>
+      <p>Forward the verdict, claim ledger, safer rewrite, and next-run decision to a PM, researcher, or support reviewer without asking them to open the full trace stack.</p>
     </div>
     <div class="export-card">
       <h3>GitHub issue body</h3>
-      <p>Turn the failed eval case into a regression issue with source IDs, contradicted claims, owner, severity, and acceptance criteria for the fix.</p>
+      <p>Turn the failed loop case into a regression issue with source IDs, contradicted claims, owner, severity, stop condition, and acceptance criteria for the fix.</p>
     </div>
   </div>
-  <pre>## AI Judge Audit Packet
+  <pre>## AI Judge Loop QA Packet
 
-Verdict: Do not ship this answer as-is.
+Verdict: Hold automatic replies for this class of ticket.
 Primary failure mode: grounded facts mixed with policy overclaims.
+Next run: rerun only after rewrite and reviewer approval.
 
 Blocking claims:
 - C3: Enterprise refund policy overgeneralized.
@@ -286,11 +303,12 @@ Blocking claims:
 Reviewer action:
 - Rewrite with enterprise-contract scope.
 - Preserve business-hour SLA language.
-- Keep maintenance and beta-feature limitations explicit.</pre>
+- Keep maintenance and beta-feature limitations explicit.
+- Keep a human gate for enterprise-policy tickets.</pre>
 
   <h2>8. Collaboration Ask</h2>
-  <p>Would your team be interested in a small example integration where AI Judge consumes an existing eval result or trace, then outputs a claim-level audit report like this?</p>
-  <p>The goal is not to replace the evaluator. The goal is to make evaluator decisions inspectable enough for product teams, researchers, and reviewers to trust or challenge them.</p>
+  <p>Would your team be interested in a small example integration where AI Judge consumes an existing agent loop, eval result, or trace, then outputs a Loop QA report like this?</p>
+  <p>The goal is not to replace the evaluator or agent. The goal is to make loop decisions inspectable enough for product teams, researchers, engineers, and reviewers to trust, challenge, or stop them.</p>
 
   <p class="footer">Prepared as a public sample for AI Judge outreach. No private user data, accounts, credentials, or production traces are included.</p>
 </main>

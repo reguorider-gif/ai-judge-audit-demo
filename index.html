@@ -3,110 +3,69 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge - Audit packets for model evaluations</title>
-  <meta name="description" content="AI Judge turns LLM-as-judge, RAG, and trace evaluation results into readable evidence packets for human review.">
+  <title>AI Judge - Loop QA packets for agent loops</title>
+  <meta name="description" content="AI Judge turns failed or borderline agent, RAG, and eval runs into reviewer-ready audit packets.">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121513"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23fffffb">AJ</text></svg>'>
-  <meta property="og:title" content="AI Judge - Audit packets for model evaluations">
-  <meta property="og:description" content="Readable, source-isolated audit packets for failed or borderline LLM evaluations.">
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
+  <meta property="og:title" content="AI Judge - Loop QA packets for agent loops">
+  <meta property="og:description" content="From a vague eval failure to a claim ledger, source support, human verdict, and next-run decision.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/ai-judge-live-client.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Judge - Audit packets for model evaluations">
-  <meta name="twitter:description" content="Readable, source-isolated audit packets for failed or borderline LLM evaluations.">
+  <meta name="twitter:title" content="AI Judge - Loop QA packets for agent loops">
+  <meta name="twitter:description" content="Reviewer-ready audit packets for failed or borderline agent and eval runs.">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/ai-judge-live-client.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
       --canvas: #fafafa;
-      --canvas-2: #f4f4f5;
-      --ink: #171717;
-      --ink-soft: #27272a;
-      --muted: #52525b;
-      --faint: #71717a;
-      --hairline: rgba(23, 23, 23, 0.11);
-      --hairline: color-mix(in oklab, #171717 11%, transparent);
-      --hairline-strong: rgba(23, 23, 23, 0.20);
-      --hairline-strong: color-mix(in oklab, #171717 20%, transparent);
+      --canvas-soft: #f4f4f5;
       --surface: #ffffff;
-      --surface-soft: #f4f4f5;
-      --charcoal: #111313;
-      --charcoal-2: #1d2020;
+      --ink: #171717;
+      --body: #3f3f46;
+      --muted: #71717a;
+      --hairline: #e4e4e7;
+      --hairline-strong: #d4d4d8;
+      --primary: #171717;
+      --on-primary: #ffffff;
       --accent: #0f8f6f;
       --accent-soft: #ddf7ee;
-      --clay: #8a5b2e;
-      --clay-soft: #f4eadf;
-      --ruby: #96363d;
-      --ruby-soft: #f3dfe2;
-      --shadow-soft: 0 1px 1px rgba(0, 0, 0, 0.04), 0 18px 46px rgba(0, 0, 0, 0.08);
-      --shadow-tight: 0 1px 1px rgba(0, 0, 0, 0.05), 0 12px 28px rgba(0, 0, 0, 0.10);
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --danger: #96363d;
+      --danger-soft: #f3dfe2;
+      --warning: #8a5b2e;
+      --warning-soft: #f4eadf;
+      --shadow: 0 1px 1px rgba(0, 0, 0, 0.04), 0 18px 44px rgba(0, 0, 0, 0.08);
       --sans: "Inter", "Aptos", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
-      --mono: "JetBrains Mono", "SFMono-Regular", "Menlo", "Consolas", monospace;
+      --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-
     html {
-      scroll-behavior: smooth;
       background: var(--canvas);
+      scroll-behavior: smooth;
     }
 
     body {
       min-width: 320px;
       margin: 0;
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(250, 250, 250, 0.98) 44%, rgba(244, 244, 245, 0.94) 100%),
-        radial-gradient(circle at 80% 12%, rgba(15, 143, 111, 0.10), transparent 32rem),
-        var(--canvas);
+        linear-gradient(180deg, #ffffff 0%, var(--canvas) 46%, var(--canvas-soft) 100%);
       color: var(--ink);
       font-family: var(--sans);
       font-size: 16px;
-      line-height: 1.62;
+      line-height: 1.6;
       letter-spacing: 0;
       text-rendering: geometricPrecision;
       -webkit-font-smoothing: antialiased;
       font-synthesis: none;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 60;
-      pointer-events: none;
-      opacity: 0.42;
-      background-image:
-        linear-gradient(rgba(23, 23, 23, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(23, 23, 23, 0.035) 1px, transparent 1px);
-      background-size: 40px 40px;
-      mask-image: linear-gradient(180deg, black 0%, rgba(0, 0, 0, 0.55) 42%, transparent 76%);
-      will-change: transform;
-      transform: translateZ(0);
-      contain: layout style paint;
-    }
-
-    @media (prefers-reduced-data: reduce) {
-      body::before {
-        display: none;
-      }
     }
 
     a {
@@ -117,14 +76,13 @@
       position: fixed;
       left: 16px;
       top: 12px;
-      z-index: 70;
+      z-index: 100;
       transform: translateY(-140%);
       border-radius: 999px;
       background: var(--ink);
       color: var(--surface);
       padding: 10px 14px;
       text-decoration: none;
-      transition: transform 360ms var(--ease);
     }
 
     .skip-link:focus {
@@ -132,54 +90,51 @@
     }
 
     :focus-visible {
-      outline: 3px solid color-mix(in oklab, var(--accent) 72%, white);
+      outline: 3px solid color-mix(in oklab, var(--accent) 74%, white);
       outline-offset: 4px;
     }
 
-    .page {
-      overflow: clip;
+    .wrap {
+      width: min(1120px, calc(100% - 40px));
+      margin-inline: auto;
     }
 
     .topbar {
       position: sticky;
-      top: 16px;
-      z-index: 50;
-      width: min(1180px, calc(100% - 40px));
-      margin: 16px auto 0;
+      top: 14px;
+      z-index: 20;
+      width: min(1120px, calc(100% - 40px));
+      margin: 14px auto 0;
       border: 1px solid var(--hairline);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04), 0 12px 30px rgba(0, 0, 0, 0.06);
-      will-change: transform;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
     }
 
     @supports (backdrop-filter: blur(1px)) {
       .topbar {
         background: rgba(255, 255, 255, 0.78);
-        backdrop-filter: blur(20px);
+        backdrop-filter: blur(18px);
       }
     }
 
     .nav {
-      min-height: 62px;
-      padding: 0 12px 0 14px;
+      min-height: 58px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 18px;
+      padding: 0 12px 0 14px;
     }
 
     .brand {
-      min-width: 0;
       display: inline-flex;
       align-items: center;
-      gap: 11px;
+      gap: 10px;
       color: var(--ink);
       text-decoration: none;
       font-size: 15px;
-      font-weight: 680;
-      letter-spacing: -0.01em;
-      border-radius: 12px;
+      font-weight: 700;
     }
 
     .mark {
@@ -187,69 +142,54 @@
       height: 30px;
       display: grid;
       place-items: center;
-      border-radius: 8px;
+      border-radius: 7px;
       background: var(--ink);
       color: var(--surface);
       font-family: var(--mono);
       font-size: 11px;
       font-weight: 700;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 560;
+      font-weight: 620;
     }
 
     .nav-links a {
       border-radius: 999px;
-      padding: 8px 11px;
+      padding: 8px 10px;
       text-decoration: none;
-      transition: color 420ms var(--ease), background 420ms var(--ease), transform 420ms var(--ease);
     }
 
     .nav-links a:hover,
     .nav-links a:focus-visible {
-      background: rgba(23, 23, 23, 0.055);
+      background: var(--canvas-soft);
       color: var(--ink);
-      transform: translateY(-1px);
-    }
-
-    .wrap {
-      width: min(1180px, calc(100% - 40px));
-      margin-inline: auto;
     }
 
     .hero {
-      padding: clamp(64px, 7vw, 96px) 0 clamp(58px, 7vw, 90px);
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 0.88fr) minmax(460px, 1.12fr);
-      gap: clamp(46px, 6vw, 78px);
-      align-items: center;
+      padding: clamp(50px, 7vw, 78px) 0 34px;
     }
 
     .eyebrow {
       width: fit-content;
       display: inline-flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
       border: 1px solid var(--hairline);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.80);
-      padding: 7px 11px 7px 8px;
+      background: var(--surface);
+      padding: 7px 10px 7px 8px;
       color: var(--muted);
       font-family: var(--mono);
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0;
       text-transform: uppercase;
-      letter-spacing: 0.10em;
     }
 
     .eyebrow::before {
@@ -265,1663 +205,697 @@
     h2,
     h3,
     p {
-      text-wrap: balance;
       text-wrap: pretty;
     }
 
     h1 {
-      max-width: 690px;
-      margin: 22px 0 20px;
+      max-width: 860px;
+      margin: 20px 0 16px;
       color: var(--ink);
-      font-size: clamp(48px, 6.2vw, 76px);
+      font-size: clamp(44px, 7vw, 82px);
       line-height: 0.98;
-      font-weight: 650;
-      letter-spacing: -0.045em;
-      text-wrap: balance;
-    }
-
-    .hero .accent {
-      display: block;
-      color: color-mix(in oklab, var(--ink) 72%, var(--accent));
-      font-family: var(--sans);
-      font-size: 0.86em;
-      font-style: normal;
-      font-weight: 620;
+      font-weight: 680;
+      letter-spacing: 0;
     }
 
     .lead {
-      max-width: 590px;
+      max-width: 720px;
       margin: 0;
-      color: var(--muted);
-      font-size: clamp(17px, 1.6vw, 19px);
-      line-height: 1.62;
-      font-weight: 430;
+      color: var(--body);
+      font-size: clamp(17px, 1.6vw, 20px);
+      line-height: 1.58;
     }
 
     .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 30px;
+      margin-top: 26px;
     }
 
     .button {
-      min-height: 50px;
+      min-height: 48px;
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      border: 1px solid var(--hairline);
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid var(--hairline-strong);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.82);
+      background: var(--surface);
       color: var(--ink);
-      padding: 8px 8px 8px 18px;
+      padding: 9px 16px;
       text-decoration: none;
       font-size: 14px;
-      font-weight: 620;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.03), 0 10px 24px rgba(0, 0, 0, 0.05);
-      transition: transform 520ms var(--ease), background 520ms var(--ease), border-color 520ms var(--ease), color 520ms var(--ease);
+      font-weight: 700;
+      white-space: nowrap;
     }
 
-    .button .arrow {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-      background: rgba(23, 23, 23, 0.06);
-      transition: transform 520ms var(--ease), background 520ms var(--ease);
+    .button.primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: var(--on-primary);
     }
 
     .button:hover,
     .button:focus-visible {
-      transform: translateY(-2px);
-      border-color: rgba(18, 21, 19, 0.18);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     }
 
-    .button:hover .arrow,
-    .button:focus-visible .arrow {
-      transform: translate(2px, -1px);
+    .story-strip {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) auto minmax(0, 1.05fr);
+      align-items: stretch;
+      gap: 14px;
+      margin-top: clamp(34px, 5vw, 52px);
     }
 
-    .button:active {
-      transform: translateY(0) scale(0.985);
-    }
-
-    .button.primary {
-      background: var(--ink);
-      color: var(--surface);
-      border-color: var(--ink);
-    }
-
-    .button.primary .arrow {
-      background: rgba(255, 255, 251, 0.13);
-    }
-
-    .hero-note {
-      max-width: 560px;
-      margin: 22px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .tool-strip {
-      max-width: 610px;
-      margin-top: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tool-strip span {
-      min-height: 30px;
-      display: inline-flex;
-      align-items: center;
+    .state-panel {
       border: 1px solid var(--hairline);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.72);
-      color: var(--muted);
-      padding: 6px 10px;
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
-
-    .hero-visual {
-      position: relative;
-    }
-
-    .product-frame {
-      border: 1px solid rgba(23, 23, 23, 0.08);
-      border-radius: 24px;
-      background: rgba(23, 23, 23, 0.055);
-      padding: 7px;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .product-core {
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 251, 0.10);
-      border-radius: 18px;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.07), transparent 38%),
-        var(--charcoal);
-      color: #f6f8f4;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.16),
-        inset 0 -1px 0 rgba(0,0,0,0.32);
     }
 
-    .product-top {
-      min-height: 58px;
-      padding: 16px 18px;
+    .state-head {
+      min-height: 44px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      border-bottom: 1px solid rgba(255,255,255,0.09);
-    }
-
-    .window-dots {
-      display: flex;
-      gap: 7px;
-    }
-
-    .window-dots span {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.32);
-    }
-
-    .product-title {
-      color: rgba(246,248,244,0.84);
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-
-    .product-body {
-      padding: 24px;
-      display: grid;
-      gap: 18px;
-    }
-
-    .case-header {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 22px;
-      align-items: start;
-    }
-
-    .case-label {
-      color: rgba(246,248,244,0.76);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-    }
-
-    .case-title {
-      display: block;
-      max-width: 430px;
-      margin: 8px 0 0;
-      color: #fffffb;
-      font-size: clamp(28px, 3.6vw, 42px);
-      line-height: 1.03;
-      font-weight: 650;
-      letter-spacing: -0.03em;
-      text-wrap: balance;
-    }
-
-    .verdict {
-      min-width: 116px;
-      border-radius: 999px;
-      background: var(--ruby-soft);
-      color: var(--ruby);
-      padding: 10px 13px;
-      text-align: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--hairline);
+      padding: 0 14px;
+      color: var(--muted);
       font-family: var(--mono);
       font-size: 11px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .summary-line {
-      max-width: 550px;
-      margin: 0;
-      color: rgba(246,248,244,0.80);
-      font-size: 14px;
-      line-height: 1.62;
-    }
-
-    .packet-meta {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .packet-meta span {
-      min-height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 999px;
-      background: rgba(255,255,251,0.045);
-      color: rgba(246,248,244,0.74);
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+      letter-spacing: 0;
       text-transform: uppercase;
     }
 
-    .claim-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .claim {
-      display: grid;
-      grid-template-columns: 44px minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      background: rgba(255,255,251,0.055);
-      padding: 14px;
-    }
-
-    .claim-id {
-      color: rgba(246,248,244,0.72);
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 650;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .claim strong {
-      display: block;
-      color: rgba(255,255,251,0.95);
-      font-size: 13px;
-      font-weight: 620;
-      line-height: 1.35;
-    }
-
-    .claim span {
-      display: block;
-      margin-top: 3px;
-      color: rgba(246,248,244,0.70);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .status {
-      min-width: 96px;
+    .state-head span:last-child {
       border-radius: 999px;
-      padding: 7px 10px;
-      text-align: center;
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 650;
+      padding: 4px 8px;
+      background: var(--canvas-soft);
+      color: var(--body);
+      letter-spacing: 0;
+      text-transform: none;
     }
 
-    .status.good {
-      background: var(--accent-soft);
-      color: #075940;
-    }
-
-    .status.warn {
-      background: var(--clay-soft);
-      color: var(--clay);
-    }
-
-    .status.bad {
-      background: var(--ruby-soft);
-      color: var(--ruby);
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .metric {
-      min-height: 92px;
-      border-radius: 20px;
-      background: rgba(255,255,251,0.07);
+    .state-body {
       padding: 16px;
     }
 
-    .metric strong {
-      display: block;
-      color: #fffffb;
-      font-size: 25px;
-      line-height: 1;
-      font-weight: 650;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .metric span {
-      display: block;
-      margin-top: 10px;
-      color: rgba(246,248,244,0.70);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .section {
-      padding: clamp(86px, 10vw, 132px) 0;
-      border-top: 1px solid var(--hairline);
-    }
-
-    .section:first-of-type {
-      border-top: 0;
-    }
-
-    .section-head {
-      display: grid;
-      grid-template-columns: minmax(0, 0.78fr) minmax(280px, 0.42fr);
-      gap: clamp(32px, 7vw, 88px);
-      align-items: end;
-    }
-
-    .section h2 {
-      max-width: 780px;
-      margin: 18px 0 0;
-      color: var(--ink);
-      font-size: clamp(36px, 4.3vw, 58px);
-      line-height: 1.05;
-      font-weight: 650;
-      letter-spacing: -0.035em;
-      text-wrap: balance;
-    }
-
-    .section-lede {
-      margin: 0;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.66;
-    }
-
-    .split {
-      margin-top: clamp(42px, 7vw, 72px);
-      display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-      gap: clamp(28px, 5vw, 58px);
-      align-items: start;
-    }
-
-    .questions {
-      display: grid;
-      gap: 12px;
-    }
-
-    .question {
-      border: 1px solid var(--hairline);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.72);
-      padding: 20px;
-    }
-
-    .question strong {
-      display: block;
-      margin-bottom: 7px;
-      color: var(--ink);
-      font-size: 18px;
-      font-weight: 650;
-    }
-
-    .question span {
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .answer-panel {
-      min-height: 360px;
-      border: 1px solid var(--hairline);
-      border-radius: 20px;
-      background:
-        linear-gradient(160deg, rgba(255,255,255,0.94), rgba(244,244,245,0.84)),
-        var(--surface);
-      padding: clamp(28px, 4vw, 46px);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .answer-panel .small-label,
-    .report-panel .small-label,
-    .shot-copy .small-label {
-      display: block;
-      margin-bottom: 26px;
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .answer-panel h3 {
-      max-width: 520px;
-      margin: 0;
-      color: var(--ink);
-      font-size: clamp(30px, 3.4vw, 45px);
+    .state-body h2 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 36px);
       line-height: 1.08;
-      font-weight: 650;
-      letter-spacing: -0.03em;
-      text-wrap: balance;
+      font-weight: 690;
+      letter-spacing: 0;
     }
 
-    .answer-panel p {
-      max-width: 560px;
-      margin: 22px 0 0;
+    .state-body p {
+      margin: 0 0 16px;
       color: var(--muted);
-      font-size: 16px;
-      line-height: 1.66;
+      font-size: 14px;
     }
 
-    .handoff {
-      margin-top: clamp(46px, 7vw, 74px);
+    .signal-list {
       display: grid;
-      grid-template-columns: minmax(0, 0.92fr) auto minmax(0, 1.08fr);
-      gap: clamp(16px, 3vw, 28px);
-      align-items: stretch;
-    }
-
-    .handoff-card {
-      border: 1px solid var(--hairline);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.78);
-      padding: clamp(22px, 3vw, 30px);
-    }
-
-    .handoff-card.output {
-      background:
-        linear-gradient(160deg, rgba(255,255,255,0.96), rgba(244,244,245,0.86)),
-        var(--surface);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .handoff-card .small-label {
-      display: block;
-      margin-bottom: 18px;
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 650;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .handoff-card h3 {
-      max-width: 440px;
-      margin: 0 0 18px;
-      color: var(--ink);
-      font-size: clamp(25px, 2.8vw, 38px);
-      line-height: 1.08;
-      font-weight: 650;
-      letter-spacing: -0.03em;
-    }
-
-    .handoff-card ul {
-      display: grid;
-      gap: 10px;
+      gap: 8px;
       margin: 0;
       padding: 0;
       list-style: none;
     }
 
-    .handoff-card li {
+    .signal-list li {
       display: grid;
-      grid-template-columns: 88px minmax(0, 1fr);
-      gap: 14px;
-      align-items: start;
-      border-top: 1px solid var(--hairline);
-      padding-top: 12px;
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 12px;
+      align-items: baseline;
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: var(--body);
+      font-size: 13px;
+    }
+
+    .signal-list code {
       color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .handoff-card li:first-child {
-      border-top: 0;
-      padding-top: 0;
-    }
-
-    .handoff-card code {
-      color: var(--ink);
       font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 650;
-      letter-spacing: 0.02em;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
     }
 
-    .handoff-arrow {
+    .signal-list .bad {
+      color: var(--danger);
+      font-weight: 760;
+    }
+
+    .signal-list .warn {
+      color: var(--warning);
+      font-weight: 760;
+    }
+
+    .signal-list .good {
+      color: var(--accent);
+      font-weight: 760;
+    }
+
+    .bridge {
       display: grid;
       place-items: center;
-      color: var(--accent);
+      min-width: 86px;
+      color: var(--muted);
       font-family: var(--mono);
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0;
       text-transform: uppercase;
     }
 
-    .workflow {
-      margin-top: clamp(48px, 7vw, 78px);
+    .bridge span {
       display: grid;
-      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
-      gap: clamp(28px, 5vw, 68px);
-      align-items: stretch;
+      place-items: center;
+      width: 74px;
+      height: 74px;
+      border: 1px solid var(--hairline);
+      border-radius: 999px;
+      background: var(--surface);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
     }
 
-    .workflow-lead {
-      border-radius: 18px;
-      background: var(--charcoal);
-      color: #fffffb;
-      padding: clamp(28px, 4vw, 44px);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 420px;
-      box-shadow: var(--shadow-tight);
+    .section {
+      padding: clamp(46px, 7vw, 78px) 0;
+      border-top: 1px solid var(--hairline);
     }
 
-    .workflow-lead strong {
-      max-width: 320px;
-      font-size: clamp(30px, 4vw, 52px);
-      line-height: 1.04;
-      font-weight: 650;
-      letter-spacing: -0.035em;
-      text-wrap: balance;
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(260px, 0.48fr);
+      gap: clamp(24px, 6vw, 64px);
+      align-items: end;
+      margin-bottom: 26px;
     }
 
-    .workflow-lead span {
-      max-width: 340px;
-      color: rgba(246,248,244,0.76);
+    .section h2 {
+      margin: 12px 0 0;
+      font-size: clamp(31px, 4.7vw, 58px);
+      line-height: 1;
+      font-weight: 680;
+      letter-spacing: 0;
+    }
+
+    .section-lede {
+      margin: 0;
+      color: var(--body);
+      font-size: 16px;
       line-height: 1.62;
     }
 
-    .steps {
+    .value-grid {
       display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }
 
-    .step {
-      display: grid;
-      grid-template-columns: 84px 1fr;
-      gap: 22px;
-      align-items: start;
+    .value-card {
+      min-height: 174px;
       border: 1px solid var(--hairline);
-      border-radius: 16px;
-      background: rgba(255,255,255,0.72);
-      padding: 24px;
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 18px;
     }
 
-    .step .num {
-      color: var(--accent);
+    .value-card span,
+    .json-label {
+      color: var(--muted);
       font-family: var(--mono);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      font-variant-numeric: tabular-nums;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
     }
 
-    .step h3 {
-      margin: 0 0 8px;
-      color: var(--ink);
-      font-size: 22px;
-      line-height: 1.15;
-      font-weight: 650;
+    .value-card h3 {
+      margin: 28px 0 8px;
+      font-size: 21px;
+      line-height: 1.18;
+      letter-spacing: 0;
     }
 
-    .step p {
-      max-width: 520px;
+    .value-card p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.62;
+      font-size: 14px;
     }
 
-    .artifact {
-      margin-top: clamp(48px, 8vw, 86px);
+    .json-shell {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(310px, 0.44fr);
-      gap: clamp(28px, 5vw, 54px);
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+      gap: 16px;
       align-items: start;
     }
 
-    .report-panel {
+    .json-copy {
       border: 1px solid var(--hairline);
-      border-radius: 20px;
+      border-radius: 8px;
       background: var(--surface);
-      padding: clamp(30px, 5vw, 58px);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .report-panel h3 {
-      max-width: 650px;
-      margin: 0 0 20px;
-      color: var(--ink);
-      font-size: clamp(34px, 4.3vw, 58px);
-      line-height: 1.05;
-      font-weight: 650;
-      letter-spacing: -0.035em;
-      text-wrap: balance;
-    }
-
-    .report-panel p,
-    .report-panel li {
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.66;
-    }
-
-    .report-panel blockquote {
-      margin: 34px 0;
-      border-left: 0;
-      border: 1px solid var(--hairline);
-      border-radius: 14px;
-      background: linear-gradient(180deg, var(--surface-soft), #ffffff);
-      padding: 24px;
-      color: var(--ink);
-      font-family: var(--sans);
-      font-size: clamp(20px, 2.3vw, 27px);
-      font-weight: 600;
-      line-height: 1.28;
-      letter-spacing: -0.02em;
-    }
-
-    .report-panel ul {
-      margin: 28px 0 0;
-      padding-left: 20px;
-    }
-
-    .notes {
-      display: grid;
-      gap: 12px;
-    }
-
-    .note {
-      border: 1px solid var(--hairline);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.74);
       padding: 20px;
     }
 
-    .note strong {
-      display: block;
-      margin-bottom: 7px;
-      color: var(--ink);
-      font-size: 17px;
-      font-weight: 650;
+    .json-copy h3 {
+      margin: 20px 0 10px;
+      font-size: 26px;
+      line-height: 1.12;
+      letter-spacing: 0;
     }
 
-    .note span {
-      color: var(--muted);
-      line-height: 1.58;
+    .json-copy p {
+      margin: 0 0 18px;
+      color: var(--body);
     }
 
-    .client-shot {
-      margin-top: clamp(48px, 8vw, 84px);
+    .json-copy ul {
       display: grid;
-      grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
-      gap: clamp(30px, 5vw, 62px);
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .json-copy li {
+      display: flex;
+      gap: 9px;
+    }
+
+    .json-copy li::before {
+      content: "";
+      flex: 0 0 auto;
+      width: 7px;
+      height: 7px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    pre {
+      margin: 0;
+      border: 1px solid #27272a;
+      border-radius: 8px;
+      background: #101211;
+      color: #edf7f3;
+      padding: 18px;
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.58;
+      tab-size: 2;
+    }
+
+    .proof {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(320px, 1.28fr);
+      gap: 18px;
       align-items: center;
     }
 
-    .shot-copy h2 {
-      margin-top: 0;
+    .proof-copy h2 {
+      margin: 12px 0 12px;
+      font-size: clamp(31px, 4.6vw, 56px);
+      line-height: 1;
+      letter-spacing: 0;
     }
 
-    .shot-copy p {
-      max-width: 520px;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.66;
+    .proof-copy p {
+      color: var(--body);
+      margin: 0 0 20px;
     }
 
-    .shot-frame {
+    .shot {
       border: 1px solid var(--hairline);
-      border-radius: 20px;
-      background: rgba(23,23,23,0.055);
-      padding: 7px;
-      box-shadow: var(--shadow-soft);
+      border-radius: 8px;
+      background: #111313;
+      padding: 10px;
+      box-shadow: var(--shadow);
     }
 
-    .shot-frame img {
+    .shot img {
       display: block;
       width: 100%;
       height: auto;
-      border-radius: 14px;
+      border-radius: 6px;
     }
 
-    .fit {
-      margin-top: clamp(48px, 7vw, 76px);
+    .fit-list {
       display: grid;
-      gap: 10px;
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+      background: var(--surface);
+      overflow: hidden;
     }
 
     .fit-row {
       display: grid;
-      grid-template-columns: minmax(180px, 0.55fr) minmax(210px, 0.62fr) minmax(0, 1fr);
-      gap: clamp(18px, 4vw, 44px);
-      align-items: start;
-      border: 1px solid var(--hairline);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.76);
-      padding: 20px 22px;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 18px;
+      padding: 16px 18px;
+      border-top: 1px solid var(--hairline);
+    }
+
+    .fit-row:first-child {
+      border-top: 0;
     }
 
     .fit-row strong {
-      color: var(--ink);
-      font-size: 18px;
-      font-weight: 650;
+      font-size: 14px;
     }
 
     .fit-row span {
       color: var(--muted);
-      line-height: 1.58;
-    }
-
-    .fit-row span:nth-child(2) {
-      color: var(--accent);
-      font-weight: 600;
+      font-size: 14px;
     }
 
     .closing {
-      padding: clamp(88px, 12vw, 150px) 0 56px;
-      background:
-        linear-gradient(180deg, var(--charcoal), #0f1111);
-      color: #fffffb;
+      padding: clamp(48px, 8vw, 88px) 0;
+      background: var(--ink);
+      color: var(--surface);
     }
 
-    .closing-grid {
+    .closing-inner {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 34px;
-      align-items: end;
+      gap: 24px;
+      align-items: center;
     }
 
     .closing h2 {
-      max-width: 780px;
-      margin: 0;
-      font-size: clamp(42px, 6vw, 82px);
-      line-height: 0.98;
-      font-weight: 650;
-      letter-spacing: -0.05em;
-      text-wrap: balance;
+      max-width: 760px;
+      margin: 0 0 12px;
+      font-size: clamp(34px, 5vw, 64px);
+      line-height: 1;
+      letter-spacing: 0;
     }
 
     .closing p {
-      max-width: 680px;
-      margin: 24px 0 0;
-      color: rgba(246,248,244,0.76);
-      font-size: 17px;
-      line-height: 1.66;
+      max-width: 660px;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.72);
     }
 
     .closing .button {
-      border-color: rgba(255,255,251,0.12);
-      background: rgba(255,255,251,0.08);
-      color: #fffffb;
-      box-shadow: none;
-    }
-
-    .closing .button.primary {
-      background: #fffffb;
+      border-color: rgba(255, 255, 255, 0.26);
+      background: var(--surface);
       color: var(--ink);
-      border-color: #fffffb;
     }
 
     footer {
-      background: #101310;
-      color: rgba(246,248,244,0.68);
-      padding: 24px 0 34px;
+      padding: 22px 0 30px;
+      background: var(--ink);
+      color: rgba(255, 255, 255, 0.56);
       font-size: 13px;
     }
 
     footer .wrap {
       display: flex;
       justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
+      gap: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      padding-top: 18px;
     }
 
     footer a {
-      color: rgba(246,248,244,0.75);
+      color: rgba(255, 255, 255, 0.78);
       text-decoration: none;
     }
 
-    .reveal {
-      animation: rise 900ms var(--ease) both;
-    }
-
-    .reveal.delay-1 { animation-delay: 80ms; }
-    .reveal.delay-2 { animation-delay: 160ms; }
-    .reveal.delay-3 { animation-delay: 240ms; }
-
-    @keyframes rise {
-      from {
-        opacity: 0;
-        transform: translateY(24px);
+    @media (max-width: 920px) {
+      .nav-links {
+        display: none;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
 
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation: none !important;
-        transition-duration: 0s !important;
-      }
-    }
-
-    @media (max-width: 980px) {
-      .hero-grid,
+      .story-strip,
       .section-head,
-      .split,
-      .handoff,
-      .workflow,
-      .artifact,
-      .client-shot,
-      .closing-grid {
+      .json-shell,
+      .proof,
+      .closing-inner {
         grid-template-columns: 1fr;
       }
 
-      .hero {
-        padding-top: 56px;
-      }
-
-      .hero-visual {
-        max-width: 720px;
-      }
-
-      .workflow-lead {
-        min-height: 320px;
-      }
-
-      .handoff-arrow {
-        min-height: 40px;
-      }
-
-      .shot-frame {
-        transform: none;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .topbar,
-      .wrap {
-        width: calc(100% - 48px);
-      }
-
-      .hero-grid,
-      .section-head,
-      .split,
-      .handoff,
-      .workflow,
-      .artifact,
-      .client-shot,
-      .closing-grid,
-      .hero-copy,
-      .hero-visual,
-      .questions,
-      .question,
-      .answer-panel,
-      .handoff-card,
-      .workflow-lead,
-      .steps,
-      .step,
-      .report-panel,
-      .notes,
-      .note,
-      .shot-copy,
-      .shot-frame,
-      .fit,
-      .fit-row {
+      .bridge {
         min-width: 0;
       }
 
-      .section-lede,
-      .question span,
-      .answer-panel p,
-      .handoff-card li,
-      .step p,
-      .report-panel p,
-      .note span,
-      .shot-copy p,
-      .fit-row span {
-        max-width: 100%;
-        overflow-wrap: anywhere;
+      .bridge span {
+        width: auto;
+        height: 44px;
+        padding: 0 18px;
       }
 
-      h1,
-      h2,
-      h3,
-      p {
-        text-wrap: wrap;
+      .value-grid {
+        grid-template-columns: 1fr;
       }
+    }
 
+    @media (max-width: 640px) {
+      .wrap,
       .topbar {
-        top: 10px;
-        margin-top: 10px;
-        border-radius: 24px;
-      }
-
-      .nav {
-        min-height: auto;
-        padding: 10px;
-        align-items: stretch;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .brand {
-        min-height: 38px;
-      }
-
-      .nav-links {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        gap: 5px;
-        overflow: visible;
-        padding-top: 0;
-      }
-
-      .nav-links a {
-        flex: 0 1 auto;
-        min-height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 999px;
-        background: rgba(18, 21, 19, 0.035);
-        padding: 6px 7px;
-        font-size: 12px;
-        line-height: 1;
-        white-space: nowrap;
+        width: min(100% - 28px, 1120px);
       }
 
       .hero {
-        padding: 22px 0 28px;
+        padding-top: 38px;
       }
 
       h1 {
-        margin-top: 14px;
-        margin-bottom: 14px;
-        font-size: clamp(34px, 9vw, 42px);
+        font-size: clamp(39px, 14vw, 56px);
         line-height: 1.02;
       }
 
-      .section h2 {
-        font-size: clamp(30px, 8vw, 38px);
-        line-height: 1.08;
-      }
-
-      .lead {
-        max-width: 34ch;
-        font-size: 16px;
-        line-height: 1.55;
-      }
-
       .actions,
-      .closing .actions {
-        width: 100%;
-      }
-
-      .actions {
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 18px;
-      }
-
       .button {
-        flex: 1 1 100%;
-        min-width: 0;
         width: 100%;
-        justify-content: space-between;
-        min-height: 46px;
-        padding: 7px 7px 7px 15px;
-        font-size: 14px;
-        white-space: nowrap;
       }
 
-      .button .arrow {
-        flex: 0 0 auto;
-        width: 30px;
-        height: 30px;
-      }
-
-      .hero-note {
-        display: none;
-      }
-
-      .tool-strip {
-        display: none;
-      }
-
-      .product-frame {
-        width: 100%;
-        max-height: 220px;
-        overflow: hidden;
-        border-radius: 26px;
-        padding: 5px;
-      }
-
-      .product-core {
-        border-radius: 21px;
-      }
-
-      .product-body {
-        padding: 12px;
+      .story-strip {
         gap: 10px;
       }
 
-      .product-top {
-        min-height: 38px;
-        padding: 9px 10px;
+      .state-body {
+        padding: 14px;
       }
 
-      .product-title {
-        max-width: calc(100% - 58px);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .case-title {
-        font-size: 20px;
-      }
-
-      .verdict {
-        min-width: 0;
-        padding: 7px 9px;
-        font-size: 10px;
-        letter-spacing: 0.08em;
-      }
-
-      .summary-line,
-      .packet-meta,
-      .claim-list .claim:nth-child(n+2),
-      .metrics {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        clip-path: inset(50%);
-        white-space: nowrap;
-      }
-
-      .case-header,
-      .claim,
-      .metrics,
-      .step,
+      .signal-list li,
       .fit-row {
-        grid-template-columns: 1fr;
-      }
-
-      .case-header {
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 10px;
-      }
-
-      .claim {
-        align-items: start;
-        gap: 8px;
-        grid-template-columns: 32px minmax(0, 1fr);
-        padding: 12px;
-      }
-
-      .claim span,
-      .status {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        clip-path: inset(50%);
-        white-space: nowrap;
-      }
-
-      .closing .actions {
-        flex-wrap: wrap;
-      }
-
-      .closing .button {
-        width: 100%;
-        flex-basis: 100%;
-      }
-
-      .section {
-        padding: 76px 0;
-      }
-
-      .question,
-      .answer-panel,
-      .handoff-card,
-      .workflow-lead,
-      .step,
-      .report-panel,
-      .note,
-      .fit-row {
-        border-radius: 22px;
-      }
-
-      .closing {
-        padding-top: 78px;
-      }
-
-      .handoff-card li {
         grid-template-columns: 1fr;
         gap: 4px;
       }
-    }
 
-    @media (max-width: 360px) {
-      .topbar,
-      .wrap {
-        width: calc(100% - 40px);
-      }
-
-      .topbar {
-        border-radius: 22px;
-      }
-
-      .nav {
-        padding: 9px;
-        gap: 8px;
-      }
-
-      .brand {
-        min-height: 34px;
-        gap: 9px;
-        font-size: 14px;
-      }
-
-      .mark {
-        width: 28px;
-        height: 28px;
-        border-radius: 9px;
-      }
-
-      .nav-links {
-        justify-content: flex-start;
-        gap: 4px;
-      }
-
-      .nav-links a {
-        min-height: 28px;
-        padding: 5px 6px;
+      pre {
         font-size: 11px;
+        padding: 14px;
       }
 
-      .eyebrow {
-        gap: 7px;
-        padding: 6px 9px 6px 7px;
-        font-size: 10px;
-      }
-
-      .hero {
-        padding: 18px 0 20px;
-      }
-
-      h1 {
-        margin-top: 12px;
-        margin-bottom: 12px;
-        font-size: clamp(33px, 10.4vw, 36px);
-      }
-
-      .actions {
-        gap: 8px;
-        margin-top: 16px;
-      }
-
-      .button {
-        min-height: 44px;
-        padding-left: 12px;
-        font-size: 13px;
-      }
-
-      .button .arrow {
-        width: 28px;
-        height: 28px;
-      }
-
-      .product-frame {
-        max-height: none;
-        border-radius: 24px;
-      }
-
-      .product-core {
-        border-radius: 19px;
-      }
-
-      .product-top {
-        min-height: 34px;
-      }
-
-      .product-title {
-        max-width: calc(100% - 52px);
-        font-size: 11px;
-      }
-
-      .product-body {
-        padding: 11px;
-        gap: 8px;
-      }
-
-      .case-label {
-        font-size: 10px;
-        letter-spacing: 0.12em;
-      }
-
-      .case-title {
-        font-size: 19px;
-      }
-
-      .verdict {
-        padding: 6px 8px;
-        font-size: 9px;
-        letter-spacing: 0.06em;
-      }
-
-      .claim-list {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        clip-path: inset(50%);
-        white-space: nowrap;
-      }
-    }
-
-    @media print {
-      .topbar,
-      .skip-link,
-      body::before {
-        display: none;
-      }
-
-      *,
-      *::before,
-      *::after {
-        backdrop-filter: none !important;
-        box-shadow: none !important;
-        mix-blend-mode: normal !important;
-        animation: none !important;
-        transition: none !important;
-      }
-
-      body {
-        background: white;
-        color: black;
-        font-size: 12pt;
-      }
-
-      .closing {
-        background: white;
-        color: black;
-      }
-
-      .closing .button {
-        border: 1px solid black;
-        background: white;
-        color: black;
-      }
-
-      .button {
-        border: 1px solid black;
-        background: white;
-        color: black;
-        box-shadow: none;
-      }
-
-      .product-frame,
-      .shot-frame {
-        box-shadow: none;
-        border: 1px solid #ccc;
-        break-inside: avoid;
-      }
-
-      img {
-        max-width: 100%;
-        break-inside: avoid;
-      }
-
-      .wrap {
-        width: 100%;
-        max-width: none;
-        margin: 0;
-        padding: 0 12pt;
-      }
-
-      a {
-        color: black;
-        text-decoration: underline;
+      footer .wrap {
+        flex-direction: column;
       }
     }
   </style>
 </head>
-<body id="top">
+<body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <div class="page">
-    <header class="topbar">
-      <nav class="nav" aria-label="Main navigation">
-        <a class="brand" href="#top" aria-label="AI Judge home">
-          <span class="mark">AJ</span>
-          <span>AI Judge</span>
-        </a>
-        <div class="nav-links">
-          <a href="#problem">Why</a>
-          <a href="#handoff">Handoff</a>
-          <a href="#packet">Packet</a>
-          <a href="#fit">Fit</a>
-          <a href="AI_Judge_Audit_Sample_Report.html">Sample</a>
-        </div>
-      </nav>
-    </header>
-
-    <main id="main">
-      <section class="hero">
-        <div class="wrap hero-grid">
-          <div class="hero-copy reveal">
-            <div class="eyebrow">Audit layer for eval teams</div>
-            <h1>AI Judge makes eval failures <span class="accent">readable.</span></h1>
-            <p class="lead">It turns borderline RAG and LLM-as-judge runs into audit packets: claim ledger, source support, judge disagreement, verdict, and safer rewrite.</p>
-            <div class="actions">
-              <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20design%20partner%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20eval%20result%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">
-                <span>Send case</span>
-                <span class="arrow" aria-hidden="true">+</span>
-              </a>
-              <a class="button" href="AI_Judge_Audit_Sample_Report.html">
-                <span>Open sample</span>
-                <span class="arrow" aria-hidden="true">-></span>
-              </a>
-            </div>
-            <p class="hero-note">Built beside Ragas, Promptfoo, DeepEval, Phoenix, Opik, Braintrust, LangSmith, and TruLens. AI Judge is the review artifact after the score.</p>
-            <div class="tool-strip" aria-label="Compatible eval and observability tools">
-              <span>Ragas</span>
-              <span>Promptfoo</span>
-              <span>DeepEval</span>
-              <span>Phoenix</span>
-              <span>LangSmith</span>
-            </div>
-          </div>
-
-          <div class="hero-visual reveal delay-1">
-            <div class="product-frame" role="img" aria-label="AI Judge audit packet preview">
-              <div class="product-core">
-                <div class="product-top">
-                  <div class="window-dots" aria-hidden="true">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <div class="product-title">customer-support-rag / audit packet</div>
-                </div>
-                <div class="product-body">
-                  <header class="case-header">
-                    <div>
-                      <div class="case-label">Case file</div>
-                      <strong class="case-title">Correct facts mixed with policy overclaims.</strong>
-                    </div>
-                    <div class="verdict">Do not ship</div>
-                  </header>
-                  <p class="summary-line">A RAG answer cites real refund and support policies, but turns exceptions into guarantees. The packet isolates the material claims before a reviewer signs off.</p>
-                  <div class="packet-meta" aria-label="Audit packet properties">
-                    <span>source-bound</span>
-                    <span>judge-dissent</span>
-                    <span>rewrite-ready</span>
-                  </div>
-                  <div class="claim-list">
-                    <div class="claim">
-                      <div class="claim-id">C1</div>
-                      <div><strong>Refunds are available within 30 days.</strong><span>Directly grounded in Source A.</span></div>
-                      <div class="status good">Supported</div>
-                    </div>
-                    <div class="claim">
-                      <div class="claim-id">C3</div>
-                      <div><strong>Enterprise customers follow the same refund policy.</strong><span>Source A says enterprise contracts follow the signed MSA.</span></div>
-                      <div class="status bad">Unsupported</div>
-                    </div>
-                    <div class="claim">
-                      <div class="claim-id">C5</div>
-                      <div><strong>Priority SLA is guaranteed during maintenance.</strong><span>Source B excludes scheduled maintenance windows.</span></div>
-                      <div class="status bad">Contradicted</div>
-                    </div>
-                  </div>
-                  <div class="metrics" aria-label="Audit summary metrics">
-                    <div class="metric"><strong>0.51</strong><span>lowest judge confidence band</span></div>
-                    <div class="metric"><strong>3</strong><span>material claim failures</span></div>
-                    <div class="metric"><strong>1</strong><span>reviewer-ready verdict</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="problem">
-        <div class="wrap">
-          <div class="section-head reveal">
-            <div>
-              <div class="eyebrow">Why this exists</div>
-              <h2>A score tells you what happened. A packet tells you what to do next.</h2>
-            </div>
-            <p class="section-lede">LLM-as-judge workflows are useful, but product teams still need an artifact they can inspect, challenge, and attach to a review process.</p>
-          </div>
-          <div class="split">
-            <div class="questions reveal delay-1">
-              <div class="question">
-                <strong>The eval failed. Why?</strong>
-                <span>Was the answer unsupported, contradicted, incomplete, or phrased too confidently?</span>
-              </div>
-              <div class="question">
-                <strong>The judge disagreed. Where?</strong>
-                <span>Which seats noticed the source conflict, and which ones only scored the final answer?</span>
-              </div>
-              <div class="question">
-                <strong>A reviewer needs to sign off. On what?</strong>
-                <span>A plain score is not enough for support, compliance, regression, or research review.</span>
-              </div>
-            </div>
-            <div class="answer-panel reveal delay-2">
-              <span class="small-label">The missing handoff</span>
-              <h3>AI Judge creates the review artifact after the eval.</h3>
-              <p>It decomposes the answer into claims, binds each claim to source fragments, summarizes judge agreement, and writes the final verdict in a format a human can read without opening the full trace stack.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="handoff">
-        <div class="wrap">
-          <div class="section-head reveal">
-            <div>
-              <div class="eyebrow">Input to output</div>
-              <h2>Send one failed trace. Get a packet a reviewer can act on.</h2>
-            </div>
-            <p class="section-lede">AI Judge turns the raw middle of an eval run into an artifact that can move through product, research, support, or compliance review.</p>
-          </div>
-          <div class="handoff">
-            <article class="handoff-card reveal delay-1">
-              <span class="small-label">Input</span>
-              <h3>The messy eval case</h3>
-              <ul>
-                <li><code>answer</code><span>Candidate response from a RAG, agent, or LLM-as-judge run.</span></li>
-                <li><code>sources</code><span>Evidence packet, retrieved chunks, policy docs, or selected trace context.</span></li>
-                <li><code>scores</code><span>Judge scores, rationales, rubric notes, and disagreement signals.</span></li>
-              </ul>
-            </article>
-            <div class="handoff-arrow" aria-hidden="true">-></div>
-            <article class="handoff-card output reveal delay-2">
-              <span class="small-label">Output</span>
-              <h3>The reviewer handoff</h3>
-              <ul>
-                <li><code>ledger</code><span>Claim-by-claim support, contradiction, partial support, and missing evidence.</span></li>
-                <li><code>verdict</code><span>Human-readable risk decision with the reason the answer should ship or stop.</span></li>
-                <li><code>export</code><span>Markdown, JSON, and GitHub-issue shaped payloads for downstream teams.</span></li>
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="workflow">
-        <div class="wrap">
-          <div class="section-head reveal">
-            <div>
-              <div class="eyebrow">Product workflow</div>
-              <h2>One narrow job: convert a failed trace into a case file.</h2>
-            </div>
-            <p class="section-lede">The output is intentionally portable: forward it to a PM, attach it to a regression, or use it as a design-partner artifact.</p>
-          </div>
-          <div class="workflow">
-            <div class="workflow-lead reveal delay-1">
-              <strong>Not another metrics wall.</strong>
-              <span>AI Judge sits after your existing eval run and turns the ambiguous middle into a readable decision packet.</span>
-            </div>
-            <div class="steps reveal delay-2">
-              <div class="step">
-                <span class="num">01</span>
-                <div>
-                  <h3>Bring the case</h3>
-                  <p>Import one failed or borderline model answer, RAG source packet, rubric, judge scores, or selected trace.</p>
-                </div>
-              </div>
-              <div class="step">
-                <span class="num">02</span>
-                <div>
-                  <h3>Audit the claims</h3>
-                  <p>Separate claims from prose and map each one to support, contradiction, partial support, or missing evidence.</p>
-                </div>
-              </div>
-              <div class="step">
-                <span class="num">03</span>
-                <div>
-                  <h3>Hand off the verdict</h3>
-                  <p>Export a readable report, JSON payload, Markdown note, or GitHub issue body for review queues and regression notes.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="packet">
-        <div class="wrap">
-          <div class="section-head reveal">
-            <div>
-              <div class="eyebrow">The artifact</div>
-              <h2>The product is the packet people can forward.</h2>
-            </div>
-            <p class="section-lede">A partner should be able to forward the artifact to an evaluator, PM, researcher, or reviewer and have the decision path make sense.</p>
-          </div>
-          <div class="artifact">
-            <article class="report-panel reveal delay-1">
-              <span class="small-label">Sample reviewer note</span>
-              <h3>Correct, but unsafe as policy language.</h3>
-              <p>The answer contains several correct source-grounded statements, but it converts exceptions and scope limits into broad guarantees. This is risky in customer support because incorrect statements sound like policy commitments.</p>
-              <blockquote>Do not ship the answer as-is. Rewrite with enterprise-contract scope, business-hour SLA language, maintenance exclusions, and beta-feature limitations.</blockquote>
-              <ul>
-                <li>Accept supported refund and data-export claims.</li>
-                <li>Reject enterprise refund overgeneralization.</li>
-                <li>Escalate SLA guarantee language before release.</li>
-              </ul>
-            </article>
-            <aside class="notes reveal delay-2" aria-label="Artifact properties">
-              <div class="note"><strong>Readable first</strong><span>No reviewer should need to parse raw traces to understand the verdict.</span></div>
-              <div class="note"><strong>Source isolated</strong><span>Every material claim points back to the provided evidence packet.</span></div>
-              <div class="note"><strong>Complementary</strong><span>Runs after your existing eval, trace, or RAG metric.</span></div>
-              <div class="note"><strong>Portable</strong><span>Can become a GitHub issue, review queue item, dataset example, or regression note.</span></div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="direction">
-        <div class="wrap client-shot">
-          <div class="shot-copy reveal">
-            <span class="small-label">Product direction</span>
-            <h2>Designed to feel like a review workspace, not a metrics wall.</h2>
-            <p>The public brand stays AI Judge. The product surface can grow into an AI Judge review client for teams that already have eval data and need human signoff.</p>
-          </div>
-          <div class="shot-frame reveal delay-1">
-            <img src="assets/ai-judge-live-client.png" width="1420" height="920" alt="Early AI Judge review client showing active cases and a prompt composer">
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="fit">
-        <div class="wrap">
-          <div class="section-head reveal">
-            <div>
-              <div class="eyebrow">Where it fits</div>
-              <h2>Attach it to systems teams already trust.</h2>
-            </div>
-            <p class="section-lede">AI Judge is deliberately small enough to sit beside the eval platforms, tracing tools, and research benchmarks people already use.</p>
-          </div>
-          <div class="fit reveal delay-1">
-            <div class="fit-row">
-              <strong>RAG eval frameworks</strong>
-              <span>Ragas, TruLens, DeepEval</span>
-              <span>Turn faithfulness and groundedness failures into claim-level evidence packets.</span>
-            </div>
-            <div class="fit-row">
-              <strong>Observability tools</strong>
-              <span>Phoenix, Opik, Langfuse, LangSmith</span>
-              <span>Attach reviewer-readable verdicts to selected traces and production incidents.</span>
-            </div>
-            <div class="fit-row">
-              <strong>Judge research</strong>
-              <span>JudgeBench, Prometheus, JETTS-style work</span>
-              <span>Preserve failure cases where judge disagreement is more useful than a single score.</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="closing">
-        <div class="wrap closing-grid">
-          <div class="reveal">
-            <h2>Send one eval result. Get one audit packet back.</h2>
-            <p>The lowest-friction collaboration is simple: give AI Judge one trace, RAG answer, or failed eval case. I will convert it into this source-isolated report format and send the artifact back.</p>
-          </div>
-          <div class="actions reveal delay-1">
-            <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20design%20partner%20case&body=Hi%2C%0A%0AI%20have%20one%20eval%20result%20or%20trace%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">
-              <span>Start with one case</span>
-              <span class="arrow" aria-hidden="true">+</span>
-            </a>
-            <a class="button" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">
-              <span>Open public gist</span>
-              <span class="arrow" aria-hidden="true">-></span>
-            </a>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="wrap">
-        <span>AI Judge public demo. No private user data or production traces are included.</span>
-        <a href="AI_Judge_Audit_Sample_Report.html">Full sample report</a>
+  <header class="topbar">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="#main" aria-label="AI Judge home">
+        <span class="mark" aria-hidden="true">AJ</span>
+        <span>AI Judge</span>
+      </a>
+      <div class="nav-links">
+        <a href="#story">Story</a>
+        <a href="#json">JSON</a>
+        <a href="#proof">Proof</a>
+        <a href="#fit">Fit</a>
+        <a href="AI_Judge_Audit_Sample_Report.html">Report</a>
       </div>
-    </footer>
-  </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Public demo</div>
+        <h1>AI Judge Loop QA packets for agent loops.</h1>
+        <p class="lead">Your eval stack can say a run failed. AI Judge turns that failure into the artifact a human can act on: claim ledger, source support, judge disagreement, verdict, safer rewrite, and next-run decision.</p>
+        <div class="actions">
+          <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">Send one loop</a>
+          <a class="button" href="AI_Judge_Audit_Sample_Report.html">Read sample report</a>
+          <a class="button" href="sample-loop-packet.json">Open JSON packet</a>
+        </div>
+
+        <div class="story-strip" aria-label="Before and after AI Judge">
+          <article class="state-panel">
+            <div class="state-head">
+              <span>Before</span>
+              <span>Eval output</span>
+            </div>
+            <div class="state-body">
+              <h2>score = 0.51, failed</h2>
+              <p>The team still has to ask why the answer failed, which claim is risky, and whether the loop should run again.</p>
+              <ul class="signal-list">
+                <li><code>trace</code><span>long tool log</span></li>
+                <li><code>rubric</code><span>faithfulness low</span></li>
+                <li><code>reviewer</code><span class="warn">unclear action</span></li>
+              </ul>
+            </div>
+          </article>
+
+          <div class="bridge" aria-hidden="true"><span>AI Judge</span></div>
+
+          <article class="state-panel">
+            <div class="state-head">
+              <span>After</span>
+              <span>Audit packet</span>
+            </div>
+            <div class="state-body">
+              <h2>hold loop until reviewer approval</h2>
+              <p>The packet says exactly what broke, what can be kept, who signs off, and what the next run is allowed to do.</p>
+              <ul class="signal-list">
+                <li><code>C3</code><span class="bad">unsupported enterprise refund claim</span></li>
+                <li><code>C5</code><span class="bad">contradicted SLA guarantee</span></li>
+                <li><code>next_run</code><span class="good">rewrite + human gate</span></li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="story">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Story</div>
+            <h2>Keep the homepage simple. Let the packet carry the depth.</h2>
+          </div>
+          <p class="section-lede">The demo now sells one concrete transformation: from a vague eval failure to a reviewer-ready artifact. The product mechanics are still there, but they live in the report and JSON contract instead of crowding the first screen.</p>
+        </div>
+        <div class="value-grid">
+          <article class="value-card">
+            <span>01</span>
+            <h3>Bring one real run</h3>
+            <p>A RAG answer, support-agent reply, coding-agent PR, trace, or failed judge result.</p>
+          </article>
+          <article class="value-card">
+            <span>02</span>
+            <h3>Separate facts from confidence</h3>
+            <p>Claims are checked against sources so real evidence cannot be stretched into false guarantees.</p>
+          </article>
+          <article class="value-card">
+            <span>03</span>
+            <h3>Decide the next run</h3>
+            <p>Approve, rewrite, rerun, escalate, or stop the loop with a human-readable reason.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="json">
+      <div class="wrap">
+        <div class="json-shell">
+          <div class="json-copy">
+            <span class="json-label">Core contract</span>
+            <h3>The product shape is portable JSON.</h3>
+            <p>The homepage tells the story. The JSON packet holds the real operating surface for integrations, review queues, GitHub issues, and future API work.</p>
+            <ul>
+              <li>Input: trigger, output, sources, tool logs, judge scores.</li>
+              <li>Audit: claim ledger, evidence status, seat disagreement.</li>
+              <li>Decision: human verdict, safer rewrite, next-run control.</li>
+            </ul>
+          </div>
+          <pre>{
+  "loop_id": "support-policy-enterprise-refund",
+  "trigger": "customer_support_ticket",
+  "audit": {
+    "claim_failures": ["C3", "C5", "C6"],
+    "lowest_judge_score": 0.51,
+    "primary_failure_mode": "policy overclaim"
+  },
+  "human_verdict": {
+    "decision": "hold_loop",
+    "reason": "Correct facts were turned into guarantees."
+  },
+  "next_run": {
+    "action": "rewrite_then_rerun",
+    "requires_human_gate": true
+  }
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="proof">
+      <div class="wrap proof">
+        <div class="proof-copy">
+          <div class="eyebrow">Proof path</div>
+          <h2>There is already a working demo surface.</h2>
+          <p>The page should lead with the value story, then let interested partners open the sample report, JSON packet, or existing client screenshot when they want proof.</p>
+          <div class="actions">
+            <a class="button primary" href="AI_Judge_Audit_Sample_Report.html">Open report</a>
+            <a class="button" href="sample-loop-packet.json">Inspect JSON</a>
+          </div>
+        </div>
+        <figure class="shot">
+          <img src="assets/ai-judge-live-client.png" alt="AI Judge local client showing an audit workflow preview">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="fit">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Where it fits</div>
+            <h2>Beside the tools teams already use.</h2>
+          </div>
+          <p class="section-lede">AI Judge is not trying to replace the eval stack. It packages selected failures into something product, research, support, engineering, and compliance reviewers can share.</p>
+        </div>
+        <div class="fit-list">
+          <div class="fit-row">
+            <strong>Ragas, TruLens, DeepEval</strong>
+            <span>Turn groundedness and faithfulness failures into claim-level audit packets.</span>
+          </div>
+          <div class="fit-row">
+            <strong>Langfuse, Phoenix, Opik, LangSmith</strong>
+            <span>Attach reviewer-readable verdicts and next-run decisions to selected traces.</span>
+          </div>
+          <div class="fit-row">
+            <strong>Support, coding, and research agents</strong>
+            <span>Stop recurring automation from repeating one polished but unsafe answer.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="wrap closing-inner">
+        <div>
+          <h2>Send one failed loop. Get one audit packet back.</h2>
+          <p>The lowest-cost test is a single real case: one trace, RAG answer, coding-agent PR, support reply, or failed eval result.</p>
+        </div>
+        <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">Start with one case</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>AI Judge public demo. No private user data or production traces are included.</span>
+      <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Public gist</a>
+    </div>
+  </footer>
 </body>
 </html>

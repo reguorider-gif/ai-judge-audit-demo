@@ -1,7 +1,7 @@
 ---
 version: alpha
 name: ai-judge-audit-demo-design
-description: Visual rules for AI Judge, a source-isolated audit packet layer for LLM evaluation and RAG trace review.
+description: Visual rules for AI Judge, a source-isolated Loop QA packet layer for agent loops, LLM evaluation, and RAG trace review.
 
 colors:
   canvas: "#fafafa"
@@ -24,7 +24,7 @@ typography:
     fontSize: "64px"
     fontWeight: 650
     lineHeight: 0.98
-    letterSpacing: "-0.045em"
+    letterSpacing: "0"
   body:
     fontFamily: "Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
     fontSize: "16px"
@@ -36,7 +36,7 @@ typography:
     fontSize: "12px"
     fontWeight: 600
     lineHeight: 1.35
-    letterSpacing: "0.08em"
+    letterSpacing: "0"
 
 rounded:
   sm: "6px"
@@ -48,11 +48,11 @@ rounded:
 
 ## Overview
 
-AI Judge should feel like a precise review workspace for eval, RAG, and observability teams. The page should communicate trust, evidence handling, and reviewer handoff before it tries to feel expressive.
+AI Judge should feel like a precise review workspace for agent, eval, RAG, and observability teams. The page should communicate trust, evidence handling, reviewer handoff, and next-run control before it tries to feel expressive.
 
 ## Design Direction
 
-Use Vercel-like black/white precision for the developer-platform layer and Mintlify-like documentation rhythm for the audit-packet reading layer. Keep the palette mostly monochrome; reserve the green accent for evidence, source support, and active review signals.
+Use Vercel-like black/white precision for the developer-platform layer and Mintlify-like documentation rhythm for the Loop QA packet reading layer. Keep the palette mostly monochrome; reserve the green accent for evidence, source support, active review signals, and approved next-run decisions.
 
 ## Component Rules
 
@@ -64,13 +64,15 @@ Use Vercel-like black/white precision for the developer-platform layer and Mintl
 
 ## Layout Rules
 
-- Keep the hero split: product promise on the left, audit packet preview on the right.
-- Keep the primary CTA focused on design-partner conversion: send one failed or borderline eval case. The sample report is the secondary proof path.
-- Use an input/output handoff section to make the raw-trace-to-review-packet transformation obvious before the workflow explanation.
+- Keep the hero split: product promise on the left, Loop QA packet preview on the right.
+- Prefer the current simplified homepage structure: one product promise, one before/after value strip, then report and JSON proof paths.
+- Keep the primary CTA focused on design-partner conversion: send one failed or borderline agent/eval loop. The sample report is the secondary proof path.
+- Use an input/output handoff section to make the raw-loop-to-review-packet transformation obvious before the workflow explanation.
+- Keep deep mechanics in the sample report and `sample-loop-packet.json`; the homepage should explain the transformation, not expose every feature.
 - Favor tight internal rhythm inside cards and generous spacing between major sections.
 - Use table-like rows for integrations and fit statements, not decorative feature cards.
 - On mobile, protect touch targets and hide only secondary mockup details, never the core claim/verdict.
-- Sample reports should expose portable actions: JSON shape, Markdown review note, GitHub issue body, and email-based design partner handoff.
+- Sample reports and JSON should expose portable actions: trigger, handoff, verification, memory, next-run decision, JSON shape, Markdown review note, GitHub issue body, and email-based design partner handoff.
 
 ## Don't
 

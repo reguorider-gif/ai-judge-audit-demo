@@ -1,0 +1,143 @@
+{
+  "schema": "ai_judge_loop_audit_packet_v0",
+  "packet_id": "public-demo-support-policy-001",
+  "loop_id": "support-policy-enterprise-refund",
+  "created_for": "public_sanitized_demo",
+  "input": {
+    "trigger": {
+      "type": "customer_support_ticket",
+      "summary": "Customer asks whether enterprise refunds, priority support, and beta features are guaranteed."
+    },
+    "candidate_output": "You can get a refund within 30 days, but only if you have used fewer than 10% of your monthly credits. Enterprise customers always follow the same policy. Priority support responds within 4 hours, and the company guarantees this response time even during maintenance. Beta features are fully supported. You can export your data from the dashboard, and deletion requests are usually completed within 14 days.",
+    "sources": [
+      {
+        "id": "A",
+        "title": "Refund Policy",
+        "updated_at": "2026-05-04",
+        "relevant_text": [
+          "Customers may request a refund within 30 days of purchase.",
+          "Digital subscriptions are refundable only if fewer than 10% of monthly credits have been used.",
+          "Enterprise contracts follow the signed master service agreement."
+        ]
+      },
+      {
+        "id": "B",
+        "title": "Support SLA",
+        "updated_at": "2026-04-12",
+        "relevant_text": [
+          "Standard support response target: 2 business days.",
+          "Priority support response target: 4 business hours.",
+          "SLA targets are not guaranteed during scheduled maintenance windows."
+        ]
+      },
+      {
+        "id": "C",
+        "title": "Product Terms",
+        "updated_at": "2026-03-29",
+        "relevant_text": [
+          "Beta features are provided as-is.",
+          "Customers may export account data from the dashboard.",
+          "Account deletion requests are completed within 14 days."
+        ]
+      }
+    ]
+  },
+  "audit": {
+    "claim_ledger": [
+      {
+        "claim_id": "C1",
+        "claim": "Refunds are available within 30 days.",
+        "source_match": ["A"],
+        "status": "supported",
+        "severity": "info",
+        "reviewer_note": "Directly grounded."
+      },
+      {
+        "claim_id": "C2",
+        "claim": "Refunds require fewer than 10% of monthly credits used.",
+        "source_match": ["A"],
+        "status": "partial",
+        "severity": "warning",
+        "reviewer_note": "Applies to digital subscriptions, not all purchases."
+      },
+      {
+        "claim_id": "C3",
+        "claim": "Enterprise customers always follow the same refund policy.",
+        "source_match": ["A"],
+        "status": "unsupported",
+        "severity": "blocker",
+        "reviewer_note": "Enterprise contracts follow the signed MSA."
+      },
+      {
+        "claim_id": "C4",
+        "claim": "Priority support responds within 4 hours.",
+        "source_match": ["B"],
+        "status": "partial",
+        "severity": "warning",
+        "reviewer_note": "Source says 4 business hours, not 4 clock hours."
+      },
+      {
+        "claim_id": "C5",
+        "claim": "The company guarantees priority SLA during maintenance.",
+        "source_match": ["B"],
+        "status": "contradicted",
+        "severity": "blocker",
+        "reviewer_note": "SLA targets are not guaranteed during scheduled maintenance."
+      },
+      {
+        "claim_id": "C6",
+        "claim": "Beta features are fully supported.",
+        "source_match": ["C"],
+        "status": "contradicted",
+        "severity": "blocker",
+        "reviewer_note": "Beta features are provided as-is."
+      },
+      {
+        "claim_id": "C7",
+        "claim": "Customers can export account data from dashboard.",
+        "source_match": ["C"],
+        "status": "supported",
+        "severity": "info",
+        "reviewer_note": "Directly grounded."
+      },
+      {
+        "claim_id": "C8",
+        "claim": "Deletion requests are usually completed within 14 days.",
+        "source_match": ["C"],
+        "status": "mostly_supported",
+        "severity": "warning",
+        "reviewer_note": "Usually softens but changes certainty."
+      }
+    ],
+    "judge_summary": {
+      "score_band": {
+        "min": 0.51,
+        "max": 0.66
+      },
+      "dissent_level": "medium_on_severity",
+      "primary_failure_mode": "grounded_facts_mixed_with_policy_overclaims",
+      "blocking_claims": ["C3", "C5", "C6"]
+    }
+  },
+  "human_verdict": {
+    "decision": "hold_loop_until_reviewer_approval",
+    "reason": "The answer contains correct source-grounded statements, but converts exceptions and scope limits into broad guarantees.",
+    "safer_rewrite": "You may request a refund within 30 days of purchase. For digital subscriptions, refunds are available only if fewer than 10% of monthly credits have been used. Enterprise customers should refer to their signed master service agreement. Priority support has a 4-business-hour response target, but SLA targets are not guaranteed during scheduled maintenance. Beta features are provided as-is. You can export account data from the dashboard, and account deletion requests are completed within 14 days."
+  },
+  "next_run": {
+    "action": "rewrite_then_rerun",
+    "requires_human_gate": true,
+    "owner": "support_policy_reviewer",
+    "acceptance_criteria": [
+      "Enterprise contract scope is explicit.",
+      "Priority support language preserves business-hour and maintenance-window limits.",
+      "Beta feature support claim is removed or rewritten as as-is."
+    ]
+  },
+  "exports": {
+    "markdown_review_note": true,
+    "github_issue_body": true,
+    "json_contract": true,
+    "sample_report_url": "AI_Judge_Audit_Sample_Report.html"
+  }
+}
