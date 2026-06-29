@@ -1,22 +1,22 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge - Loop QA packets for agent loops</title>
-  <meta name="description" content="AI Judge turns failed or borderline agent, RAG, and eval runs into reviewer-ready audit packets.">
+  <title>AI Judge - 面向 Agent Loop 的 QA 审计包</title>
+  <meta name="description" content="AI Judge 把失败或边界状态的 agent、RAG、eval 循环变成可复盘、可交接、可继续执行的 Loop QA 审计包。">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
-  <meta property="og:title" content="AI Judge - Loop QA packets for agent loops">
-  <meta property="og:description" content="From a vague eval failure to a claim ledger, source support, human verdict, and next-run decision.">
+  <meta property="og:title" content="AI Judge - 面向 Agent Loop 的 QA 审计包">
+  <meta property="og:description" content="从一次模糊失败，到 claim ledger、source support、human verdict 和 next-run decision。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
-  <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/ai-judge-live-client.png">
+  <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Judge - Loop QA packets for agent loops">
-  <meta name="twitter:description" content="Reviewer-ready audit packets for failed or borderline agent and eval runs.">
-  <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/ai-judge-live-client.png">
+  <meta name="twitter:title" content="AI Judge - 面向 Agent Loop 的 QA 审计包">
+  <meta name="twitter:description" content="把失败或边界状态的 agent / RAG / eval run 变成 reviewer-ready audit packet。">
+  <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -56,8 +56,7 @@
     body {
       min-width: 320px;
       margin: 0;
-      background:
-        linear-gradient(180deg, #ffffff 0%, var(--canvas) 46%, var(--canvas-soft) 100%);
+      background: var(--canvas-soft);
       color: var(--ink);
       font-family: var(--sans);
       font-size: 16px;
@@ -172,7 +171,16 @@
     }
 
     .hero {
-      padding: clamp(50px, 7vw, 78px) 0 34px;
+      padding: clamp(30px, 4vw, 44px) 0 clamp(24px, 3vw, 34px);
+      border-bottom: 1px solid var(--hairline);
+      background: #f5f5f7;
+    }
+
+    .hero-copy {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 0.32fr);
+      gap: clamp(20px, 4vw, 48px);
+      align-items: end;
     }
 
     .eyebrow {
@@ -209,28 +217,136 @@
     }
 
     h1 {
-      max-width: 860px;
-      margin: 20px 0 16px;
+      max-width: 980px;
+      margin: 16px 0 12px;
       color: var(--ink);
-      font-size: clamp(44px, 7vw, 82px);
-      line-height: 0.98;
+      font-size: clamp(40px, 4.7vw, 60px);
+      line-height: 1.06;
       font-weight: 680;
       letter-spacing: 0;
     }
 
     .lead {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0;
       color: var(--body);
-      font-size: clamp(17px, 1.6vw, 20px);
-      line-height: 1.58;
+      font-size: clamp(16px, 1.25vw, 17px);
+      line-height: 1.56;
+    }
+
+    .hero-note {
+      justify-self: end;
+      max-width: 360px;
+      border-left: 1px solid var(--hairline-strong);
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .hero-note strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .council-stage {
+      position: relative;
+      max-width: 1040px;
+      margin: clamp(20px, 3vw, 28px) auto 0;
+      border: 1px solid rgba(0, 0, 0, 0.10);
+      border-radius: 22px;
+      background: var(--surface);
+      padding: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 34px 90px -26px rgba(0, 0, 0, 0.26);
+    }
+
+    .stage-bar {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 12px 8px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .stage-bar strong {
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 14px;
+      text-transform: none;
+    }
+
+    .council-media {
+      overflow: hidden;
+      border-radius: 16px;
+      background: #e8e8ea;
+      height: min(34vw, 320px);
+    }
+
+    .council-media img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 38%;
+    }
+
+    .audit-rail {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      margin-top: 10px;
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      background: var(--hairline);
+    }
+
+    .audit-chip {
+      min-height: 58px;
+      background: #fbfbfb;
+      padding: 10px 12px;
+    }
+
+    .audit-chip span {
+      display: block;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .audit-chip strong {
+      display: block;
+      margin-top: 6px;
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.32;
+    }
+
+    .stage-caption {
+      margin: 12px 2px 2px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
     }
 
     .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 26px;
+      margin-top: 20px;
     }
 
     .button {
@@ -390,6 +506,7 @@
     .section {
       padding: clamp(46px, 7vw, 78px) 0;
       border-top: 1px solid var(--hairline);
+      background: var(--canvas);
     }
 
     .section-head {
@@ -638,12 +755,21 @@
         display: none;
       }
 
+      .hero-copy,
       .story-strip,
       .section-head,
       .json-shell,
       .proof,
       .closing-inner {
         grid-template-columns: 1fr;
+      }
+
+      .hero-note {
+        justify-self: start;
+        max-width: 680px;
+        border-left: 0;
+        border-top: 1px solid var(--hairline-strong);
+        padding: 18px 0 0;
       }
 
       .bridge {
@@ -656,7 +782,8 @@
         padding: 0 18px;
       }
 
-      .value-grid {
+      .value-grid,
+      .audit-rail {
         grid-template-columns: 1fr;
       }
     }
@@ -668,12 +795,16 @@
       }
 
       .hero {
-        padding-top: 38px;
+        padding-top: 28px;
       }
 
       h1 {
-        font-size: clamp(39px, 14vw, 56px);
-        line-height: 1.02;
+        font-size: clamp(34px, 11vw, 46px);
+        line-height: 1.08;
+      }
+
+      .hero-note {
+        display: none;
       }
 
       .actions,
@@ -683,6 +814,29 @@
 
       .story-strip {
         gap: 10px;
+      }
+
+      .council-stage {
+        border-radius: 16px;
+        padding: 8px;
+      }
+
+      .stage-bar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
+        min-height: 0;
+        padding: 2px 8px 8px;
+      }
+
+      .council-media {
+        border-radius: 12px;
+        aspect-ratio: 4 / 3;
+        height: auto;
+      }
+
+      .audit-rail {
+        display: none;
       }
 
       .state-body {
@@ -715,11 +869,11 @@
         <span>AI Judge</span>
       </a>
       <div class="nav-links">
-        <a href="#story">Story</a>
+        <a href="#story">价值</a>
         <a href="#json">JSON</a>
-        <a href="#proof">Proof</a>
-        <a href="#fit">Fit</a>
-        <a href="AI_Judge_Audit_Sample_Report.html">Report</a>
+        <a href="#proof">证据</a>
+        <a href="#fit">适配</a>
+        <a href="AI_Judge_Audit_Sample_Report.html">报告</a>
       </div>
     </nav>
   </header>
@@ -727,15 +881,76 @@
   <main id="main">
     <section class="hero">
       <div class="wrap">
-        <div class="eyebrow">Public demo</div>
-        <h1>AI Judge Loop QA packets for agent loops.</h1>
-        <p class="lead">Your eval stack can say a run failed. AI Judge turns that failure into the artifact a human can act on: claim ledger, source support, judge disagreement, verdict, safer rewrite, and next-run decision.</p>
-        <div class="actions">
-          <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">Send one loop</a>
-          <a class="button" href="AI_Judge_Audit_Sample_Report.html">Read sample report</a>
-          <a class="button" href="sample-loop-packet.json">Open JSON packet</a>
+        <div class="hero-copy">
+          <div>
+            <div class="eyebrow">Loop engineering demo</div>
+            <h1>为 AI Agent 时代而生的 Loop QA 审计层。</h1>
+            <p class="lead">不止评测分数。AI Judge 把 OpenCouncil 里的席位、分歧、证据、人工裁决和下一轮控制，整理成可转发、可复盘、可接入工作流的 audit packet。</p>
+            <div class="actions">
+              <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">发送一个循环</a>
+              <a class="button" href="AI_Judge_Audit_Sample_Report.html">看样例报告</a>
+              <a class="button" href="sample-loop-packet.json">打开 JSON Packet</a>
+            </div>
+          </div>
+          <aside class="hero-note" aria-label="AI Judge value note">
+            <strong>人从操作者变成循环架构师。</strong>
+            OpenCouncil 展示评议现场；AI Judge 负责把现场沉淀成一份可以进入 GitHub issue、review queue、合规记录或下一轮 agent 控制的证据包。
+          </aside>
         </div>
 
+        <figure class="council-stage">
+          <div class="stage-bar">
+            <strong>OpenSpark Council</strong>
+            <span>14 / 15 seats · judge: MiMo · roundtable proof</span>
+          </div>
+          <div class="council-media">
+            <img src="assets/openspark-council.png" alt="OpenSpark 的 OpenCouncil 圆桌界面，显示 14 / 15 个评审席位和像素风议院场景">
+          </div>
+          <div class="audit-rail" aria-label="AI Judge packet outputs">
+            <div class="audit-chip">
+              <span>Observe</span>
+              <strong>席位、模型、分歧和工具上下文进入 packet</strong>
+            </div>
+            <div class="audit-chip">
+              <span>Judge</span>
+              <strong>claim ledger 标记 unsupported / contradicted 风险</strong>
+            </div>
+            <div class="audit-chip">
+              <span>Control</span>
+              <strong>下一轮只能 rewrite、rerun 或等待 human gate</strong>
+            </div>
+          </div>
+          <figcaption class="stage-caption">OpenCouncil 是循环发生现场；AI Judge 把现场变成可审计、可交接、可继续运行的 Loop QA Packet。</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="story">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">价值故事</div>
+            <h2>OpenCouncil 让你看见议院，AI Judge 让循环能被治理。</h2>
+          </div>
+          <p class="section-lede">循环工程的关键不是让人继续点按钮，而是把人放到架构师位置：定义什么时候跑、什么时候停、谁来签字、下一轮能做什么。</p>
+        </div>
+        <div class="value-grid">
+          <article class="value-card">
+            <span>01</span>
+            <h3>接入一次真实循环</h3>
+            <p>可以是 OpenCouncil 评议、RAG 回答、support agent 回复、coding-agent PR 或一次失败 eval。</p>
+          </article>
+          <article class="value-card">
+            <span>02</span>
+            <h3>拆开事实与信心</h3>
+            <p>把每条 claim 对齐 source、judge disagreement、人工 verdict，避免“看起来合理”的循环继续扩大风险。</p>
+          </article>
+          <article class="value-card">
+            <span>03</span>
+            <h3>决定下一轮能否跑</h3>
+            <p>不是只给分，而是输出 approve、rewrite、rerun、escalate 或 hold loop 的控制结论。</p>
+          </article>
+        </div>
         <div class="story-strip" aria-label="Before and after AI Judge">
           <article class="state-panel">
             <div class="state-head">
@@ -744,11 +959,11 @@
             </div>
             <div class="state-body">
               <h2>score = 0.51, failed</h2>
-              <p>The team still has to ask why the answer failed, which claim is risky, and whether the loop should run again.</p>
+              <p>团队仍然要追问：到底哪条 claim 有风险？哪个席位不同意？这轮循环要不要继续？</p>
               <ul class="signal-list">
-                <li><code>trace</code><span>long tool log</span></li>
+                <li><code>trace</code><span>长工具日志</span></li>
                 <li><code>rubric</code><span>faithfulness low</span></li>
-                <li><code>reviewer</code><span class="warn">unclear action</span></li>
+                <li><code>reviewer</code><span class="warn">动作不清楚</span></li>
               </ul>
             </div>
           </article>
@@ -762,7 +977,7 @@
             </div>
             <div class="state-body">
               <h2>hold loop until reviewer approval</h2>
-              <p>The packet says exactly what broke, what can be kept, who signs off, and what the next run is allowed to do.</p>
+              <p>packet 会说明什么坏了、哪些证据能保留、谁需要签字，以及下一轮循环被允许做什么。</p>
               <ul class="signal-list">
                 <li><code>C3</code><span class="bad">unsupported enterprise refund claim</span></li>
                 <li><code>C5</code><span class="bad">contradicted SLA guarantee</span></li>
@@ -774,46 +989,17 @@
       </div>
     </section>
 
-    <section class="section" id="story">
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="eyebrow">Story</div>
-            <h2>Keep the homepage simple. Let the packet carry the depth.</h2>
-          </div>
-          <p class="section-lede">The demo now sells one concrete transformation: from a vague eval failure to a reviewer-ready artifact. The product mechanics are still there, but they live in the report and JSON contract instead of crowding the first screen.</p>
-        </div>
-        <div class="value-grid">
-          <article class="value-card">
-            <span>01</span>
-            <h3>Bring one real run</h3>
-            <p>A RAG answer, support-agent reply, coding-agent PR, trace, or failed judge result.</p>
-          </article>
-          <article class="value-card">
-            <span>02</span>
-            <h3>Separate facts from confidence</h3>
-            <p>Claims are checked against sources so real evidence cannot be stretched into false guarantees.</p>
-          </article>
-          <article class="value-card">
-            <span>03</span>
-            <h3>Decide the next run</h3>
-            <p>Approve, rewrite, rerun, escalate, or stop the loop with a human-readable reason.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <section class="section" id="json">
       <div class="wrap">
         <div class="json-shell">
           <div class="json-copy">
             <span class="json-label">Core contract</span>
-            <h3>The product shape is portable JSON.</h3>
-            <p>The homepage tells the story. The JSON packet holds the real operating surface for integrations, review queues, GitHub issues, and future API work.</p>
+            <h3>产品形态不是页面，是可流转的 JSON。</h3>
+            <p>首页负责讲清楚价值；JSON packet 才是真正能进入集成、review queue、GitHub issue 和未来 API 的操作面。</p>
             <ul>
-              <li>Input: trigger, output, sources, tool logs, judge scores.</li>
-              <li>Audit: claim ledger, evidence status, seat disagreement.</li>
-              <li>Decision: human verdict, safer rewrite, next-run control.</li>
+              <li>Input: trigger、output、sources、tool logs、judge scores。</li>
+              <li>Audit: claim ledger、evidence status、seat disagreement。</li>
+              <li>Decision: human verdict、safer rewrite、next-run control。</li>
             </ul>
           </div>
           <pre>{
@@ -840,16 +1026,16 @@
     <section class="section" id="proof">
       <div class="wrap proof">
         <div class="proof-copy">
-          <div class="eyebrow">Proof path</div>
-          <h2>There is already a working demo surface.</h2>
-          <p>The page should lead with the value story, then let interested partners open the sample report, JSON packet, or existing client screenshot when they want proof.</p>
+          <div class="eyebrow">证据路径</div>
+          <h2>视觉现场在首屏，审计深度在报告里。</h2>
+          <p>强视觉负责让人第一眼理解“这是一个真实循环”；样例报告和 JSON 负责证明它能落成 claim、source、verdict 和 next-run decision。</p>
           <div class="actions">
-            <a class="button primary" href="AI_Judge_Audit_Sample_Report.html">Open report</a>
-            <a class="button" href="sample-loop-packet.json">Inspect JSON</a>
+            <a class="button primary" href="AI_Judge_Audit_Sample_Report.html">打开报告</a>
+            <a class="button" href="sample-loop-packet.json">检查 JSON</a>
           </div>
         </div>
         <figure class="shot">
-          <img src="assets/ai-judge-live-client.png" alt="AI Judge local client showing an audit workflow preview">
+          <img src="assets/ai-judge-live-client.png" alt="AI Judge 本地客户端展示审计工作流预览">
         </figure>
       </div>
     </section>
@@ -858,23 +1044,23 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Where it fits</div>
-            <h2>Beside the tools teams already use.</h2>
+            <div class="eyebrow">适配位置</div>
+            <h2>放在团队已经使用的 eval、trace 和 agent 工具旁边。</h2>
           </div>
-          <p class="section-lede">AI Judge is not trying to replace the eval stack. It packages selected failures into something product, research, support, engineering, and compliance reviewers can share.</p>
+          <p class="section-lede">AI Judge 不替代 eval stack。它把被选中的失败循环包装成产品、研究、客服、工程、合规都能读懂并接手的审计包。</p>
         </div>
         <div class="fit-list">
           <div class="fit-row">
             <strong>Ragas, TruLens, DeepEval</strong>
-            <span>Turn groundedness and faithfulness failures into claim-level audit packets.</span>
+            <span>把 groundedness / faithfulness failure 转成 claim-level audit packet。</span>
           </div>
           <div class="fit-row">
             <strong>Langfuse, Phoenix, Opik, LangSmith</strong>
-            <span>Attach reviewer-readable verdicts and next-run decisions to selected traces.</span>
+            <span>给被选中的 trace 附上 reviewer-readable verdict 和 next-run decision。</span>
           </div>
           <div class="fit-row">
-            <strong>Support, coding, and research agents</strong>
-            <span>Stop recurring automation from repeating one polished but unsafe answer.</span>
+            <strong>Support / coding / research agents</strong>
+            <span>阻止自动循环重复输出“很顺滑但不安全”的答案。</span>
           </div>
         </div>
       </div>
@@ -883,17 +1069,17 @@
     <section class="closing">
       <div class="wrap closing-inner">
         <div>
-          <h2>Send one failed loop. Get one audit packet back.</h2>
-          <p>The lowest-cost test is a single real case: one trace, RAG answer, coding-agent PR, support reply, or failed eval result.</p>
+          <h2>给我一个失败循环，换回一份审计包。</h2>
+          <p>最低成本的验证就是一个真实 case：一条 trace、一个 RAG answer、一份 coding-agent PR、一次 support reply，或者一条失败 eval。</p>
         </div>
-        <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">Start with one case</a>
+        <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">从一个 case 开始</a>
       </div>
     </section>
   </main>
 
   <footer>
     <div class="wrap">
-      <span>AI Judge public demo. No private user data or production traces are included.</span>
+      <span>AI Judge public demo. 页面不包含私有用户数据或生产 traces。</span>
       <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Public gist</a>
     </div>
   </footer>

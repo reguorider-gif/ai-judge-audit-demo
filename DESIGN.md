@@ -54,6 +54,8 @@ AI Judge should feel like a precise review workspace for agent, eval, RAG, and o
 
 Use Vercel-like black/white precision for the developer-platform layer and Mintlify-like documentation rhythm for the Loop QA packet reading layer. Keep the palette mostly monochrome; reserve the green accent for evidence, source support, active review signals, and approved next-run decisions.
 
+The current homepage borrows one transferable move from FigCraft-style AI tool pages: a quiet black/white product promise followed immediately by a large, real product surface. Do not copy FigCraft's brand, gallery, fonts, or content. Translate the principle into AI Judge: OpenCouncil is the visible loop arena, and AI Judge is the audit layer that turns that arena into a portable Loop QA packet.
+
 ## Component Rules
 
 - Primary CTA: black pill with white text.
@@ -61,10 +63,11 @@ Use Vercel-like black/white precision for the developer-platform layer and Mintl
 - Cards: white surface, 1px hairline border, subtle stacked shadow only when a product mockup needs depth.
 - Technical labels: mono uppercase, compact, and used only for metadata, claim IDs, status, and workflow numbers.
 - Product mockups: dark audit workspace surfaces with readable evidence rows, compact chips, and tabular numeric metrics.
+- Primary visual proof: `assets/openspark-council.png`, framed as an OpenSpark/OpenCouncil roundtable surface with seat count and judge status. Use it to make "agent council loop" concrete before showing deeper report mechanics.
 
 ## Layout Rules
 
-- Keep the hero split: product promise on the left, Loop QA packet preview on the right.
+- Keep the hero as a first-viewport product surface: large Chinese/CJK product promise, compact note, then the OpenCouncil screenshot in a framed stage.
 - Prefer the current simplified homepage structure: one product promise, one before/after value strip, then report and JSON proof paths.
 - Keep the primary CTA focused on design-partner conversion: send one failed or borderline agent/eval loop. The sample report is the secondary proof path.
 - Use an input/output handoff section to make the raw-loop-to-review-packet transformation obvious before the workflow explanation.
