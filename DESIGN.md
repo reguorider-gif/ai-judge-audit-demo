@@ -64,10 +64,12 @@ The current homepage borrows one transferable move from FigCraft-style AI tool p
 - Technical labels: mono uppercase, compact, and used only for metadata, claim IDs, status, and workflow numbers.
 - Product mockups: dark audit workspace surfaces with readable evidence rows, compact chips, and tabular numeric metrics.
 - Primary visual proof: `assets/openspark-council.png`, framed as an OpenSpark/OpenCouncil roundtable surface with seat count and judge status. Use it to make "agent council loop" concrete before showing deeper report mechanics.
+- Hero live mock: overlay the Council screenshot with a restrained "AI Judge lens" and a compact Loop QA Packet preview. The overlay must explain transformation from live council state to packet fields, not behave like decoration.
 
 ## Layout Rules
 
 - Keep the hero as a first-viewport product surface: large Chinese/CJK product promise, compact note, then the OpenCouncil screenshot in a framed stage.
+- On desktop, show the packet preview inside the screenshot stage so the first viewport reads as a working product surface. On mobile, keep the packet preview compressed inside the image and hide secondary chip rows to preserve hierarchy.
 - Prefer the current simplified homepage structure: one product promise, one before/after value strip, then report and JSON proof paths.
 - Keep the primary CTA focused on design-partner conversion: send one failed or borderline agent/eval loop. The sample report is the secondary proof path.
 - Use an input/output handoff section to make the raw-loop-to-review-packet transformation obvious before the workflow explanation.

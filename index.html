@@ -286,6 +286,7 @@
     }
 
     .council-media {
+      position: relative;
       overflow: hidden;
       border-radius: 16px;
       background: #e8e8ea;
@@ -298,6 +299,177 @@
       height: 100%;
       object-fit: cover;
       object-position: center 38%;
+    }
+
+    .council-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 26%, transparent 64%, rgba(255, 255, 255, 0.16)),
+        linear-gradient(180deg, transparent 58%, rgba(0, 0, 0, 0.16));
+      pointer-events: none;
+    }
+
+    .lens-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .lens-status {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      padding: 7px 10px;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+    }
+
+    .lens-status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(15, 143, 111, 0.14);
+    }
+
+    .lens-hotspot {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      border-radius: 999px;
+      background: rgba(15, 143, 111, 0.88);
+      box-shadow: 0 0 0 6px rgba(15, 143, 111, 0.18), 0 10px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .lens-hotspot.risk {
+      background: #96363d;
+      box-shadow: 0 0 0 6px rgba(150, 54, 61, 0.18), 0 10px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .lens-hotspot.seat-a {
+      left: 48%;
+      top: 48%;
+    }
+
+    .lens-hotspot.seat-b {
+      left: 66%;
+      top: 58%;
+    }
+
+    .lens-hotspot.seat-c {
+      left: 57%;
+      top: 70%;
+    }
+
+    .packet-panel {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      width: min(310px, 36%);
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 12px;
+      color: var(--ink);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+    }
+
+    @supports (backdrop-filter: blur(1px)) {
+      .lens-status,
+      .packet-panel {
+        backdrop-filter: blur(16px);
+      }
+    }
+
+    .packet-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+      margin-bottom: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .packet-title span:last-child {
+      color: var(--accent);
+    }
+
+    .packet-lines {
+      display: grid;
+      gap: 7px;
+    }
+
+    .packet-line {
+      display: grid;
+      grid-template-columns: 68px minmax(0, 1fr);
+      gap: 10px;
+      align-items: baseline;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding-top: 7px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .packet-line:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .packet-line code {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .packet-line strong {
+      font-size: 12px;
+    }
+
+    .packet-meter {
+      overflow: hidden;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.09);
+    }
+
+    .packet-meter span {
+      display: block;
+      width: 76%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+
+    .packet-decision {
+      margin-top: 10px;
+      border-radius: 10px;
+      background: var(--ink);
+      color: var(--surface);
+      padding: 9px 10px;
+      font-size: 12px;
+      font-weight: 760;
+      line-height: 1.35;
     }
 
     .audit-rail {
@@ -835,6 +1007,46 @@
         height: auto;
       }
 
+      .lens-status {
+        top: 10px;
+        left: 10px;
+        padding: 6px 8px;
+        font-size: 9px;
+      }
+
+      .lens-hotspot {
+        display: none;
+      }
+
+      .packet-panel {
+        top: auto;
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        width: auto;
+        padding: 10px;
+      }
+
+      .packet-title {
+        margin-bottom: 7px;
+      }
+
+      .packet-line {
+        grid-template-columns: 58px minmax(0, 1fr);
+        font-size: 11px;
+      }
+
+      .packet-line:nth-child(2),
+      .packet-line:nth-child(3) {
+        display: none;
+      }
+
+      .packet-decision {
+        margin-top: 7px;
+        padding: 8px;
+        font-size: 11px;
+      }
+
       .audit-rail {
         display: none;
       }
@@ -905,22 +1117,49 @@
           </div>
           <div class="council-media">
             <img src="assets/openspark-council.png" alt="OpenSpark 的 OpenCouncil 圆桌界面，显示 14 / 15 个评审席位和像素风议院场景">
+            <div class="lens-overlay" aria-label="AI Judge 正在把 OpenCouncil 现场整理成 Loop QA Packet">
+              <div class="lens-status">AI Judge lens active</div>
+              <span class="lens-hotspot seat-a" aria-hidden="true"></span>
+              <span class="lens-hotspot risk seat-b" aria-hidden="true"></span>
+              <span class="lens-hotspot seat-c" aria-hidden="true"></span>
+              <aside class="packet-panel">
+                <div class="packet-title">
+                  <span>Loop QA Packet</span>
+                  <span>building</span>
+                </div>
+                <div class="packet-lines">
+                  <div class="packet-line">
+                    <code>SEATS</code>
+                    <strong>14 / 15 已就座，2 个席位给出风险标记</strong>
+                  </div>
+                  <div class="packet-line">
+                    <code>CLAIM</code>
+                    <strong>C3 unsupported · C5 contradicted</strong>
+                  </div>
+                  <div class="packet-line">
+                    <code>SUPPORT</code>
+                    <div class="packet-meter" aria-hidden="true"><span></span></div>
+                  </div>
+                </div>
+                <div class="packet-decision">Next run: rewrite then rerun · requires human gate</div>
+              </aside>
+            </div>
           </div>
           <div class="audit-rail" aria-label="AI Judge packet outputs">
             <div class="audit-chip">
               <span>Observe</span>
-              <strong>席位、模型、分歧和工具上下文进入 packet</strong>
+              <strong>审计镜头读取席位、模型、分歧和工具上下文</strong>
             </div>
             <div class="audit-chip">
               <span>Judge</span>
-              <strong>claim ledger 标记 unsupported / contradicted 风险</strong>
+              <strong>claim ledger 实时标记 unsupported / contradicted 风险</strong>
             </div>
             <div class="audit-chip">
               <span>Control</span>
               <strong>下一轮只能 rewrite、rerun 或等待 human gate</strong>
             </div>
           </div>
-          <figcaption class="stage-caption">OpenCouncil 是循环发生现场；AI Judge 把现场变成可审计、可交接、可继续运行的 Loop QA Packet。</figcaption>
+          <figcaption class="stage-caption">OpenCouncil 是循环发生现场；AI Judge lens 把现场抽成可审计、可交接、可继续运行的 Loop QA Packet。</figcaption>
         </figure>
       </div>
     </section>
