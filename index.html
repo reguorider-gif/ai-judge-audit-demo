@@ -1020,5 +1020,106 @@
       <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">公开 Gist</a>
     </div>
   </footer>
+  <script>
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  /* Reveal on scroll */
+  const revealEls = document.querySelectorAll(
+    '.step-card, .engine-card, .delivery-card, .dont-card, .vm, .verdict-card, .section-head, .audit-row, .stage-verdict'
+  );
+  revealEls.forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(28px)';
+    el.style.transition = 'opacity 0.72s cubic-bezier(0.16,1,0.3,1), transform 0.72s cubic-bezier(0.16,1,0.3,1)';
+    el.style.transitionDelay = (i % 4) * 55 + 'ms';
+  });
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  /* Seat chips stagger reveal */
+  const seatStrip = document.querySelector('.seat-strip');
+  if (seatStrip) {
+    const seatChips = seatStrip.querySelectorAll('.seat-chip');
+    seatChips.forEach((chip, i) => {
+      chip.style.opacity = '0';
+      chip.style.transform = 'scale(0.88)';
+      chip.style.transition = 'opacity 0.42s cubic-bezier(0.16,1,0.3,1), transform 0.42s cubic-bezier(0.16,1,0.3,1)';
+      chip.style.transitionDelay = i * 38 + 'ms';
+    });
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          seatChips.forEach((chip, i) => {
+            setTimeout(() => {
+              chip.style.opacity = '1';
+              chip.style.transform = 'scale(1)';
+            }, i * 38);
+          });
+        }
+      });
+    }, { threshold: 0.18 }).observe(seatStrip);
+  }
+
+  /* Portfolio bar widths animate from zero */
+  const barEls = document.querySelectorAll('.portfolio-bar [class^="pb-"]');
+  barEls.forEach(el => { el.style.transition = 'width 0.9s cubic-bezier(0.16,1,0.3,1)'; el.dataset.w = getComputedStyle(el).width; el.style.width = '0'; });
+  const barContainer = document.querySelector('.portfolio-bar');
+  if (barContainer) {
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          barContainer.querySelectorAll('[class^="pb-"]').forEach(b => { b.style.width = b.dataset.w; });
+        }
+      });
+    }, { threshold: 0.3 }).observe(barContainer.parentElement);
+  }
+
+  /* Hero stats fade in on load */
+  setTimeout(() => {
+    document.querySelectorAll('.hero-side .stat, .hero-side .stat-label').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(14px)';
+      el.style.transition = 'opacity 0.56s ease, transform 0.56s ease';
+      el.style.transitionDelay = i * 80 + 'ms';
+      requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+    });
+  }, 300);
+
+  /* Product stage subtle breathing */
+  const stage = document.querySelector('.product-stage');
+  if (stage) {
+    let floatY = 0;
+    const floatInterval = setInterval(() => {
+      floatY = -2 + Math.sin(Date.now() / 1900) * 2;
+      stage.style.transform = 'translateY(' + floatY + 'px)';
+    }, 60);
+    stage.addEventListener('mouseenter', () => { clearInterval(floatInterval); stage.style.transform = 'translateY(-4px) scale(1.004)'; });
+    stage.addEventListener('mouseleave', () => { stage.style.transform = 'translateY(0) scale(1)'; });
+  }
+
+  /* Card hover micro-lift */
+  document.querySelectorAll('.step-card, .engine-card, .delivery-card, .dont-card, .verdict-card').forEach(card => {
+    card.style.transition = 'transform 0.24s cubic-bezier(0.16,1,0.3,1), box-shadow 0.24s cubic-bezier(0.16,1,0.3,1)';
+    card.addEventListener('mouseenter', function(){ this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 18px 44px rgba(0,0,0,0.1)'; });
+    card.addEventListener('mouseleave', function(){ this.style.transform = 'translateY(0)'; this.style.boxShadow = ''; });
+  });
+
+  /* Seat chip hover pop */
+  document.querySelectorAll('.seat-chip').forEach(chip => {
+    chip.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+    chip.addEventListener('mouseenter', function(){ this.style.transform = 'scale(1.08)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.12)'; });
+    chip.addEventListener('mouseleave', function(){ this.style.transform = 'scale(1)'; this.style.boxShadow = ''; });
+  });
+})();
+</script>
 </body>
 </html>
