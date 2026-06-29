@@ -1,163 +1,337 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge Sample Loop QA Report</title>
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121513"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23fffffb">AJ</text></svg>'>
+  <title>AI Judge Sample Final Report</title>
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23171717"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
   <style>
     :root {
       color-scheme: light;
-      --ink: #17202a;
-      --muted: #5c6670;
-      --line: #d9e0e7;
-      --soft: #f5f7fa;
-      --accent: #2457d6;
-      --good: #126b3a;
-      --warn: #9a5a00;
-      --bad: #a12222;
+      --canvas: #fafafa;
+      --soft: #f4f4f5;
+      --surface: #ffffff;
+      --ink: #171717;
+      --body: #3f3f46;
+      --muted: #71717a;
+      --line: #e4e4e7;
+      --line-strong: #d4d4d8;
+      --good: #0f8f6f;
+      --good-soft: #ddf7ee;
+      --warn: #8a5b2e;
+      --warn-soft: #f4eadf;
+      --bad: #96363d;
+      --bad-soft: #f3dfe2;
+      --sans: Inter, "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "SFMono-Regular", Menlo, Consolas, monospace;
     }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.55;
+      background: var(--canvas);
       color: var(--ink);
-      background: #ffffff;
+      font-family: var(--sans);
+      line-height: 1.62;
+      letter-spacing: 0;
+      -webkit-font-smoothing: antialiased;
     }
+
     main {
-      max-width: 980px;
+      max-width: 1040px;
       margin: 0 auto;
-      padding: 48px 28px 72px;
+      padding: 44px 28px 72px;
     }
+
+    h1,
+    h2,
+    h3,
+    p {
+      text-wrap: balance;
+      text-wrap: pretty;
+    }
+
     h1 {
-      font-size: 38px;
-      line-height: 1.1;
+      max-width: 820px;
       margin: 0 0 12px;
+      font-size: clamp(36px, 5vw, 58px);
+      line-height: 1.08;
+      font-weight: 760;
       letter-spacing: 0;
     }
+
     h2 {
-      font-size: 22px;
       margin: 36px 0 12px;
-      padding-top: 8px;
+      padding-top: 18px;
       border-top: 1px solid var(--line);
+      font-size: 24px;
+      line-height: 1.24;
       letter-spacing: 0;
     }
+
     h3 {
-      font-size: 17px;
       margin: 24px 0 8px;
+      font-size: 17px;
       letter-spacing: 0;
     }
-    p, li {
+
+    p,
+    li {
+      color: var(--body);
       font-size: 15px;
     }
-    .lede {
-      font-size: 18px;
-      color: var(--muted);
-      margin-bottom: 24px;
+
+    a {
+      color: inherit;
     }
-    .meta, .box {
-      background: var(--soft);
+
+    .lede {
+      max-width: 800px;
+      margin: 0 0 22px;
+      color: var(--body);
+      font-size: 18px;
+      line-height: 1.74;
+    }
+
+    .eyebrow,
+    .label,
+    .pill {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      padding: 8px 11px 8px 9px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--good);
+      box-shadow: 0 0 0 4px rgba(15, 143, 111, 0.12);
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 14px 16px;
-      margin: 18px 0;
+      background: var(--line);
+      margin: 22px 0;
     }
-    .meta p {
-      margin: 4px 0;
+
+    .meta div {
+      min-height: 86px;
+      background: var(--surface);
+      padding: 14px;
     }
+
+    .meta strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 15px;
+      line-height: 1.38;
+    }
+
     .report-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin: 20px 0 28px;
     }
-    .report-button {
+
+    .button {
       min-height: 40px;
       display: inline-flex;
       align-items: center;
-      border: 1px solid var(--line);
+      justify-content: center;
+      border: 1px solid var(--line-strong);
       border-radius: 999px;
-      background: #ffffff;
+      background: var(--surface);
       color: var(--ink);
       padding: 8px 13px;
       text-decoration: none;
       font-size: 14px;
-      font-weight: 650;
+      font-weight: 700;
     }
-    .report-button.primary {
+
+    .button.primary {
       background: var(--ink);
-      color: #ffffff;
+      color: var(--surface);
       border-color: var(--ink);
     }
-    blockquote {
-      margin: 18px 0;
-      padding: 12px 16px;
-      border-left: 4px solid var(--accent);
-      background: var(--soft);
+
+    .box,
+    blockquote,
+    .signature {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 14px 16px;
+      margin: 16px 0;
     }
+
+    blockquote {
+      border-left: 4px solid var(--good);
+      background: var(--soft);
+      color: var(--body);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin: 16px 0 24px;
+      background: var(--surface);
       font-size: 14px;
     }
-    th, td {
+
+    th,
+    td {
       border: 1px solid var(--line);
       padding: 9px 10px;
       vertical-align: top;
       text-align: left;
     }
+
     th {
-      background: #eef3fb;
+      background: var(--soft);
+      color: var(--ink);
+      font-weight: 720;
     }
-    code, pre {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    code,
+    pre {
+      font-family: var(--mono);
       font-size: 13px;
     }
+
     pre {
       overflow: auto;
-      background: #101828;
-      color: #eef3fb;
-      padding: 14px;
       border-radius: 8px;
+      background: #101211;
+      color: #edf7f3;
+      padding: 14px;
+      line-height: 1.55;
     }
+
+    .pill {
+      width: fit-content;
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 5px 8px;
+      background: var(--good-soft);
+      color: var(--good);
+      white-space: nowrap;
+    }
+
+    .pill.warn {
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+
+    .pill.bad {
+      background: var(--bad-soft);
+      color: var(--bad);
+    }
+
+    .good {
+      color: var(--good);
+      font-weight: 700;
+    }
+
+    .warn {
+      color: var(--warn);
+      font-weight: 700;
+    }
+
+    .bad {
+      color: var(--bad);
+      font-weight: 700;
+    }
+
+    .signature {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      background: var(--soft);
+    }
+
+    .signature strong {
+      display: block;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .signature span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
     .export-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      gap: 14px;
       margin: 16px 0 24px;
     }
+
     .export-card {
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: #ffffff;
+      background: var(--surface);
       padding: 14px 16px;
     }
+
     .export-card h3 {
       margin-top: 0;
     }
+
     .export-card p {
-      color: var(--muted);
       margin-bottom: 0;
+      color: var(--muted);
     }
-    .good { color: var(--good); font-weight: 650; }
-    .warn { color: var(--warn); font-weight: 650; }
-    .bad { color: var(--bad); font-weight: 650; }
+
     .footer {
       margin-top: 44px;
       color: var(--muted);
       font-size: 13px;
     }
-    @media (max-width: 720px) {
+
+    @media (max-width: 760px) {
       main {
         padding: 34px 18px 56px;
       }
-      h1 {
-        font-size: 32px;
-      }
-      .export-grid {
+
+      .meta,
+      .export-grid,
+      .signature {
         grid-template-columns: 1fr;
       }
+
+      .report-actions,
+      .button {
+        width: 100%;
+      }
+
       table {
         display: block;
         overflow-x: auto;
@@ -167,36 +341,70 @@
 </head>
 <body>
 <main>
-  <h1>AI Judge Sample Loop QA Report</h1>
-  <p class="lede">A source-isolated Loop QA layer for agent, RAG, and LLM-as-judge workflows.</p>
+  <div class="eyebrow">Final Report</div>
+  <h1>Drop a high-risk claim. Get an auditable verdict.</h1>
+  <p class="lede">This sample shows the MVP shape of AI Judge: Radar Card, Problem Contract, Verdict Packet, and a human-signable Final Report. It is a public, sanitized product artifact, not a benchmark claim.</p>
 
-  <section class="meta">
-    <p><strong>Status:</strong> public, sanitized sample. This is a product communication artifact, not a benchmark claim.</p>
-    <p><strong>Audience:</strong> agent teams, eval framework teams, observability teams, and LLM-as-judge researchers.</p>
+  <section class="meta" aria-label="Report metadata">
+    <div>
+      <span class="label">Report</span>
+      <strong>AJR-2026-06-29-001</strong>
+    </div>
+    <div>
+      <span class="label">Status</span>
+      <strong>Hold until signed</strong>
+    </div>
+    <div>
+      <span class="label">Signer</span>
+      <strong>support_policy_reviewer</strong>
+    </div>
+    <div>
+      <span class="label">Archive</span>
+      <strong>JSON + report</strong>
+    </div>
   </section>
 
   <nav class="report-actions" aria-label="Report actions">
-    <a class="report-button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%20or%20eval%20loop%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20Loop%20QA%20packet%3A%0A">Send one loop</a>
-    <a class="report-button" href="index.html">Back to demo</a>
-    <a class="report-button" href="sample-loop-packet.json">Open JSON packet</a>
-    <a class="report-button" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Open public gist</a>
+    <a class="button primary" href="sample-loop-packet.json">Open JSON packet</a>
+    <a class="button" href="index.html">Back to demo</a>
+    <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20high-risk%20claim&body=Hi%2C%0A%0AI%20have%20one%20high-risk%20claim%20that%20needs%20an%20auditable%20verdict%3A%0A">Send one claim</a>
+    <a class="button" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Public gist</a>
   </nav>
 
-  <h2>1. Why This Report Exists</h2>
-  <p>Most evaluation stacks can tell a team whether one output passed a metric. Agent teams also need to know whether the loop that produced it is safe to run again.</p>
-  <p>AI Judge is designed as a post-run Loop QA layer. It does not replace Ragas, Promptfoo, Langfuse, DeepEval, Phoenix, Opik, LangSmith, TruLens, or a coding agent. It sits after a model answer, RAG answer, trace, PR, support reply, or evaluator score and turns the run into an inspectable review record.</p>
-  <blockquote>If an agent loop says an answer is faithful, complete, or safe, can a human reviewer inspect the path from trigger to evidence to verdict to next-run decision?</blockquote>
+  <h2>1. Radar Card</h2>
+  <p>Radar Card decides whether the problem is worth judging before any deep multi-model work runs.</p>
+  <table>
+    <thead>
+      <tr><th>Indicator</th><th>Hit</th><th>Reason</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Real loss</td><td><span class="pill">Yes</span></td><td>Incorrect refund, SLA, or beta-support statements can create customer escalations and contractual risk.</td></tr>
+      <tr><td>High frequency</td><td><span class="pill">Yes</span></td><td>Enterprise-policy questions appear repeatedly in support workflows and can be automated by the same agent loop.</td></tr>
+      <tr><td>Ambiguous boundary</td><td><span class="pill">Yes</span></td><td>The answer must preserve scope, exceptions, business-hour language, and beta-feature limits.</td></tr>
+      <tr><td>Evidence and responsibility chain</td><td><span class="pill">Yes</span></td><td>Each claim must be tied back to source policy text and reviewer decision.</td></tr>
+      <tr><td>Clear buyer or user</td><td><span class="pill">Yes</span></td><td>Support policy owners, QA reviewers, and customer-support teams can act on the verdict.</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Radar result:</strong> <span class="good">Judge worthy, 9/10.</span> This is not ordinary Q&A. It is a high-risk ambiguous judgment that needs evidence and signature.</p>
 
-  <h2>2. Sample Scenario</h2>
-  <h3>Loop Context</h3>
+  <h2>2. Problem Contract</h2>
+  <table>
+    <tbody>
+      <tr><th>Whose problem?</th><td>Support policy owner.</td></tr>
+      <tr><th>Wrong-decision cost</th><td>A wrong approval can publish unsupported policy commitments to an enterprise customer and teach the automated loop to repeat the same overclaim.</td></tr>
+      <tr><th>Current workaround</th><td>A human reviewer rereads the support answer, source policy pages, evaluator scores, and trace logs before deciding whether to send or rewrite.</td></tr>
+      <tr><th>Why AI Judge fits</th><td>The task is high-risk, ambiguous, evidence-bound, and requires a signed final verdict rather than one model's fluent answer.</td></tr>
+      <tr><th>Final signer</th><td>support_policy_reviewer, required before customer delivery.</td></tr>
+      <tr><th>Validity test</th><td>Each blocking claim is mapped to source evidence or contradiction, dissent is recorded, and the reviewer signs the final report.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Verdict Packet</h2>
+  <h3>Input Claim</h3>
   <div class="box">
     <p><strong>Trigger:</strong> a customer asks whether enterprise refunds, priority support, and beta features are guaranteed.</p>
-    <p><strong>Handoff:</strong> a support agent retrieves policy sources, drafts a reply, and sends it to an evaluator before customer delivery.</p>
-    <p><strong>Human gate:</strong> enterprise-policy answers require reviewer signoff before the loop is allowed to reply automatically.</p>
+    <p><strong>Candidate reply:</strong> You can get a refund within 30 days, but only if you have used fewer than 10% of your monthly credits. Enterprise customers always follow the same policy. Priority support responds within 4 hours, and the company guarantees this response time even during maintenance. Beta features are fully supported. You can export your data from the dashboard, and deletion requests are usually completed within 14 days.</p>
   </div>
-
-  <h3>User Task</h3>
-  <p>Evaluate whether a customer-support agent reply is grounded in the provided policy sources, and decide whether this class of loop can continue automatically.</p>
 
   <h3>Source Packet</h3>
   <div class="box">
@@ -220,97 +428,74 @@
     </ul>
   </div>
 
-  <h3>Candidate Agent Reply</h3>
-  <blockquote>You can get a refund within 30 days, but only if you have used fewer than 10% of your monthly credits. Enterprise customers always follow the same policy. Priority support responds within 4 hours, and the company guarantees this response time even during maintenance. Beta features are fully supported. You can export your data from the dashboard, and deletion requests are usually completed within 14 days.</blockquote>
-
-  <h2>3. Claim Ledger</h2>
+  <h3>Multi-Model Judgment</h3>
   <table>
     <thead>
-      <tr><th>Claim</th><th>Candidate Claim</th><th>Source Match</th><th>Status</th><th>Notes</th></tr>
+      <tr><th>Seat</th><th>Score</th><th>Finding</th><th>Risk Pattern</th></tr>
     </thead>
     <tbody>
-      <tr><td>C1</td><td>Refunds are available within 30 days.</td><td>Source A</td><td class="good">Supported</td><td>Directly grounded.</td></tr>
-      <tr><td>C2</td><td>Refunds require fewer than 10% of monthly credits used.</td><td>Source A</td><td class="warn">Partial</td><td>Applies to digital subscriptions, not all purchases.</td></tr>
-      <tr><td>C3</td><td>Enterprise customers always follow the same refund policy.</td><td>Source A</td><td class="bad">Unsupported</td><td>Enterprise contracts follow the signed MSA.</td></tr>
-      <tr><td>C4</td><td>Priority support responds within 4 hours.</td><td>Source B</td><td class="warn">Partial</td><td>Source says 4 business hours, not 4 clock hours.</td></tr>
-      <tr><td>C5</td><td>The company guarantees priority SLA during maintenance.</td><td>Source B</td><td class="bad">Contradicted</td><td>SLA targets are not guaranteed during scheduled maintenance.</td></tr>
-      <tr><td>C6</td><td>Beta features are fully supported.</td><td>Source C</td><td class="bad">Contradicted</td><td>Beta features are provided as-is.</td></tr>
-      <tr><td>C7</td><td>Customers can export account data from dashboard.</td><td>Source C</td><td class="good">Supported</td><td>Directly grounded.</td></tr>
-      <tr><td>C8</td><td>Deletion requests are usually completed within 14 days.</td><td>Source C</td><td class="warn">Mostly supported</td><td>"Usually" softens but changes certainty.</td></tr>
+      <tr><td>seat_1_policy_scope</td><td>0.58</td><td>Enterprise refund policy was overgeneralized.</td><td>Over-broad policy transfer.</td></tr>
+      <tr><td>seat_2_sla_checker</td><td>0.63</td><td>Maintenance-window exception contradicts the guarantee claim.</td><td>SLA guarantee drift.</td></tr>
+      <tr><td>seat_3_terms_checker</td><td>0.51</td><td>Beta features were described as fully supported though terms say as-is.</td><td>Unsupported assurance.</td></tr>
+      <tr><td>seat_4_language_precision</td><td>0.66</td><td>The answer compresses 4 business hours into 4 hours.</td><td>Time-unit compression.</td></tr>
+      <tr><td>seat_5_release_gate</td><td>0.60</td><td>Correct facts are mixed with unsafe guarantees, so the answer should not ship.</td><td>Mixed grounded and ungrounded response.</td></tr>
     </tbody>
   </table>
 
-  <h2>4. Judge Seat Summary</h2>
+  <h3>Evidence Chain</h3>
   <table>
     <thead>
-      <tr><th>Seat</th><th>Score</th><th>Most Important Finding</th><th>Risk Pattern</th></tr>
+      <tr><th>Claim</th><th>Candidate Claim</th><th>Source</th><th>Status</th><th>Reviewer Note</th></tr>
     </thead>
     <tbody>
-      <tr><td>Seat 1</td><td>0.58</td><td>Flagged enterprise refund overgeneralization.</td><td>Over-broad policy transfer.</td></tr>
-      <tr><td>Seat 2</td><td>0.63</td><td>Focused on maintenance-window contradiction.</td><td>SLA guarantee drift.</td></tr>
-      <tr><td>Seat 3</td><td>0.51</td><td>Penalized beta feature support claim heavily.</td><td>Unsupported assurance.</td></tr>
-      <tr><td>Seat 4</td><td>0.66</td><td>Treated "4 hours" vs "4 business hours" as material.</td><td>Time-unit compression.</td></tr>
-      <tr><td>Seat 5</td><td>0.60</td><td>Found correct claims but marked answer unsafe overall.</td><td>Mixed grounded/ungrounded response.</td></tr>
+      <tr><td>C1</td><td>Refunds are available within 30 days.</td><td>A</td><td class="good">Supported</td><td>Directly grounded.</td></tr>
+      <tr><td>C2</td><td>Refunds require fewer than 10% of monthly credits used.</td><td>A</td><td class="warn">Partial</td><td>Applies to digital subscriptions, not all purchases.</td></tr>
+      <tr><td>C3</td><td>Enterprise customers always follow the same refund policy.</td><td>A</td><td class="bad">Unsupported</td><td>Enterprise contracts follow the signed MSA.</td></tr>
+      <tr><td>C4</td><td>Priority support responds within 4 hours.</td><td>B</td><td class="warn">Partial</td><td>Source says 4 business hours, not 4 clock hours.</td></tr>
+      <tr><td>C5</td><td>The company guarantees priority SLA during maintenance.</td><td>B</td><td class="bad">Contradicted</td><td>SLA targets are not guaranteed during scheduled maintenance.</td></tr>
+      <tr><td>C6</td><td>Beta features are fully supported.</td><td>C</td><td class="bad">Contradicted</td><td>Beta features are provided as-is.</td></tr>
+      <tr><td>C7</td><td>Customers can export account data from dashboard.</td><td>C</td><td class="good">Supported</td><td>Directly grounded.</td></tr>
+      <tr><td>C8</td><td>Deletion requests are usually completed within 14 days.</td><td>C</td><td class="warn">Mostly supported</td><td>"Usually" softens but changes certainty.</td></tr>
     </tbody>
   </table>
-  <p><strong>Consensus band:</strong> 0.51-0.66. <strong>Dissent level:</strong> low on final risk, medium on severity. <strong>Primary failure mode:</strong> grounded facts mixed with policy overclaims.</p>
+  <p><strong>Overclaim pattern:</strong> policy exceptions and scope limits were converted into broad customer-facing guarantees. <strong>Blocking claims:</strong> C3, C5, C6. <strong>Dissent:</strong> final direction is low-dissent; severity is medium-dissent because C4 could be warning or blocker.</p>
 
-  <h2>5. Final Loop QA Verdict</h2>
-  <p><strong>Verdict:</strong> Hold automatic replies for this class of ticket until a human reviewer approves the rewrite.</p>
-  <p><strong>Reason:</strong> The answer contains several correct source-grounded statements, but it converts exceptions and scope limits into broad guarantees. This is dangerous in customer support because incorrect statements sound like policy commitments, and the same loop could repeat the mistake at scale.</p>
+  <h2>4. Final Report</h2>
+  <p><strong>Verdict:</strong> <span class="bad">Hold automatic reply until reviewer approval.</span></p>
+  <p><strong>Reason:</strong> The answer is unsafe to send because it mixes grounded facts with unsupported or contradicted policy guarantees.</p>
 
   <h3>Safer Rewrite</h3>
   <blockquote>You may request a refund within 30 days of purchase. For digital subscriptions, refunds are available only if fewer than 10% of monthly credits have been used. Enterprise customers should refer to their signed master service agreement. Priority support has a 4-business-hour response target, but SLA targets are not guaranteed during scheduled maintenance. Beta features are provided as-is. You can export account data from the dashboard, and account deletion requests are completed within 14 days.</blockquote>
 
-  <h2>6. Suggested Integration Surface</h2>
+  <div class="signature">
+    <div>
+      <strong>Human signature required</strong>
+      <span>support_policy_reviewer · pending · required before customer delivery</span>
+    </div>
+    <span class="pill bad">Hold until signed</span>
+  </div>
+
+  <h3>Portable Archive</h3>
+  <div class="export-grid">
+    <div class="export-card">
+      <h3>JSON packet</h3>
+      <p>Machine-readable contract containing Radar Card, Problem Contract, Verdict Packet, Final Report, and next-run gate.</p>
+    </div>
+    <div class="export-card">
+      <h3>Human report</h3>
+      <p>Reviewer-ready artifact for support, QA, legal, PM, or engineering teams to challenge, sign, and archive.</p>
+    </div>
+  </div>
   <pre>{
-  "loop_id": "support-policy-enterprise-refund",
-  "trigger": "customer_support_ticket",
-  "candidate_output": "...",
-  "question": "...",
-  "sources": [{"id": "A", "text": "..."}],
-  "judge_scores": [{"judge": "seat_1", "score": 0.58, "rationale": "..."}],
-  "human_verdict": "hold_loop_until_reviewer_approval",
-  "next_run": {
-    "action": "rerun_after_rewrite",
-    "requires_human_gate": true,
-    "budget": "one reviewer pass before customer delivery"
+  "final_report": {
+    "status": "hold_until_signed",
+    "signer": "support_policy_reviewer",
+    "blocking_claims": ["C3", "C5", "C6"],
+    "next_run": "rewrite_then_rerun_with_human_gate"
   }
 }</pre>
 
-  <h2>7. Portable Export Targets</h2>
-  <div class="export-grid">
-    <div class="export-card">
-      <h3>Markdown review note</h3>
-      <p>Forward the verdict, claim ledger, safer rewrite, and next-run decision to a PM, researcher, or support reviewer without asking them to open the full trace stack.</p>
-    </div>
-    <div class="export-card">
-      <h3>GitHub issue body</h3>
-      <p>Turn the failed loop case into a regression issue with source IDs, contradicted claims, owner, severity, stop condition, and acceptance criteria for the fix.</p>
-    </div>
-  </div>
-  <pre>## AI Judge Loop QA Packet
-
-Verdict: Hold automatic replies for this class of ticket.
-Primary failure mode: grounded facts mixed with policy overclaims.
-Next run: rerun only after rewrite and reviewer approval.
-
-Blocking claims:
-- C3: Enterprise refund policy overgeneralized.
-- C5: Priority SLA guarantee contradicts maintenance exception.
-- C6: Beta support claim contradicts as-is terms.
-
-Reviewer action:
-- Rewrite with enterprise-contract scope.
-- Preserve business-hour SLA language.
-- Keep maintenance and beta-feature limitations explicit.
-- Keep a human gate for enterprise-policy tickets.</pre>
-
-  <h2>8. Collaboration Ask</h2>
-  <p>Would your team be interested in a small example integration where AI Judge consumes an existing agent loop, eval result, or trace, then outputs a Loop QA report like this?</p>
-  <p>The goal is not to replace the evaluator or agent. The goal is to make loop decisions inspectable enough for product teams, researchers, engineers, and reviewers to trust, challenge, or stop them.</p>
-
-  <p class="footer">Prepared as a public sample for AI Judge outreach. No private user data, accounts, credentials, or production traces are included.</p>
+  <p class="footer">Prepared as a public sanitized sample for AI Judge. No private user data, accounts, credentials, or production traces are included.</p>
 </main>
 </body>
 </html>

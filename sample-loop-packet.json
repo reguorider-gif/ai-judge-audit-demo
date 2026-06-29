@@ -1,49 +1,141 @@
 {
-  "schema": "ai_judge_loop_audit_packet_v0",
+  "schema": "ai_judge_auditable_verdict_packet_v1",
   "packet_id": "public-demo-support-policy-001",
-  "loop_id": "support-policy-enterprise-refund",
+  "report_id": "AJR-2026-06-29-001",
+  "created_at": "2026-06-29",
   "created_for": "public_sanitized_demo",
-  "input": {
-    "trigger": {
-      "type": "customer_support_ticket",
-      "summary": "Customer asks whether enterprise refunds, priority support, and beta features are guaranteed."
-    },
-    "candidate_output": "You can get a refund within 30 days, but only if you have used fewer than 10% of your monthly credits. Enterprise customers always follow the same policy. Priority support responds within 4 hours, and the company guarantees this response time even during maintenance. Beta features are fully supported. You can export your data from the dashboard, and deletion requests are usually completed within 14 days.",
-    "sources": [
+  "positioning": "AI Judge is responsibility infrastructure for high-risk ambiguous judgments, not a smarter answer generator.",
+  "radar_card": {
+    "question": "Should this customer-support claim be judged before the agent is allowed to reply automatically?",
+    "route": "judge",
+    "score": 9,
+    "threshold": 7,
+    "summary": "Worth judging because the claim can create policy commitments, mixes exceptions with guarantees, and requires a human signer.",
+    "indicators": [
       {
-        "id": "A",
-        "title": "Refund Policy",
-        "updated_at": "2026-05-04",
-        "relevant_text": [
-          "Customers may request a refund within 30 days of purchase.",
-          "Digital subscriptions are refundable only if fewer than 10% of monthly credits have been used.",
-          "Enterprise contracts follow the signed master service agreement."
-        ]
+        "id": "real_loss",
+        "label": "Real loss",
+        "hit": true,
+        "reason": "Incorrect refund, SLA, or beta-support statements can create customer escalations and contractual risk."
       },
       {
-        "id": "B",
-        "title": "Support SLA",
-        "updated_at": "2026-04-12",
-        "relevant_text": [
-          "Standard support response target: 2 business days.",
-          "Priority support response target: 4 business hours.",
-          "SLA targets are not guaranteed during scheduled maintenance windows."
-        ]
+        "id": "high_frequency",
+        "label": "High frequency",
+        "hit": true,
+        "reason": "Enterprise-policy questions appear repeatedly in support workflows and can be automated by the same agent loop."
       },
       {
-        "id": "C",
-        "title": "Product Terms",
-        "updated_at": "2026-03-29",
-        "relevant_text": [
-          "Beta features are provided as-is.",
-          "Customers may export account data from the dashboard.",
-          "Account deletion requests are completed within 14 days."
-        ]
+        "id": "ambiguous_boundary",
+        "label": "Ambiguous boundary",
+        "hit": true,
+        "reason": "The answer must preserve policy scope, exceptions, business-hour language, and beta-feature limitations."
+      },
+      {
+        "id": "evidence_and_responsibility_chain",
+        "label": "Evidence and responsibility chain",
+        "hit": true,
+        "reason": "Each claim must be tied back to source policy text and a reviewer decision."
+      },
+      {
+        "id": "clear_buyer_or_user",
+        "label": "Clear buyer or user",
+        "hit": true,
+        "reason": "Support policy owners, QA reviewers, and customer-support teams can act on the verdict."
       }
     ]
   },
-  "audit": {
-    "claim_ledger": [
+  "problem_contract": {
+    "problem_statement": "A customer asks whether enterprise refunds, priority support, and beta features are guaranteed. The support agent reply may convert policy limits into broad guarantees.",
+    "whose_problem": "support_policy_owner",
+    "wrong_decision_cost": "A wrong approval can publish unsupported policy commitments to an enterprise customer and teach the automated loop to repeat the same overclaim.",
+    "current_workaround": "Manual reviewer rereads the support answer, source policy pages, evaluator scores, and trace logs before deciding whether to send or rewrite.",
+    "why_ai_judge_fits": "The task is high-risk, ambiguous, evidence-bound, and requires a signed final verdict rather than a single model's fluent answer.",
+    "final_signer": {
+      "role": "support_policy_reviewer",
+      "signature_state": "pending",
+      "required_before": "customer_delivery"
+    },
+    "validity_test": "The verdict is valid only if each blocking claim is mapped to source evidence or contradiction, dissent is recorded, and the reviewer signs the final report.",
+    "acceptance_criteria": [
+      "The report names the problem owner and wrong-decision cost.",
+      "All blocking claims include source IDs and reviewer notes.",
+      "The safer rewrite removes enterprise, SLA, and beta-feature overclaims.",
+      "The final report records human signature state before archive."
+    ]
+  },
+  "verdict_packet": {
+    "input": {
+      "trigger": {
+        "type": "customer_support_ticket",
+        "summary": "Customer asks whether enterprise refunds, priority support, and beta features are guaranteed."
+      },
+      "candidate_output": "You can get a refund within 30 days, but only if you have used fewer than 10% of your monthly credits. Enterprise customers always follow the same policy. Priority support responds within 4 hours, and the company guarantees this response time even during maintenance. Beta features are fully supported. You can export your data from the dashboard, and deletion requests are usually completed within 14 days.",
+      "sources": [
+        {
+          "id": "A",
+          "title": "Refund Policy",
+          "updated_at": "2026-05-04",
+          "relevant_text": [
+            "Customers may request a refund within 30 days of purchase.",
+            "Digital subscriptions are refundable only if fewer than 10% of monthly credits have been used.",
+            "Enterprise contracts follow the signed master service agreement."
+          ]
+        },
+        {
+          "id": "B",
+          "title": "Support SLA",
+          "updated_at": "2026-04-12",
+          "relevant_text": [
+            "Standard support response target: 2 business days.",
+            "Priority support response target: 4 business hours.",
+            "SLA targets are not guaranteed during scheduled maintenance windows."
+          ]
+        },
+        {
+          "id": "C",
+          "title": "Product Terms",
+          "updated_at": "2026-03-29",
+          "relevant_text": [
+            "Beta features are provided as-is.",
+            "Customers may export account data from the dashboard.",
+            "Account deletion requests are completed within 14 days."
+          ]
+        }
+      ]
+    },
+    "multi_model_judgments": [
+      {
+        "judge": "seat_1_policy_scope",
+        "score": 0.58,
+        "finding": "Enterprise refund policy was overgeneralized.",
+        "risk_pattern": "over-broad policy transfer"
+      },
+      {
+        "judge": "seat_2_sla_checker",
+        "score": 0.63,
+        "finding": "Maintenance-window exception contradicts the guarantee claim.",
+        "risk_pattern": "SLA guarantee drift"
+      },
+      {
+        "judge": "seat_3_terms_checker",
+        "score": 0.51,
+        "finding": "Beta features were described as fully supported even though the terms say as-is.",
+        "risk_pattern": "unsupported assurance"
+      },
+      {
+        "judge": "seat_4_language_precision",
+        "score": 0.66,
+        "finding": "The answer compresses 4 business hours into 4 hours.",
+        "risk_pattern": "time-unit compression"
+      },
+      {
+        "judge": "seat_5_release_gate",
+        "score": 0.60,
+        "finding": "Correct facts are mixed with unsafe guarantees, so the answer should not ship.",
+        "risk_pattern": "mixed grounded and ungrounded response"
+      }
+    ],
+    "evidence_chain": [
       {
         "claim_id": "C1",
         "claim": "Refunds are available within 30 days.",
@@ -66,7 +158,8 @@
         "source_match": ["A"],
         "status": "unsupported",
         "severity": "blocker",
-        "reviewer_note": "Enterprise contracts follow the signed MSA."
+        "reviewer_note": "Enterprise contracts follow the signed MSA.",
+        "overclaim_type": "scope_overgeneralization"
       },
       {
         "claim_id": "C4",
@@ -74,7 +167,8 @@
         "source_match": ["B"],
         "status": "partial",
         "severity": "warning",
-        "reviewer_note": "Source says 4 business hours, not 4 clock hours."
+        "reviewer_note": "Source says 4 business hours, not 4 clock hours.",
+        "overclaim_type": "time_unit_compression"
       },
       {
         "claim_id": "C5",
@@ -82,7 +176,8 @@
         "source_match": ["B"],
         "status": "contradicted",
         "severity": "blocker",
-        "reviewer_note": "SLA targets are not guaranteed during scheduled maintenance."
+        "reviewer_note": "SLA targets are not guaranteed during scheduled maintenance.",
+        "overclaim_type": "exception_removed"
       },
       {
         "claim_id": "C6",
@@ -90,7 +185,8 @@
         "source_match": ["C"],
         "status": "contradicted",
         "severity": "blocker",
-        "reviewer_note": "Beta features are provided as-is."
+        "reviewer_note": "Beta features are provided as-is.",
+        "overclaim_type": "unsupported_assurance"
       },
       {
         "claim_id": "C7",
@@ -109,35 +205,54 @@
         "reviewer_note": "Usually softens but changes certainty."
       }
     ],
-    "judge_summary": {
-      "score_band": {
-        "min": 0.51,
-        "max": 0.66
-      },
-      "dissent_level": "medium_on_severity",
-      "primary_failure_mode": "grounded_facts_mixed_with_policy_overclaims",
-      "blocking_claims": ["C3", "C5", "C6"]
+    "dissent": {
+      "final_direction": "low_dissent",
+      "severity": "medium_dissent",
+      "notes": "All seats recommend holding the automatic reply. The main disagreement is whether C4 is a blocker or warning."
+    },
+    "overclaim_summary": {
+      "pattern": "Policy exceptions and scope limits were converted into broad customer-facing guarantees.",
+      "blocking_claims": ["C3", "C5", "C6"],
+      "warnings": ["C2", "C4", "C8"]
+    },
+    "machine_verdict": {
+      "decision": "hold_until_reviewer_approval",
+      "reason": "The candidate answer contains correct source-grounded statements but converts exceptions and scope limits into broad guarantees."
     }
   },
-  "human_verdict": {
-    "decision": "hold_loop_until_reviewer_approval",
-    "reason": "The answer contains correct source-grounded statements, but converts exceptions and scope limits into broad guarantees.",
-    "safer_rewrite": "You may request a refund within 30 days of purchase. For digital subscriptions, refunds are available only if fewer than 10% of monthly credits have been used. Enterprise customers should refer to their signed master service agreement. Priority support has a 4-business-hour response target, but SLA targets are not guaranteed during scheduled maintenance. Beta features are provided as-is. You can export account data from the dashboard, and account deletion requests are completed within 14 days."
-  },
-  "next_run": {
-    "action": "rewrite_then_rerun",
-    "requires_human_gate": true,
-    "owner": "support_policy_reviewer",
-    "acceptance_criteria": [
-      "Enterprise contract scope is explicit.",
-      "Priority support language preserves business-hour and maintenance-window limits.",
-      "Beta feature support claim is removed or rewritten as as-is."
-    ]
-  },
-  "exports": {
-    "markdown_review_note": true,
-    "github_issue_body": true,
-    "json_contract": true,
-    "sample_report_url": "AI_Judge_Audit_Sample_Report.html"
+  "final_report": {
+    "status": "hold_until_signed",
+    "human_verdict": {
+      "decision": "hold_automatic_reply_until_reviewer_approval",
+      "reason": "The answer is unsafe to send because it mixes grounded facts with unsupported or contradicted policy guarantees.",
+      "safer_rewrite": "You may request a refund within 30 days of purchase. For digital subscriptions, refunds are available only if fewer than 10% of monthly credits have been used. Enterprise customers should refer to their signed master service agreement. Priority support has a 4-business-hour response target, but SLA targets are not guaranteed during scheduled maintenance. Beta features are provided as-is. You can export account data from the dashboard, and account deletion requests are completed within 14 days."
+    },
+    "signature": {
+      "required": true,
+      "signer": "support_policy_reviewer",
+      "state": "pending",
+      "signed_at": null
+    },
+    "archive": {
+      "report_url": "AI_Judge_Audit_Sample_Report.html",
+      "json_packet": "sample-loop-packet.json",
+      "retention_note": "Public sanitized demo. No private user data, credentials, or production traces are included."
+    },
+    "exports": {
+      "human_signable_report": true,
+      "json_contract": true,
+      "markdown_review_note": true,
+      "github_issue_body": true
+    },
+    "next_run": {
+      "action": "rewrite_then_rerun",
+      "requires_human_gate": true,
+      "owner": "support_policy_reviewer",
+      "acceptance_criteria": [
+        "Enterprise contract scope is explicit.",
+        "Priority support language preserves business-hour and maintenance-window limits.",
+        "Beta feature support claim is removed or rewritten as as-is."
+      ]
+    }
   }
 }
