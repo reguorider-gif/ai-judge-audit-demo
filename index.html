@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge — 可签字的 AI 审计包</title>
-  <meta name="description" content="把高风险 AI 输出、RAG 回答和 agent loop 失败样本，变成有证据链、异议记录和人工签字位的审计包。">
+  <title>AI Judge — 你的 AI 回答，到底能不能发给用户？</title>
+  <meta name="description" content="不是评分工具。把你的 RAG 回答拆成逐条核验：哪句有依据、哪句是瞎编的、能不能放行。">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
   <meta property="og:title" content="AI Judge — 可签字的 AI 审计包">
-  <meta property="og:description" content="把高风险 AI 输出变成 Radar Card、Problem Contract、Verdict Packet 和 Final Report。">
+  <meta property="og:description" content="你的 AI 回答拆成逐条核验：有依据、缺证据、还是被源文档推翻——附带能不能发的结论。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="AI Judge — 可签字的 AI 审计包">
-  <meta name="twitter:description" content="高风险 AI 输出进来，可归档、可复核、可签字的审计包出去。">
+  <meta name="twitter:description" content="RAG 回答进来，逐条核验报告出去。附带能不能发的结论和签字位。">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,24 +49,48 @@
     .nav-links a:hover{color:var(--ink)}
 
     /* hero */
-    .hero{padding:82px 0 56px;text-align:center}
+    .hero{padding:64px 0 46px;text-align:left}
+    .hero-layout{display:grid;grid-template-columns:minmax(0,0.98fr) minmax(420px,0.72fr);gap:clamp(30px,5vw,58px);align-items:start}
+    .hero-copy{padding-top:30px}
     .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(0,0,0,0.08);border-radius:999px;background:rgba(255,255,255,0.7);padding:8px 13px 8px 10px;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:20px}
     .hero .eyebrow::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(13,143,114,0.12)}
-    .hero h1{max-width:860px;margin:0 auto 18px;font-size:5.2rem;line-height:1.06;font-weight:780;letter-spacing:0;overflow-wrap:anywhere}
-    .hero p{max-width:690px;margin:0 auto;color:#54545c;font-size:18px;line-height:1.72}
+    .hero h1{max-width:760px;margin:0 0 18px;font-size:clamp(52px,5.7vw,82px);line-height:1.06;font-weight:780;letter-spacing:0;overflow-wrap:anywhere}
+    .hero p{max-width:620px;margin:0;color:#54545c;font-size:18px;line-height:1.72}
     .hero .stats{margin-top:clamp(28px,4vw,42px);display:flex;justify-content:center;gap:clamp(32px,6vw,72px)}
     .hero .stats .st{text-align:center}
     .hero .stats .st b{display:block;font-size:clamp(38px,5vw,60px);font-weight:780;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
     .hero .stats .st span{display:block;margin-top:6px;color:var(--muted);font-size:13px;max-width:180px;margin-inline:auto}
-    .hero .actions{margin-top:clamp(26px,4vw,38px);display:flex;justify-content:center;flex-wrap:wrap;gap:10px}
+    .hero .actions{grid-column:1;margin-top:clamp(22px,3vw,32px);display:flex;justify-content:flex-start;flex-wrap:wrap;gap:10px}
     .btn{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(0,0,0,0.1);border-radius:999px;background:#fff;color:var(--ink);padding:10px 22px;font-size:15px;font-weight:700;white-space:nowrap;transition:transform .16s ease,box-shadow .16s ease}
     .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
     .btn:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,0,0,.11)}
-    .proof-strip{max-width:1000px;margin:34px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;text-align:left}
+    .proof-strip{grid-column:1/-1;max-width:none;margin:10px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;text-align:left}
     .proof-card{min-width:0;min-height:118px;border:1px solid rgba(0,0,0,0.08);border-radius:16px;background:rgba(255,255,255,0.72);padding:18px;box-shadow:0 16px 42px rgba(0,0,0,.04)}
     .proof-card b{display:block;color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:10px}
     .proof-card strong{display:block;font-size:16px;line-height:1.35;font-weight:720;color:var(--ink)}
     .proof-card span{display:block;margin-top:7px;color:var(--muted);font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+
+    .audit-console{position:relative;border:1px solid rgba(0,0,0,0.08);border-radius:22px;background:rgba(255,255,255,0.78);box-shadow:0 28px 80px rgba(0,0,0,.08);padding:18px;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+    .audit-console::before{content:"";position:absolute;inset:10px;border:1px solid rgba(13,143,114,.12);border-radius:16px;pointer-events:none}
+    .console-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700}
+    .status-pill{display:inline-flex;align-items:center;gap:7px;border-radius:999px;background:#111;color:#fff;padding:6px 10px;font-family:var(--mono);font-size:10px;font-weight:700}
+    .status-pill::before{content:"";width:6px;height:6px;border-radius:999px;background:#f4b8bc}
+    .decision-card{position:relative;border-radius:16px;background:#101312;color:#fff;padding:20px;margin-bottom:10px;overflow:hidden}
+    .decision-card::after{content:"";position:absolute;inset:auto -24px -44px auto;width:150px;height:150px;border-radius:999px;background:rgba(13,143,114,.18);filter:blur(18px)}
+    .decision-card small{display:block;color:rgba(255,255,255,.58);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:10px}
+    .decision-card strong{position:relative;z-index:1;display:block;font-size:clamp(30px,3.6vw,46px);line-height:1.02;font-weight:790;letter-spacing:0;color:#fff}
+    .decision-card p{position:relative;z-index:1;margin:10px 0 0;max-width:320px;color:rgba(255,255,255,.72);font-size:13px;line-height:1.55}
+    .metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}
+    .metric{border:1px solid rgba(0,0,0,.07);border-radius:14px;background:#fff;padding:12px}
+    .metric b{display:block;font-size:24px;line-height:1;font-weight:780;color:var(--ink);font-variant-numeric:tabular-nums}
+    .metric span{display:block;margin-top:6px;color:var(--muted);font-size:11px;line-height:1.35}
+    .claim-stack{display:grid;gap:8px}
+    .evidence-row{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid rgba(0,0,0,.07);border-radius:12px;background:#fff;padding:10px 12px;color:#3f3f46;font-size:12px;line-height:1.38}
+    .evidence-row code{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--muted)}
+    .evidence-row b{font-weight:700;color:var(--ink)}
+    .evidence-row span{justify-self:end;border-radius:999px;padding:4px 7px;font-family:var(--mono);font-size:9px;font-weight:700;background:#eef8f4;color:#0a745d;white-space:nowrap}
+    .evidence-row.warn span{background:#fff6d7;color:#8a5d00}
+    .evidence-row.bad span{background:#f7e5e8;color:var(--danger)}
 
     /* capability strip */
     .cap-strip{border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(0,0,0,0.06);overflow:hidden;white-space:nowrap;padding:13px 0;background:rgba(255,255,255,0.4)}
@@ -160,6 +184,8 @@
     @media(max-width:920px){
       .wrap,.topbar{width:calc(100% - 32px)}
       .nav-links{display:none}
+      .hero-layout{grid-template-columns:1fr;gap:22px}
+      .hero-copy{padding-top:0}
       .hero h1{font-size:4rem}
       .proof-strip,.steps-grid,.case-dark .verdict-strip,.delivery-grid,.ledger-grid{grid-template-columns:repeat(2,1fr)}
       .case-dark .stage-overlay{padding:26px;align-items:flex-end}
@@ -171,14 +197,27 @@
     @media(max-width:640px){
       .wrap{width:100%;padding-inline:14px}
       .topbar{width:100%}
-      .hero{padding:58px 0 42px;text-align:left}
+      .hero{padding:34px 0 28px;text-align:left}
       .hero .eyebrow,.hero h1,.hero p{margin-left:0;margin-right:0}
-      .hero h1{max-width:300px;font-size:1.78rem;line-height:1.16}
-      .hero p{max-width:285px;font-size:16px;overflow-wrap:anywhere}
-      .hero p,.proof-card,.proof-card *,.steps-grid .sc,.steps-grid .sc *,.claim,.claim *,.engine-grid .eg,.engine-grid .eg *,.delivery-grid .dc,.delivery-grid .dc *,.closing p{overflow-wrap:anywhere;word-break:break-all}
+      .hero h1{max-width:360px;font-size:2rem;line-height:1.13}
+      .hero p{max-width:350px;font-size:15.5px;line-height:1.68;overflow-wrap:anywhere}
+      .hero p,.proof-card,.proof-card *,.steps-grid .sc,.steps-grid .sc *,.claim,.claim *,.engine-grid .eg,.engine-grid .eg *,.delivery-grid .dc,.delivery-grid .dc *,.closing p{overflow-wrap:anywhere;word-break:normal}
       .hero .actions{width:min(100%,320px);display:grid;grid-template-columns:1fr;gap:10px;padding-inline:0;margin-inline:0}
       .btn{width:100%;white-space:normal;text-align:center}
-      .proof-strip,.steps-grid,.case-dark .verdict-strip,.delivery-grid,.ledger-grid{width:100%;grid-template-columns:minmax(0,1fr)}
+      .proof-strip{width:100%;display:flex;overflow-x:auto;gap:10px;padding:0 0 8px;scroll-snap-type:x mandatory}
+      .proof-card{flex:0 0 238px;min-height:136px;scroll-snap-align:start}
+      .steps-grid,.case-dark .verdict-strip,.delivery-grid,.ledger-grid{width:100%;grid-template-columns:minmax(0,1fr)}
+      .audit-console{padding:14px;border-radius:18px}
+      .console-head{font-size:10px}
+      .decision-card{padding:16px;border-radius:14px}
+      .decision-card strong{font-size:2rem}
+      .decision-card p{font-size:12px}
+      .metric-grid{gap:6px}
+      .metric{padding:10px 8px;border-radius:12px}
+      .metric b{font-size:20px}
+      .metric span{font-size:10px}
+      .evidence-row{grid-template-columns:38px minmax(0,1fr);gap:6px;padding:9px 10px}
+      .evidence-row span{grid-column:2;justify-self:start;margin-top:2px}
       .case-dark .stage-wrapper{border-radius:14px}
       .case-dark .inner{padding:48px 16px 56px}
       .seat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
@@ -321,18 +360,43 @@
     <!-- HERO -->
     <section class="hero">
       <div class="wrap">
-        <div class="eyebrow">Loop QA Packet</div>
-        <h1>高风险 AI 输出，<br>可签字审计包。</h1>
-        <p>接在 agent / RAG / eval 后面，输出证据、异议和动作。</p>
-        <div class="proof-strip" aria-label="AI Judge packet stages">
-          <div class="proof-card"><b>01 · Radar Card</b><strong>先判断值不值得审</strong><span>真实损失、边界模糊、可复现，才进入审计。</span></div>
-          <div class="proof-card"><b>02 · Problem Contract</b><strong>锁定问题和责任人</strong><span>记录错误成本、验收标准、签字人和判断红线。</span></div>
-          <div class="proof-card"><b>03 · Verdict Packet</b><strong>逐条 claim 对证据</strong><span>支持、部分支持、缺证据、反证，全部落进账本。</span></div>
-          <div class="proof-card"><b>04 · Final Report</b><strong>交付可归档裁决</strong><span>交给复核人、工单、合规记录和下一轮控制。</span></div>
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <div class="eyebrow">AI 安全检查</div>
+            <h1>你的 AI 回答，<br>到底能不能发给用户？</h1>
+            <p>评测工具告诉你"这一条不合格"。但它不会说：哪句有问题？为什么？要不要人看一眼再发？AI Judge 告诉你后面这些。</p>
+          </div>
+          <aside class="audit-console" aria-label="AI Judge verdict preview">
+            <div class="console-head">
+              <span>support-policy-reply</span>
+              <span class="status-pill">reviewer required</span>
+            </div>
+            <div class="decision-card">
+              <small>final verdict</small>
+              <strong>暂不放行</strong>
+              <p>8 条主张里有 3 条阻断项。自动回复暂停，交给政策 owner 签字。</p>
+            </div>
+            <div class="metric-grid" aria-label="Audit summary">
+              <div class="metric"><b>8</b><span>claims checked</span></div>
+              <div class="metric"><b>3</b><span>release blockers</span></div>
+              <div class="metric"><b>1</b><span>human signer</span></div>
+            </div>
+            <div class="claim-stack">
+              <div class="evidence-row"><code>C1</code><b>30 天退款窗口</b><span>有依据</span></div>
+              <div class="evidence-row warn"><code>C4</code><b>4 小时 vs 4 个工作小时</b><span>有偏差</span></div>
+              <div class="evidence-row bad"><code>C5</code><b>维护期 SLA 保障不变</b><span>矛盾</span></div>
+            </div>
+          </aside>
+          <div class="actions">
+            <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">打开真实审计报告</a>
+            <a class="btn" href="sample-loop-packet.json">查看 JSON 数据包</a>
+          </div>
         </div>
-        <div class="actions">
-          <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">打开样例审计报告</a>
-          <a class="btn" href="sample-loop-packet.json">查看 JSON 包</a>
+        <div class="proof-strip" aria-label="AI Judge packet stages">
+          <div class="proof-card"><b>01 · 筛选</b><strong>不是什么都要审</strong><span>错了会赔钱的、会被客户升级投诉的 case 才进来。</span></div>
+          <div class="proof-card"><b>02 · 拆解</b><strong>把回答拆成一条条主张</strong><span>"退款 30 天内可申请"——是真的吗？源文档在哪？</span></div>
+          <div class="proof-card"><b>03 · 对账</b><strong>每条主张对回源文档</strong><span>有依据、部分有、缺证据、还是被源文档推翻——逐条标出来。</span></div>
+          <div class="proof-card"><b>04 · 裁决</b><strong>给出能不能发的结论</strong><span>暂停自动回复等人签字，还是可以直接放行。</span></div>
         </div>
       </div>
     </section>
@@ -340,7 +404,7 @@
     <!-- CAP STRIP -->
     <div class="cap-strip" aria-hidden="true">
       <div class="cap-track">
-        <span><b>RAG</b>unsupported claim</span> · <span><b>Agent</b>unsafe next action</span> · <span><b>Eval</b>borderline failure</span> · <span><b>Support</b>policy answer</span> · <span><b>Review</b>human signoff</span> · <span><b>Archive</b>portable packet</span> · <span><b>RAG</b>unsupported claim</span> · <span><b>Agent</b>unsafe next action</span> · <span><b>Eval</b>borderline failure</span> · <span><b>Support</b>policy answer</span> · <span><b>Review</b>human signoff</span> · <span><b>Archive</b>portable packet</span>
+        <span><b>RAG回答核查</b></span> · <span><b>Agent输出审计</b></span> · <span><b>客服赔偿风险</b></span> · <span><b>合规判断</b></span> · <span><b>人工签字</b></span> · <span><b>可归档记录</b></span> · <span><b>RAG回答核查</b></span> · <span><b>Agent输出审计</b></span> · <span><b>客服赔偿风险</b></span> · <span><b>合规判断</b></span> · <span><b>人工签字</b></span> · <span><b>可归档记录</b></span>
       </div>
     </div>
 
@@ -351,21 +415,21 @@
           <img src="assets/openspark-council.png" alt="OpenCouncil 议院圆桌，13 个 AI 席位同时审议">
           <div class="stage-overlay">
             <div class="stage-copy">
-              <span class="tag">Sample Case · Support Policy Agent</span>
-              <h2>一条看似正确的客服回答，哪里不能直接发？</h2>
+              <span class="tag">真实案例 · 一条客服 RAG 回答</span>
+              <h2>读起来好像没问题。<br>但有三处承诺，源文档没写。</h2>
             </div>
             <div class="packet-panel" aria-hidden="true">
-              <div class="packet-title"><b>Loop QA Packet</b><span>HOLD</span></div>
-              <div class="packet-row"><code>RADAR</code><span>Judge worthy · 9/10 · 有合同和客服升级风险</span></div>
-              <div class="packet-row"><code>CLAIMS</code><span>8 条主张拆解 · 3 条阻断发布</span></div>
-              <div class="packet-row"><code>VERDICT</code><span>Hold automatic reply until reviewer approval</span></div>
+              <div class="packet-title"><b>审计包</b><span>暂不放行</span></div>
+              <div class="packet-row"><code>来源</code><span>客服 RAG 回答 + 三份政策源文档</span></div>
+              <div class="packet-row"><code>拆解</code><span>8 条主张 · 3 条有问题</span></div>
+              <div class="packet-row"><code>裁决</code><span>暂停自动回复 · 等 reviewer 看过再决定</span></div>
             </div>
           </div>
         </div>
         <div class="verdict-strip">
-          <div class="vs"><b>HOLD UNTIL SIGNED</b><span>最终裁决：自动回复需暂停，等待 reviewer 签字</span></div>
-          <div class="vs"><b>8 claims</b><span>每条客服承诺都映射到源政策或反证</span></div>
-          <div class="vs"><b>3 blockers</b><span>企业合同、维护期 SLA、Beta 支持三处不能放行</span></div>
+          <div class="vs"><b>暂不放行</b><span>三条主张缺少源文档依据</span></div>
+          <div class="vs"><b>8 条逐项核验</b><span>每条都对了退款政策、SLA 和产品条款</span></div>
+          <div class="vs"><b>3 条不能发</b><span>企业退款、维护期保障、Beta 功能承诺——源文档没写或写的是相反的</span></div>
         </div>
       </div>
     </section>
@@ -373,13 +437,13 @@
     <!-- STEPS -->
     <section class="steps">
       <div class="wrap">
-        <h2>从一次失败输出，到一份责任链。</h2>
-        <p>AI Judge 把 eval 结果、source policy、trace 和 reviewer 判断装进同一个可交付 packet。</p>
+        <h2>从一条失败的 AI 回答，到一份能签字的核验报告。</h2>
+        <p>eval 工具告诉你"这条不行"。AI Judge 接手，把"哪里不行、为什么、谁来看"变成一份可以转发的文件。</p>
         <div class="steps-grid">
-          <div class="sc"><span class="n">01 · Radar</span><h4>筛掉普通问答</h4><p>只有真实损失、高频复现、边界模糊、需要证据链和责任人的 case 才进入审计。</p></div>
-          <div class="sc"><span class="n">02 · Contract</span><h4>锁住判断边界</h4><p>明确错判成本、当前 workaround、签字人、验收标准和不能自动发布的红线。</p></div>
-          <div class="sc"><span class="n">03 · Packet</span><h4>逐条 claim 对源</h4><p>每个判断都要落到 source、dissent、置信度、overclaim 和下一步动作。</p></div>
-          <div class="sc"><span class="n">04 · Report</span><h4>交给人签字</h4><p>输出 HTML/JSON/Markdown/GitHub issue 形态，能进入 review queue 和归档系统。</p></div>
+          <div class="sc"><span class="n">01 · 来一条问题回答</span><h4>客服 RAG / agent 回复 / eval 判了不合格的</h4><p>只要错了会赔钱、会被投诉、会被合规盯上——就值得审。</p></div>
+          <div class="sc"><span class="n">02 · 拆成逐条主张</span><h4>不是笼统打分，是逐句拆开</h4><p>"退款 30 天内可申请"拆成一条，"企业客户一样适用"拆成另一条——每条单独核实。</p></div>
+          <div class="sc"><span class="n">03 · 对回源文档查证</span><h4>每条主张落在源文档上</h4><p>源文档写"4 个工作小时"，回答写"4 小时"——差两个字就是两种承诺。</p></div>
+          <div class="sc"><span class="n">04 · 输出签字报告</span><h4>交给一个人看过再决定</h4><p>报告里有什么能发、什么不能、为什么、谁签字。能贴进工单或 GitHub issue。</p></div>
         </div>
       </div>
     </section>
@@ -387,17 +451,17 @@
     <!-- CLAIM LEDGER -->
     <section class="ledger" id="ledger">
       <div class="wrap">
-        <h2>不是一个总分，是一张 claim ledger。</h2>
-        <p>样例报告把客服回答拆成 8 条主张。支持、部分支持、缺证据和被源文档推翻，直接决定能不能放行。</p>
+        <h2>不是说"整体可信度偏低"。是说 C3 缺依据，C5 直接矛盾。</h2>
+        <p>一条客服回答被拆成 8 条主张，逐条核验。3 条有问题，自动回复被暂停。</p>
         <div class="ledger-grid" aria-label="Claim ledger sample">
-          <div class="claim"><div class="cid">C1 <span class="status">Supported</span></div><p>30 天退款窗口有直接政策依据，可以保留。</p></div>
-          <div class="claim"><div class="cid">C2 <span class="status warn">Partial</span></div><p>10% credits 条件只适用于数字订阅，不能泛化到所有购买。</p></div>
-          <div class="claim"><div class="cid">C3 <span class="status bad">Unsupported</span></div><p>企业客户不一定走同一退款政策，应回到签署的 MSA。</p></div>
-          <div class="claim"><div class="cid">C4 <span class="status warn">Partial</span></div><p>源文档说的是 4 个工作小时，不是 4 个自然小时。</p></div>
-          <div class="claim"><div class="cid">C5 <span class="status bad">Contradicted</span></div><p>维护期 SLA 不保证，原回答会制造过度承诺。</p></div>
-          <div class="claim"><div class="cid">C6 <span class="status bad">Contradicted</span></div><p>Beta 功能按 as-is 提供，不能承诺完整支持。</p></div>
-          <div class="claim"><div class="cid">C7 <span class="status">Supported</span></div><p>用户可在 dashboard 导出账号数据，有直接依据。</p></div>
-          <div class="claim"><div class="cid">C8 <span class="status warn">Mostly</span></div><p>14 天删除请求大体成立，但 “usually” 改变了承诺强度。</p></div>
+          <div class="claim"><div class="cid">C1 <span class="status">有依据</span></div><p>"30 天内可申请退款"直接对应退款政策原文。</p></div>
+          <div class="claim"><div class="cid">C2 <span class="status warn">有前提</span></div><p>"用掉不到 10% credits 才能退"只适用于数字订阅，不能对所有购买说这句话。</p></div>
+          <div class="claim"><div class="cid">C3 <span class="status bad">缺依据</span></div><p>"企业客户也走同样退款政策"——源文档写的是"按签署的 MSA 执行"。</p></div>
+          <div class="claim"><div class="cid">C4 <span class="status warn">有偏差</span></div><p>源文档写 4 个工作小时，回答写成 4 个小时——差两个字是两种承诺。</p></div>
+          <div class="claim"><div class="cid">C5 <span class="status bad">矛盾</span></div><p>"维护期内 SLA 保障不变"——源文档明确排除维护窗口。</p></div>
+          <div class="claim"><div class="cid">C6 <span class="status bad">矛盾</span></div><p>"Beta 功能完整支持"——源文档写的是 as-is 提供，不承诺支持。</p></div>
+          <div class="claim"><div class="cid">C7 <span class="status">有依据</span></div><p>"可在 dashboard 导出账号数据"有明确的政策条款对应。</p></div>
+          <div class="claim"><div class="cid">C8 <span class="status warn">有偏差</span></div><p>多了一个"usually"，承诺强度变了——源文档是"14 天内完成"，不是"通常 14 天"。</p></div>
         </div>
       </div>
     </section>
@@ -409,8 +473,8 @@
         <p style="text-align:center;color:var(--muted);font-size:15px;margin:0 auto clamp(28px,4vw,40px);max-width:520px;">可以进 GitHub issue、内部 review queue、合规记录，或接入下一轮 agent 控制。</p>
         <div class="delivery-grid">
           <div class="dc">
-            <h4>审计报告（可打印 PDF / HTML）</h4>
-            <p>Radar 判断、问题契约、claim ledger、异议记录、阻断理由、签字位和归档路径。</p>
+            <h4>审计报告（HTML / 可打印 PDF）</h4>
+            <p>里面有逐条核验结果、阻断理由、安全改写版本、签字位。不需要打开任何 eval 工具就能看懂。</p>
             <a class="btn" href="AI_Judge_Audit_Sample_Report.html">打开样例报告</a>
           </div>
           <pre>{
@@ -421,11 +485,11 @@
     "risk": "contractual_escalation"
   },
   "verdict": {
-    "decision": "hold_until_reviewer_approval",
+    "decision": "hold_until_signed",
     "blockers": ["C3", "C5", "C6"]
   },
   "next_run": {
-    "action": "rewrite_with_policy_bounds",
+    "action": "rewrite_then_human_review",
     "handoff": "support_policy_owner"
   }
 }</pre>
@@ -436,12 +500,12 @@
     <!-- ENGINE -->
     <section class="engine" id="engine">
       <div class="wrap">
-        <h2>不是单模型打分，也不是又一个 eval 面板。</h2>
-        <p>AI Judge 接在你已经有的 eval、trace、RAG observability 后面，只处理那些需要责任链的边界 case。</p>
+        <h2>不是又一个评分工具。是坐在评分工具后面，做它们不做的事。</h2>
+        <p>你已经在用 Ragas、DeepEval、Langfuse。AI Judge 接在它们后面，只处理错了会出事的那一类——不是扫全量。</p>
         <div class="engine-grid">
-          <div class="eg"><span class="elabel">01 · Worth judging</span><h4>先判断这件事配不配审计</h4><p>低风险、低频、没有责任人的普通问答不要进来。AI Judge 只处理错了会付成本的判断。</p></div>
-          <div class="eg"><span class="elabel">02 · Source isolation</span><h4>每条主张必须回到源材料</h4><p>回答拆成 claim，再逐条连接 source、例外、反证和语气强度。模型意见不能替代证据。</p></div>
-          <div class="eg"><span class="elabel">03 · Human signoff</span><h4>裁决要能被人接手</h4><p>输出不是一个分数，而是阻断理由、可发布改写、签字状态和下一轮 agent 控制动作。</p></div>
+          <div class="eg"><span class="elabel">01 · 只审值得审的</span><h4>不扫全量，只处理高风险</h4><p>大多数 AI 回答错了也无所谓。只有错了会赔钱、会升级投诉、会被合规盯上的才值得审。</p></div>
+          <div class="eg"><span class="elabel">02 · 只看源文档</span><h4>模型说什么不重要，源文档才重要</h4><p>每条主张必须对回源文档。没写的标缺依据，写相反的标矛盾。不能模糊过去。</p></div>
+          <div class="eg"><span class="elabel">03 · 交给人签字</span><h4>不是 pass 或 fail，是"等人看过再放行"</h4><p>报告里有阻断理由、安全改写版本、签字位，和"下一轮要不要继续跑"的控制指令。</p></div>
         </div>
       </div>
     </section>
@@ -449,8 +513,8 @@
     <!-- CLOSING -->
     <section class="closing">
       <div class="wrap">
-        <h2>给我一个失败或边界案例，<br>换回一份审计包。</h2>
-        <p>一条 RAG 回答、一份 agent 自动回复、一条 eval 判定为不合格的输出。你给现有材料，我给可签字、可归档、可复核的 packet。</p>
+        <h2>给我一条你感觉"不太对"的 AI 回答，<br>我还你一份核验报告。</h2>
+        <p>一条 RAG 客服回复、一段 agent 的自动结论、一条 eval 刚判不及格的输出。给我现有材料，我还你报告——里面有哪句对、哪句错、为什么、能不能发、谁需要签字。</p>
         <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
       </div>
     </section>
