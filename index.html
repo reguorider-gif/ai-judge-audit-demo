@@ -1238,13 +1238,13 @@
         <span class="mark" aria-hidden="true">AJ</span>
         <span>AI Judge</span>
       </a>
-      <h2 class="sr-only" id="nav-heading">Page sections</h2>
+      <h2 class="sr-only" id="nav-heading">页面栏目</h2>
       <div class="nav-links" role="navigation" aria-labelledby="nav-heading">
-        <a href="#story">价值</a>
-        <a href="#json">JSON</a>
-        <a href="#proof">证据</a>
-        <a href="#fit">适配</a>
-        <a href="AI_Judge_Audit_Sample_Report.html">报告</a>
+        <a href="#story">它做什么</a>
+        <a href="#json">输出格式</a>
+        <a href="#proof">样例报告</a>
+        <a href="#fit">工具箱</a>
+        <a href="AI_Judge_Audit_Sample_Report.html">完整报告</a>
       </div>
     </nav>
   </header>
@@ -1254,25 +1254,25 @@
       <div class="wrap">
         <div class="hero-copy">
           <div>
-            <div class="eyebrow">Loop engineering demo</div>
-            <h1>AI Agent 循环的 QA 审计层。</h1>
-            <p class="lead">不止评测分数。AI Judge 把 OpenCouncil 里的席位、分歧、证据、人工裁决和下一轮控制，整理成可转发、可复盘、可接入工作流的 Loop QA Packet。</p>
+            <div class="eyebrow">AI 输出质量控制</div>
+            <h1>你的 AI 回答到底哪里不靠谱？</h1>
+            <p class="lead">团队用 Ragas、DeepEval 跑完评测，拿到一个 0.51 分——但没人能一眼看出：哪句回答拍脑袋了？哪句和源文档冲突？这轮要不要重跑？AI Judge 把一次模糊的评测失败，拆成一份可读的审计报告。</p>
             <div class="actions">
-              <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">发送一个失败循环</a>
-              <a class="button" href="AI_Judge_Audit_Sample_Report.html">看样例报告</a>
-              <a class="button" href="sample-loop-packet.json">打开 JSON Packet</a>
+              <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个失败案例</a>
+              <a class="button" href="AI_Judge_Audit_Sample_Report.html">看审计报告长什么样</a>
+              <a class="button" href="sample-loop-packet.json">打开 JSON 数据包</a>
             </div>
           </div>
           <aside class="hero-note" aria-label="AI Judge value note">
-            <strong>人从操作者变成循环架构师。</strong>
-            OpenCouncil 展示评议现场；AI Judge 负责把现场沉淀成一份可以进入 GitHub issue、review queue、合规记录或下一轮 agent 控制的证据包。
+            <strong>不是另一个评分工具。</strong>
+            AI Judge 不替代你现有的 eval 框架。它坐在 eval 的下游，把分数变成人能读懂、能转发、能进入审批流程的审计包。
           </aside>
         </div>
 
         <figure class="council-stage">
           <div class="stage-bar">
-            <strong>OpenSpark Council</strong>
-            <span>14 / 15 seats · judge: MiMo · roundtable proof</span>
+            <strong>一次失败的 AI 客服回答</strong>
+            <span>3 条 claim 不成立 · 最低评分 0.51</span>
           </div>
           <div class="council-media">
             <img src="assets/openspark-council.png" alt="OpenSpark 的 OpenCouncil 圆桌界面，显示 14 / 15 个评审席位和像素风议院场景">
@@ -1289,36 +1289,36 @@
                 <div class="packet-lines">
                   <div class="packet-line">
                     <code>SEATS</code>
-                    <strong>14 / 15 已就座；2 个席位给出风险标记</strong>
+                    <strong>14 条主张已提取，3 条标记为风险</strong>
                   </div>
                   <div class="packet-line">
                     <code>CLAIM</code>
-                    <strong>C3 缺少证据 · C5 与来源冲突</strong>
+                    <strong>C3 缺少证据 · C5 与源文档冲突</strong>
                   </div>
                   <div class="packet-line">
                     <code>SUPPORT</code>
                     <div class="packet-meter" aria-hidden="true"><span></span></div>
                   </div>
                 </div>
-                <div class="packet-decision">下一轮：重写后重跑，需要人工确认</div>
+                <div class="packet-decision">裁决：不发布当前回答，需人工复核后重写</div>
               </aside>
             </div>
           </div>
           <div class="audit-rail" aria-label="AI Judge packet outputs">
             <div class="audit-chip">
               <span>观测</span>
-              <strong>读取席位、模型、分歧和工具上下文</strong>
+              <strong>拆解 AI 回答，逐条提取事实主张</strong>
             </div>
             <div class="audit-chip">
               <span>判定</span>
-              <strong>把缺证据、相互冲突的 claim 标进 ledger</strong>
+              <strong>逐条比对源文档，标出矛盾与缺失</strong>
             </div>
             <div class="audit-chip">
               <span>控制</span>
-              <strong>给出下一轮：重写、重跑，或等待人工确认</strong>
+              <strong>给出行动结论：发布 / 重写 / 人工复核</strong>
             </div>
           </div>
-          <figcaption class="stage-caption">OpenCouncil 是循环发生现场；AI Judge lens 把现场抽成可审计、可交接、可继续运行的 Loop QA Packet。</figcaption>
+          <figcaption class="stage-caption">AI Judge 读取一次失败的 AI 输出和它的源文档，拆成逐条可审计的事实主张，标出哪条对、哪条错、哪条缺少证据，最后给出“能不能发布”的结论。</figcaption>
         </figure>
       </div>
     </section>
@@ -1327,41 +1327,41 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <div class="eyebrow">价值故事</div>
-            <h2>OpenCouncil 让你看见议院，AI Judge 让循环能被治理。</h2>
+            <div class="eyebrow">一句话讲清楚</div>
+            <h2>你缺的不是更多分数，是一份能拿去开会的审计报告。</h2>
           </div>
-          <p class="section-lede">循环工程的关键不是让人继续点按钮，而是把人放到架构师位置：定义什么时候跑、什么时候停、谁来签字、下一轮能做什么。</p>
+          <p class="section-lede">现在 eval 工具告诉你“faithfulness 低了”。AI Judge 告诉 PM、法务、QA：哪句话有问题、为什么有问题、要不要重跑。</p>
         </div>
         <div class="value-grid">
           <article class="value-card">
             <span>01</span>
-            <h3>接入一次真实循环</h3>
-            <p>可以是 OpenCouncil 评议、RAG 回答、support agent 回复、coding-agent PR 或一次失败 eval。</p>
+            <h3>给一个失败的回答</h3>
+            <p>RAG 客服回答、agent 自动回复、coding-agent 的 PR 摘要——任何被 eval 判定为不合格的 AI 输出。</p>
           </article>
           <article class="value-card">
             <span>02</span>
-            <h3>拆开事实与信心</h3>
-            <p>把每条 claim 对齐 source、judge disagreement、人工 verdict，避免“看起来合理”的循环继续扩大风险。</p>
+            <h3>拆成可验证的主张</h3>
+            <p>把一段话拆成逐条“断言”，每条断言对回源文档核查：有证据、缺证据、还是直接被源文档推翻。</p>
           </article>
           <article class="value-card">
             <span>03</span>
-            <h3>决定下一轮能否跑</h3>
-            <p>不是只给分，而是输出 approve、rewrite、rerun、escalate 或 hold loop 的控制结论。</p>
+            <h3>拿到明确的行动结论</h3>
+            <p>不是 0.51 分。是“C3、C5、C6 三条主张不成立，禁止发布，需重写后重新提交人工审批”。</p>
           </article>
         </div>
         <div class="story-strip" aria-label="Before and after AI Judge">
           <article class="state-panel">
             <div class="state-head">
               <span>Before</span>
-              <span>Eval output</span>
+              <span>只有分数</span>
             </div>
             <div class="state-body">
-              <h2>score = 0.51, failed</h2>
-              <p>团队仍然要追问：到底哪条 claim 有风险？哪个席位不同意？这轮循环要不要继续？</p>
+              <h2>评分 = 0.51，不合格</h2>
+              <p>你知道答案不靠谱。但 PM 问你“具体哪句有问题？”——你答不上来。</p>
               <ul class="signal-list">
-                <li><code>trace</code><span>长工具日志</span></li>
-                <li><code>rubric</code><span>faithfulness low</span></li>
-                <li><code>reviewer</code><span class="warn">动作不清楚</span></li>
+                <li><code>trace</code><span>一长串工具日志</span></li>
+                <li><code>rubric</code><span>faithfulness 偏低</span></li>
+                <li><code>reviewer</code><span class="warn">不知道该怎么处理</span></li>
               </ul>
             </div>
           </article>
@@ -1371,15 +1371,15 @@
           <article class="state-panel">
             <div class="state-head">
               <span>After</span>
-              <span>Audit packet</span>
+              <span>审计报告</span>
             </div>
             <div class="state-body">
-              <h2>hold loop until reviewer approval</h2>
-              <p>packet 会说明什么坏了、哪些证据能保留、谁需要签字，以及下一轮循环被允许做什么。</p>
+              <h2>结论：禁止发布，重写后人工复核</h2>
+              <p>报告中会列明：C3（企业退款承诺）无证据支持、C5（SLA 保障）与源文档直接冲突、C6（功能保证）是凭空添加的。</p>
               <ul class="signal-list">
-                <li><code>C3</code><span class="bad">unsupported enterprise refund claim</span></li>
-                <li><code>C5</code><span class="bad">contradicted SLA guarantee</span></li>
-                <li><code>next_run</code><span class="good">rewrite + human gate</span></li>
+                <li><code>C3</code><span class="bad">企业退款政策缺少依据</span></li>
+                <li><code>C5</code><span class="bad">SLA 描述与源文档矛盾</span></li>
+                <li><code>next_run</code><span class="good">重写 + 人工审批</span></li>
               </ul>
             </div>
           </article>
@@ -1391,13 +1391,13 @@
       <div class="wrap">
         <div class="json-shell">
           <div class="json-copy">
-            <span class="json-label">Core contract</span>
-            <h3>产品形态不是页面，是可流转的 JSON。</h3>
-            <p>首页负责讲清楚价值；JSON packet 才是真正能进入集成、review queue、GitHub issue 和未来 API 的操作面。</p>
+            <span class="json-label">交付物</span>
+            <h3>审计结果是一份 JSON，不是另一面数据看板。</h3>
+            <p>首页让你理解它做什么。JSON packet 才是产品本体——它可以直接进入 GitHub issue、内部 review queue、合规记录，或者接入你自己 agent 的“要不要继续跑”的判断逻辑。</p>
             <ul>
-              <li>Input: trigger、output、sources、tool logs、judge scores。</li>
-              <li>Audit: claim ledger、evidence status、seat disagreement。</li>
-              <li>Decision: human verdict、safer rewrite、next-run control。</li>
+              <li>Input: 原始回答、源文档、评测分数、工具调用日志。</li>
+              <li>Audit: 逐条 claim 与证据的对照表、评审分歧记录。</li>
+              <li>Decision: 人工裁决、安全改写版本、下一轮行动指令。</li>
             </ul>
           </div>
           <pre>{
@@ -1424,12 +1424,12 @@
     <section class="section" id="proof">
       <div class="wrap proof">
         <div class="proof-copy">
-          <div class="eyebrow">证据路径</div>
-          <h2>视觉现场在首屏，审计深度在报告里。</h2>
-          <p>强视觉负责让人第一眼理解“这是一个真实循环”；样例报告和 JSON 负责证明它能落成 claim、source、verdict 和 next-run decision。</p>
+          <div class="eyebrow">看一看</div>
+          <h2>上面是概念。这里是真实的审计报告。</h2>
+          <p>首页负责第一印象，样例报告负责证明它能落成具体的 claim、source mapping、verdict 和 rewrite。JSON 文件展示了它接入系统的实际格式。</p>
           <div class="actions">
-            <a class="button primary" href="AI_Judge_Audit_Sample_Report.html">打开报告</a>
-            <a class="button" href="sample-loop-packet.json">检查 JSON</a>
+            <a class="button primary" href="AI_Judge_Audit_Sample_Report.html">打开审计报告样例</a>
+            <a class="button" href="sample-loop-packet.json">查看 JSON 输出格式</a>
           </div>
         </div>
         <figure class="shot">
@@ -1442,23 +1442,23 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <div class="eyebrow">适配位置</div>
-            <h2>放在团队已经使用的 eval、trace 和 agent 工具旁边。</h2>
+            <div class="eyebrow">放哪用</div>
+            <h2>接在你已经在用的 eval 和 trace 工具后面。</h2>
           </div>
-          <p class="section-lede">AI Judge 不替代 eval stack。它把被选中的失败循环包装成产品、研究、客服、工程、合规都能读懂并接手的审计包。</p>
+          <p class="section-lede">AI Judge 不替代你的评测框架。它把被标记为失败的案例，包装成产品经理、法务、QA 和工程师都能独立读懂并签字的审计包。</p>
         </div>
         <div class="fit-list">
           <div class="fit-row">
-            <strong>Ragas, TruLens, DeepEval</strong>
-            <span>把 groundedness / faithfulness failure 转成 claim-level audit packet。</span>
+            <strong>Ragas / TruLens / DeepEval</strong>
+            <span>把 faithfulness 或 groundedness 偏低的结果，转成逐条 claim 的证据审查报告。</span>
           </div>
           <div class="fit-row">
-            <strong>Langfuse, Phoenix, Opik, LangSmith</strong>
-            <span>给被选中的 trace 附上 reviewer-readable verdict 和 next-run decision。</span>
+            <strong>Langfuse / Phoenix / Opik / LangSmith</strong>
+            <span>给被标记为异常的 trace，附上一份 reviewer 能直接签字的裁决书。</span>
           </div>
           <div class="fit-row">
-            <strong>Support / coding / research agents</strong>
-            <span>阻止自动循环重复输出“很顺滑但不安全”的答案。</span>
+            <strong>客服 agent / coding agent / 研究 agent</strong>
+            <span>阻止自动循环一遍遍输出“读起来顺、但事实不可靠”的回答。</span>
           </div>
         </div>
       </div>
@@ -1467,18 +1467,18 @@
     <section class="closing">
       <div class="wrap closing-inner">
         <div>
-          <h2>给我一个失败循环，换回一份审计包。</h2>
-          <p>最低成本的验证就是一个真实 case：一条 trace、一个 RAG answer、一份 coding-agent PR、一次 support reply，或者一条失败 eval。</p>
+          <h2>给我一个失败案例，换回一份审计报告。</h2>
+          <p>最低成本的验证就是一次真实的失败：一条 RAG 回答、一份 agent 的自动回复、一条被 eval 判定为不合格的输出。把你已经有的评测结果给我，我把审计包给你。</p>
         </div>
-        <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">从一个 case 开始</a>
+        <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
       </div>
     </section>
   </main>
 
   <footer>
     <div class="wrap">
-      <span>AI Judge public demo. 页面不包含私有用户数据或生产 traces。</span>
-      <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Public gist</a>
+      <span>AI Judge 公开演示页面。不含任何私有用户数据或生产 trace。</span>
+      <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">公开 Gist</a>
     </div>
   </footer>
 </body>
