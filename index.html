@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge - 面向 Agent Loop 的 QA 审计包</title>
-  <meta name="description" content="AI Judge 把失败或边界状态的 agent、RAG、eval 循环变成可复盘、可交接、可继续执行的 Loop QA 审计包。">
+  <title>AI Judge - 把 AI 回答拆成可审计的事实主张</title>
+  <meta name="description" content="AI Judge 把一次模糊的评测失败拆成逐条可验证的事实主张：哪句对、哪句缺证据、哪句与源文档冲突，最后给出能不能发布的结论。">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
   <meta property="og:title" content="AI Judge - 面向 Agent Loop 的 QA 审计包">
-  <meta property="og:description" content="从一次模糊失败，到 claim ledger、source support、human verdict 和 next-run decision。">
+  <meta property="og:description" content="AI Judge 把一次模糊的评测失败拆成逐条可验证的事实主张：哪句对、哪句缺证据、哪句与源文档冲突，最后给出能不能发布的结论。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="AI Judge - 面向 Agent Loop 的 QA 审计包">
-  <meta name="twitter:description" content="把失败或边界状态的 agent / RAG / eval run 变成 reviewer-ready audit packet。">
+  <meta name="twitter:description" content="AI Judge 把一次模糊的评测失败拆成逐条可验证的事实主张：哪句对、哪句缺证据、哪句与源文档冲突，最后给出能不能发布的结论。">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1258,7 +1258,7 @@
             <h1>你的 AI 回答到底哪里不靠谱？</h1>
             <p class="lead">团队用 Ragas、DeepEval 跑完评测，拿到一个 0.51 分——但没人能一眼看出：哪句回答拍脑袋了？哪句和源文档冲突？这轮要不要重跑？AI Judge 把一次模糊的评测失败，拆成一份可读的审计报告。</p>
             <div class="actions">
-              <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个失败案例</a>
+              <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个失败案例</a>
               <a class="button" href="AI_Judge_Audit_Sample_Report.html">看审计报告长什么样</a>
               <a class="button" href="sample-loop-packet.json">打开 JSON 数据包</a>
             </div>
@@ -1275,8 +1275,8 @@
             <span>3 条 claim 不成立 · 最低评分 0.51</span>
           </div>
           <div class="council-media">
-            <img src="assets/openspark-council.png" alt="OpenSpark 的 OpenCouncil 圆桌界面，显示 14 / 15 个评审席位和像素风议院场景">
-            <div class="lens-overlay" aria-label="AI Judge 正在把 OpenCouncil 现场整理成 Loop QA Packet">
+            <img src="assets/openspark-council.png" alt="AI Judge 审计界面预览：左侧显示原始 AI 输出和源文档，右侧生成逐条 claim 的审计面板">
+            <div class="lens-overlay" aria-label="AI Judge 正在分析失败的 AI 回答，拆解事实主张并生成审计报告">
               <div class="lens-status">AI Judge 审计中</div>
               <span class="lens-hotspot seat-a" aria-hidden="true"></span>
               <span class="lens-hotspot risk seat-b" aria-hidden="true"></span>
@@ -1409,11 +1409,11 @@
     "primary_failure_mode": "policy overclaim"
   },
   "human_verdict": {
-    "decision": "hold_loop",
+    "decision": "do_not_ship",
     "reason": "Correct facts were turned into guarantees."
   },
   "next_run": {
-    "action": "rewrite_then_rerun",
+    "action": "rewrite_with_human_review",
     "requires_human_gate": true
   }
 }</pre>
@@ -1470,7 +1470,7 @@
           <h2>给我一个失败案例，换回一份审计报告。</h2>
           <p>最低成本的验证就是一次真实的失败：一条 RAG 回答、一份 agent 的自动回复、一条被 eval 判定为不合格的输出。把你已经有的评测结果给我，我把审计包给你。</p>
         </div>
-        <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
+        <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
       </div>
     </section>
   </main>
