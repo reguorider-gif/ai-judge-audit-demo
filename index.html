@@ -223,54 +223,86 @@
     }
 
     .hero {
-      padding: clamp(46px, 7vw, 92px) 0 clamp(44px, 6vw, 78px);
+      padding: clamp(48px, 7vw, 88px) 0 clamp(34px, 5vw, 56px);
       border-bottom: 1px solid var(--hairline);
-      background: #f6f6f4;
+      background: linear-gradient(180deg, #f8f8f7 0%, #f1f2f4 100%);
     }
 
-    .hero-grid {
+    .hero-copy {
       display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(390px, 0.78fr);
-      gap: clamp(30px, 6vw, 76px);
-      align-items: center;
+      grid-template-columns: minmax(0, 0.78fr) minmax(260px, 0.32fr);
+      gap: clamp(24px, 6vw, 72px);
+      align-items: end;
+      margin-bottom: clamp(26px, 5vw, 48px);
     }
 
     h1 {
-      max-width: 700px;
-      margin: 18px 0 16px;
+      max-width: 720px;
+      margin: 18px 0 18px;
       color: var(--ink);
-      font-size: clamp(42px, 5vw, 66px);
-      line-height: 1.02;
+      font-size: clamp(48px, 5.8vw, 78px);
+      line-height: 0.98;
       font-weight: 740;
       letter-spacing: 0;
     }
 
     .lead {
-      max-width: 680px;
+      max-width: 650px;
       margin: 0;
       color: var(--body);
       font-size: clamp(17px, 1.24vw, 19px);
-      line-height: 1.74;
+      line-height: 1.68;
+    }
+
+    .hero-note {
+      align-self: center;
+      max-width: 310px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.72;
+    }
+
+    .hero-note strong {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .hero-note strong::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #0b73ff;
+      box-shadow: 0 0 0 4px rgba(11, 115, 255, 0.11);
     }
 
     .problem-lens {
-      display: grid;
+      display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       max-width: 680px;
-      margin-top: 26px;
+      margin-top: 20px;
       padding: 0;
       list-style: none;
       color: var(--body);
-      font-size: 14px;
-      line-height: 1.64;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
     .problem-lens li {
-      display: grid;
-      grid-template-columns: 150px minmax(0, 1fr);
-      gap: 16px;
-      border-top: 1px solid var(--hairline);
-      padding-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      max-width: 100%;
+      border: 1px solid var(--hairline);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.54);
+      padding: 7px 11px;
     }
 
     .problem-lens code {
@@ -279,6 +311,7 @@
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0;
+      white-space: nowrap;
     }
 
     .actions {
@@ -318,61 +351,136 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     }
 
-    .verdict-surface {
-      border: 1px solid var(--hairline);
-      border-radius: 12px;
-      background: var(--surface);
-      box-shadow: var(--shadow);
+    .product-stage {
+      position: relative;
+      margin: 0 auto;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 18px;
+      background: #0d0f0f;
+      padding: 14px;
+      box-shadow: 0 42px 110px -42px rgba(0, 0, 0, 0.42);
       overflow: hidden;
     }
 
-    .surface-head {
+    .stage-chrome {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      min-height: 52px;
-      border-bottom: 1px solid var(--hairline);
-      background: #fbfbfa;
-      padding: 0 18px;
+      height: 34px;
+      padding: 0 8px 12px;
+      color: rgba(255, 255, 255, 0.48);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
     }
 
-    .surface-head strong {
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 760;
+    .stage-lights {
+      display: inline-flex;
+      gap: 6px;
     }
 
-    .verdict-body {
+    .stage-lights span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .stage-shell {
       display: grid;
-      gap: 0;
+      grid-template-columns: minmax(0, 1fr) minmax(270px, 0.34fr);
+      min-height: 540px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #050606;
     }
 
-    .verdict-row {
+    .stage-main {
       display: grid;
-      grid-template-columns: 116px minmax(0, 1fr);
-      gap: 16px;
-      border-top: 1px solid var(--hairline);
-      padding: 16px 18px;
+      place-items: center;
+      min-width: 0;
+      padding: clamp(18px, 3vw, 34px);
+      background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), transparent 34%), #050606;
     }
 
-    .verdict-row:first-child {
-      border-top: 0;
-    }
-
-    .verdict-row strong {
+    .stage-main img {
       display: block;
-      margin-bottom: 6px;
-      font-size: 15.5px;
-      line-height: 1.42;
-      font-weight: 740;
+      width: min(100%, 760px);
+      height: auto;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
     }
 
-    .verdict-row p {
+    .stage-dock {
+      display: grid;
+      align-content: space-between;
+      gap: 22px;
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      background: #121414;
+      padding: 24px;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .stage-dock h2 {
+      margin: 12px 0 10px;
+      color: #fff;
+      font-size: clamp(24px, 2.1vw, 34px);
+      line-height: 1.08;
+      font-weight: 740;
+      letter-spacing: 0;
+    }
+
+    .stage-dock p {
       margin: 0;
-      color: var(--muted);
+      color: rgba(255, 255, 255, 0.62);
       font-size: 14px;
-      line-height: 1.66;
+      line-height: 1.68;
+    }
+
+    .stage-dock .meta-label,
+    .stage-dock .json-label {
+      color: rgba(255, 255, 255, 0.42);
+    }
+
+    .stage-signals {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .stage-signals li {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .stage-signals code {
+      color: #ffb3b9;
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+
+    .stage-result {
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 13px 14px;
+    }
+
+    .stage-caption {
+      margin: 12px 8px 2px;
+      color: rgba(255, 255, 255, 0.54);
+      font-size: 13px;
     }
 
     .status-pill {
@@ -454,21 +562,22 @@
     .mvp-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
+      gap: clamp(20px, 3vw, 34px);
     }
 
     .mvp-card {
-      min-height: 196px;
-      border: 1px solid var(--hairline);
-      border-radius: 10px;
-      background: var(--surface);
-      padding: 20px;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.025);
+      min-height: 0;
+      border: 0;
+      border-top: 1px solid var(--hairline-strong);
+      border-radius: 0;
+      background: transparent;
+      padding: 22px 0 0;
+      box-shadow: none;
     }
 
     .mvp-card h3 {
-      margin: 34px 0 10px;
-      font-size: 20px;
+      margin: 34px 0 12px;
+      font-size: 22px;
       line-height: 1.25;
       letter-spacing: 0;
     }
@@ -693,12 +802,21 @@
     }
 
     @media (max-width: 980px) {
-      .hero-grid,
+      .hero-copy,
       .section-head,
       .json-shell,
       .report-layout,
       .closing-inner {
         grid-template-columns: 1fr;
+      }
+
+      .stage-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-dock {
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-left: 0;
       }
 
       .mvp-grid,
@@ -739,17 +857,18 @@
       }
 
       h1 {
-        max-width: 13ch;
-        font-size: clamp(34px, 10.2vw, 44px);
-        line-height: 1.04;
+        max-width: 12ch;
+        font-size: clamp(38px, 12.2vw, 52px);
+        line-height: 0.98;
       }
 
       .hero {
-        padding: 32px 0 42px;
+        padding: 30px 0 34px;
       }
 
-      .hero-grid {
-        gap: 26px;
+      .hero-copy {
+        gap: 20px;
+        margin-bottom: 24px;
       }
 
       .lead {
@@ -758,9 +877,10 @@
       }
 
       .problem-lens {
-        margin-top: 20px;
-        font-size: 13px;
-        line-height: 1.58;
+        margin-top: 17px;
+        gap: 6px;
+        font-size: 12.5px;
+        line-height: 1.45;
       }
 
       .problem-lens li,
@@ -769,26 +889,40 @@
         grid-template-columns: 1fr;
       }
 
-      .verdict-row {
-        grid-template-columns: 82px minmax(0, 1fr);
-        gap: 12px;
-        padding: 12px 14px;
+      .problem-lens li {
+        display: inline-flex;
+        padding: 6px 9px;
       }
 
-      .verdict-row strong {
-        font-size: 14px;
-        line-height: 1.36;
+      .hero-note {
+        display: none;
       }
 
-      .verdict-row p,
-      .claim-list li {
-        font-size: 12.5px;
-        line-height: 1.5;
+      .product-stage {
+        border-radius: 14px;
+        padding: 10px;
       }
 
-      .status-pill {
-        min-width: 64px;
-        padding: 5px 7px;
+      .stage-chrome {
+        height: 28px;
+        padding: 0 4px 8px;
+      }
+
+      .stage-shell {
+        min-height: 0;
+      }
+
+      .stage-main {
+        padding: 14px;
+      }
+
+      .stage-dock {
+        gap: 16px;
+        padding: 18px;
+      }
+
+      .stage-signals li {
+        grid-template-columns: 42px minmax(0, 1fr);
       }
 
       .mvp-grid,
@@ -814,12 +948,6 @@
       .button {
         white-space: normal;
         text-align: center;
-      }
-
-      .surface-head {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 12px 14px;
       }
 
       pre {
@@ -933,69 +1061,57 @@
 
   <main id="main">
     <section class="hero">
-      <div class="wrap hero-grid">
-        <div>
-          <div class="eyebrow">AI Judge MVP</div>
-          <h1>Drop a high-risk claim. Get an auditable verdict.</h1>
-          <p class="lead">AI Judge 不卖“更聪明的回答”。它卖的是高风险、模糊、有争议判断的责任基础设施：先判断值不值得裁决，再锁定问题契约，最后输出可签署、可追溯、可归档的 verdict。</p>
-          <ul class="problem-lens" aria-label="High-value problem lens">
-            <li><code>本轮问题</code><span>企业客服自动回复把政策例外说成保证，可能形成错误承诺。</span></li>
-            <li><code>错误成本</code><span>退款、SLA、Beta 支持被误导后，会带来客户升级、法务风险和重复返工。</span></li>
-            <li><code>最小验证</code><span>给一条高风险 claim，产出一份 JSON packet 和一份可签署最终报告。</span></li>
-          </ul>
-          <div class="actions">
-            <a class="button primary" href="AI_Judge_Audit_Sample_Report.html">打开最终报告</a>
-            <a class="button" href="sample-loop-packet.json">查看 JSON packet</a>
+      <div class="wrap">
+        <div class="hero-copy">
+          <div>
+            <div class="eyebrow">AI Judge MVP</div>
+            <h1>Drop a high-risk claim. Get an auditable verdict.</h1>
+            <p class="lead">AI Judge 不生成更顺的答案。它把一条高风险 claim 拆成证据、分歧、裁决和人类签署记录，让 agent 自动回复在出门前有责任链。</p>
+            <ul class="problem-lens" aria-label="High-value problem lens">
+              <li><code>Risk</code><span>policy overclaim</span></li>
+              <li><code>Cost</code><span>refund / SLA escalation</span></li>
+              <li><code>Output</code><span>JSON packet + signed report</span></li>
+            </ul>
+            <div class="actions">
+              <a class="button primary" href="AI_Judge_Audit_Sample_Report.html">打开最终报告</a>
+              <a class="button" href="sample-loop-packet.json">查看 JSON packet</a>
+            </div>
           </div>
+          <aside class="hero-note" aria-label="AI Judge product note">
+            <strong>Judgment infrastructure for agent loops</strong>
+            一条高风险 claim 进来，Radar、Contract、Verdict、Signature 顺序跑完。页面只负责让责任关系一眼可读。
+          </aside>
         </div>
 
-        <aside class="verdict-surface" aria-label="AI Judge verdict preview">
-          <div class="surface-head">
-            <span class="meta-label">Radar Card</span>
-            <strong>Worth judging · 9/10</strong>
+        <figure class="product-stage" aria-label="AI Judge product preview">
+          <div class="stage-chrome">
+            <span class="stage-lights" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span>AI Judge · final report workspace</span>
+            <span>human-signable</span>
           </div>
-          <div class="verdict-body">
-            <div class="verdict-row">
-              <span class="status-pill">Judge</span>
-              <div>
-                <strong>问题值得裁决</strong>
-                <p>真实损失、高频发生、语义模糊、需要证据链、有明确签署人，五项都命中。</p>
-              </div>
+          <div class="stage-shell">
+            <div class="stage-main">
+              <img src="assets/ai-judge-live-client.png" alt="AI Judge final report preview showing audit records and verdict packet">
             </div>
-            <div class="verdict-row">
-              <span class="status-pill danger">Verdict</span>
+            <aside class="stage-dock" aria-label="AI Judge verdict packet summary">
               <div>
-                <strong>Hold automatic reply until reviewer approval.</strong>
-                <p>正确事实被扩大成政策保证，当前输出不能直接发给客户。</p>
+                <span class="json-label">Verdict Packet</span>
+                <h2>Hold until reviewer signs.</h2>
+                <p>正确事实被扩大成政策保证。当前自动回复进入 hold，不再直接发给客户。</p>
               </div>
-            </div>
-            <div class="verdict-row">
-              <span class="meta-label">Evidence</span>
-              <div>
-                <strong>证据链锁定 3 个 blocker</strong>
-                <ul class="claim-list">
-                  <li><code>C3</code><span>企业退款政策被过度泛化。</span></li>
-                  <li><code>C5</code><span>SLA 保证与维护窗口例外冲突。</span></li>
-                  <li><code>C6</code><span>Beta 支持承诺与 as-is 条款冲突。</span></li>
-                </ul>
+              <ul class="stage-signals">
+                <li><code>C3</code><span>企业退款政策被过度泛化。</span></li>
+                <li><code>C5</code><span>SLA 保证与维护窗口例外冲突。</span></li>
+                <li><code>C6</code><span>Beta 支持承诺与 as-is 条款冲突。</span></li>
+              </ul>
+              <div class="stage-result">
+                <span class="meta-label">Signature</span>
+                <p>support_policy_reviewer · pending · report_id AJR-2026-06-29-001</p>
               </div>
-            </div>
-            <div class="verdict-row">
-              <span class="meta-label">Dissent</span>
-              <div>
-                <strong>最终方向一致，严重度存在中等分歧</strong>
-                <p>多模型均建议 hold，但对 C4 的“4 hours vs 4 business hours”严重度判断不同。</p>
-              </div>
-            </div>
-            <div class="verdict-row">
-              <span class="meta-label">Signature</span>
-              <div>
-                <strong>support_policy_reviewer · pending signature</strong>
-                <p>最终 verdict 进入归档前需要人类负责人签署。</p>
-              </div>
-            </div>
+            </aside>
           </div>
-        </aside>
+          <figcaption class="stage-caption">Live preview · 一条高风险 claim 被拆成证据、分歧、裁决和人类签署记录。</figcaption>
+        </figure>
       </div>
     </section>
 
