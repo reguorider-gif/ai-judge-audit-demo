@@ -56,6 +56,8 @@ Use Vercel-like black/white precision for the developer-platform layer and Mintl
 
 The current homepage borrows one transferable move from FigCraft-style AI tool pages: a quiet black/white product promise followed immediately by a large, real product surface. Do not copy FigCraft's brand, gallery, fonts, or content. Translate the principle into AI Judge: OpenCouncil is the visible loop arena, and AI Judge is the audit layer that turns that arena into a portable Loop QA packet.
 
+2026-06-29 visual lift note: use FigCraft only as a rhythm reference. The transferable moves are a calmer top nav, a strong CJK headline, pill CTAs, a large dark product stage, a horizontal capability strip, and a case-study sequence below the fold. AI Judge should keep its own operational trust language, monochrome precision, green evidence accent, and OpenCouncil/AI Judge audit imagery.
+
 ## Component Rules
 
 - Primary CTA: black pill with white text.

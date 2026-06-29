@@ -343,6 +343,383 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
     }
+
+    /* ── v4 Visual Lift · FigCraft-inspired product rhythm ── */
+    :root {
+      --canvas: #f7f7f8;
+      --canvas-soft: #eff0f2;
+      --surface: #ffffff;
+      --ink: #19191d;
+      --body: #3e3e46;
+      --muted: #6d6d76;
+      --hairline: #dedfe3;
+      --hairline-strong: #c9cad0;
+      --accent: #0d8f72;
+      --accent-soft: #dff6ee;
+      --stage: #050607;
+      --stage-panel: #0d0e10;
+      --blue: #1264f4;
+      --shadow: 0 1px 1px rgba(0, 0, 0, 0.035), 0 34px 90px rgba(0, 0, 0, 0.11);
+    }
+
+    body { background: var(--canvas); font-size: 17px; line-height: 1.7; }
+    .wrap { width: min(1192px, calc(100% - 48px)); }
+    .topbar {
+      width: min(1232px, calc(100% - 48px));
+      margin-top: 16px; border: 0; background: transparent; box-shadow: none;
+    }
+    @supports (backdrop-filter: blur(1px)) {
+      .topbar { background: transparent; backdrop-filter: none; }
+    }
+    .nav { min-height: 50px; padding: 0; }
+    .brand { font-size: 16px; font-weight: 760; }
+    .mark { width: 32px; height: 32px; border-radius: 9px; }
+    .nav-links { gap: 18px; color: #303036; font-size: 14px; font-weight: 640; }
+    .nav-links a { padding: 6px 0; border-radius: 0; }
+    .nav-links a:hover, .nav-links a:focus-visible { background: transparent; color: var(--ink); }
+
+    .hero {
+      padding: clamp(58px, 8vw, 108px) 0 clamp(38px, 5vw, 70px);
+      border-bottom: 0;
+      background:
+        linear-gradient(180deg, #f8f8f9 0%, #f1f2f4 100%);
+      overflow: hidden;
+    }
+    .hero-copy {
+      grid-template-columns: minmax(0, 0.7fr) minmax(260px, 0.3fr);
+      align-items: center;
+      gap: clamp(26px, 6vw, 78px);
+      margin-bottom: clamp(26px, 4vw, 42px);
+    }
+    .eyebrow {
+      min-height: 36px;
+      padding: 8px 13px 8px 10px;
+      border-color: rgba(25, 25, 29, 0.1);
+      background: rgba(255, 255, 255, 0.72);
+      color: #5f6068;
+      font-size: 11px;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.035);
+    }
+    h1 {
+      max-width: 820px;
+      margin: 18px 0 18px;
+      font-size: clamp(52px, 7.2vw, 86px);
+      line-height: 0.98;
+      font-weight: 780;
+    }
+    .lead {
+      max-width: 680px;
+      color: #4c4c55;
+      font-size: clamp(17px, 1.35vw, 19px);
+      line-height: 1.76;
+    }
+    .actions { margin-top: 26px; gap: 10px; }
+    .button {
+      min-height: 46px;
+      border-color: rgba(25, 25, 29, 0.12);
+      padding: 10px 20px;
+      font-size: 15px;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.025);
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+    .button.primary { border-color: var(--ink); background: var(--ink); }
+    .button:hover, .button:focus-visible { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0, 0, 0, 0.11); }
+    .hero-side {
+      justify-self: end;
+      width: min(100%, 330px);
+      max-width: 330px;
+      border-left: 0;
+      padding-left: 0;
+      display: grid;
+      gap: 12px;
+    }
+    .hero-side::before {
+      content: "Nasdaq case study";
+      width: fit-content;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .hero-side .stat {
+      margin: 0;
+      padding-top: 14px;
+      border-top: 1px solid rgba(25, 25, 29, 0.14);
+      font-size: clamp(34px, 3.8vw, 48px);
+      line-height: 0.98;
+    }
+    .hero-side .stat-label { max-width: 260px; color: #686974; font-size: 14px; line-height: 1.68; }
+
+    .product-stage {
+      margin: 0 auto;
+      border: 1px solid rgba(0, 0, 0, 0.16);
+      border-radius: 22px;
+      background: var(--stage);
+      box-shadow: 0 42px 110px -44px rgba(0, 0, 0, 0.62);
+      overflow: hidden;
+    }
+    .stage-chrome {
+      min-height: 42px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 16px;
+      color: rgba(255, 255, 255, 0.42);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .stage-lights { display: inline-flex; gap: 6px; }
+    .stage-lights span {
+      width: 8px; height: 8px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.28);
+    }
+    .stage-title { justify-self: center; }
+    .stage-state { justify-self: end; color: rgba(255, 255, 255, 0.56); }
+    .stage-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.34fr);
+      min-height: clamp(430px, 44vw, 560px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .stage-main {
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(16px, 2.6vw, 30px);
+      background:
+        radial-gradient(circle at 48% 40%, rgba(255, 255, 255, 0.1), transparent 34%),
+        #050607;
+    }
+    .stage-main img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 510px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+    }
+    .stage-panel {
+      display: grid;
+      align-content: space-between;
+      gap: 24px;
+      border-left: 1px solid rgba(255, 255, 255, 0.09);
+      background: var(--stage-panel);
+      color: rgba(255, 255, 255, 0.7);
+      padding: clamp(22px, 2.8vw, 34px);
+    }
+    .stage-panel .label {
+      color: rgba(255, 255, 255, 0.42);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .stage-panel h2 {
+      margin: 10px 0 10px;
+      color: #fff;
+      font-size: clamp(26px, 2.8vw, 38px);
+      line-height: 1.08;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+    .stage-panel p { margin: 0; color: rgba(255, 255, 255, 0.62); font-size: 14px; line-height: 1.68; }
+    .audit-stack { display: grid; gap: 10px; }
+    .audit-row {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .audit-row strong { color: #fff; font-family: var(--mono); font-size: 13px; font-weight: 700; }
+    .stage-verdict {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.045);
+      padding: 14px;
+    }
+    .stage-verdict strong { display: block; color: #ffb7bc; font-family: var(--mono); font-size: 12px; margin-bottom: 6px; }
+
+    .cap-strip {
+      margin-top: clamp(22px, 3vw, 34px);
+      border-color: rgba(25, 25, 29, 0.1);
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .case-section { background: var(--surface); }
+    .case-header-bar { padding: clamp(58px, 7vw, 86px) 0 24px; }
+    .case-header-bar h2 {
+      max-width: 920px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.05;
+      font-weight: 760;
+    }
+    .case-tag { background: var(--surface); font-size: 11px; }
+    .verdict-card {
+      border-radius: 18px;
+      border-color: rgba(25, 25, 29, 0.1);
+      box-shadow: 0 26px 86px rgba(0, 0, 0, 0.08);
+    }
+    .verdict-head { padding: 16px 20px; }
+    .verdict-body { padding: clamp(22px, 3vw, 34px); gap: 18px; }
+    .verdict-body .big-line {
+      max-width: 980px;
+      font-size: clamp(22px, 2.4vw, 32px);
+      line-height: 1.34;
+      font-weight: 760;
+    }
+    .verdict-meta { gap: 14px; }
+    .vm { border-radius: 14px; background: #f3f4f6; padding: 18px; }
+    .vm .v { font-size: clamp(24px, 2.6vw, 34px); line-height: 1; }
+    .vm .l { font-size: 13px; line-height: 1.55; }
+
+    .step-grid { gap: 14px; margin-top: 22px; padding-bottom: clamp(54px, 7vw, 82px); }
+    .step-card {
+      min-height: 226px;
+      border-radius: 14px;
+      border-color: rgba(25, 25, 29, 0.1);
+      padding: 22px;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.025);
+    }
+    .step-card .step-num { margin-bottom: 16px; }
+    .step-card h4 { font-size: 18px; line-height: 1.35; }
+    .step-card p { font-size: 14px; line-height: 1.72; }
+
+    .seat-section { background: var(--surface); }
+    .mini-section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .mini-section-head h3 { margin: 0; font-size: 22px; font-weight: 760; line-height: 1.25; }
+    .mini-section-head span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .seat-strip { grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 7px; margin-top: 18px; padding-bottom: 34px; }
+    .seat-chip {
+      min-height: 74px;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      border-radius: 12px;
+      border-color: rgba(150, 54, 61, 0.2);
+      background: #fff;
+      border-left-width: 1px;
+    }
+    .seat-chip.against { border-left-width: 1px; box-shadow: inset 0 3px 0 rgba(150, 54, 61, 0.72); }
+    .seat-chip .sn { font-size: 10px; }
+    .seat-chip .sv { font-size: 12px; }
+    .case-data-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
+      gap: clamp(18px, 4vw, 46px);
+      margin-top: 26px;
+      align-items: start;
+    }
+    .portfolio-bar { height: 16px; margin-top: 12px; }
+    .risk-table { margin-top: 12px; border: 1px solid var(--hairline); border-radius: 14px; border-collapse: separate; border-spacing: 0; overflow: hidden; background: #fff; }
+    .risk-table th { border-bottom-color: var(--hairline-strong); padding: 12px 14px; }
+    .risk-table td { padding: 13px 14px; }
+
+    .section { padding: clamp(60px, 8vw, 96px) 0; background: var(--canvas); }
+    .section h2 { font-size: clamp(34px, 4.7vw, 58px); line-height: 1.08; font-weight: 760; }
+    .section-head { margin-bottom: 34px; }
+    .section-lede { font-size: 17px; line-height: 1.74; }
+    .dont-grid, .engine-grid { gap: 14px; }
+    .dont-card {
+      min-height: 136px;
+      border-color: rgba(150, 54, 61, 0.2);
+      border-radius: 14px;
+      background: #fff;
+      padding: 18px;
+      box-shadow: inset 0 3px 0 rgba(150, 54, 61, 0.68);
+      font-size: 14px;
+      line-height: 1.68;
+    }
+    .dont-card strong { font-size: 16px; }
+    .delivery-grid { grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr); gap: 22px; }
+    .delivery-card, .engine-card {
+      border-radius: 16px;
+      border-color: rgba(25, 25, 29, 0.1);
+      padding: 24px;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.025);
+    }
+    .delivery-card h4, .engine-card h4 { font-size: 20px; line-height: 1.35; }
+    .delivery-card p, .engine-card p { font-size: 15px; line-height: 1.72; }
+    pre {
+      min-height: 360px;
+      border-radius: 18px;
+      border-color: rgba(255, 255, 255, 0.08);
+      background: #070908;
+      box-shadow: 0 28px 78px rgba(0, 0, 0, 0.18);
+    }
+    .closing { padding: clamp(66px, 9vw, 110px) 0; }
+
+    @media (max-width: 1080px) {
+      .seat-strip { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
+    }
+    @media (max-width: 920px) {
+      .topbar { width: min(100% - 32px, 1232px); }
+      .brand::after { content: none; }
+      .hero-copy, .case-data-grid { grid-template-columns: 1fr; }
+      .hero-side {
+        justify-self: start;
+        width: 100%;
+        max-width: none;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .hero-side::before { grid-column: 1 / -1; }
+      .hero-side .stat-label { max-width: none; }
+      .step-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      .stage-shell { grid-template-columns: 1fr; }
+      .stage-panel { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.09); }
+    }
+    @media (max-width: 640px) {
+      .wrap, .topbar { width: min(100% - 28px, 1192px); }
+      .hero { padding-top: 44px; }
+      h1 { font-size: clamp(42px, 13vw, 54px); line-height: 1.02; }
+      .lead { font-size: 16px; line-height: 1.74; }
+      .hero-side { grid-template-columns: 1fr; }
+      .actions, .button { width: 100%; }
+      .product-stage { border-radius: 16px; }
+      .stage-chrome {
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        padding: 0 12px;
+      }
+      .stage-title { justify-self: start; }
+      .stage-state { display: none; }
+      .stage-main { padding: 10px; }
+      .stage-main img { max-height: 270px; border-radius: 10px; }
+      .stage-panel { padding: 20px; }
+      .audit-row { grid-template-columns: 64px minmax(0, 1fr); }
+      .case-header-bar h2, .section h2 { font-size: clamp(30px, 9vw, 40px); }
+      .step-grid, .dont-grid, .verdict-meta { grid-template-columns: 1fr; }
+      .step-card { min-height: 0; }
+      .mini-section-head { align-items: flex-start; flex-direction: column; }
+      .seat-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .seat-chip { min-height: 60px; }
+      .delivery-grid { grid-template-columns: 1fr; }
+      pre { min-height: 0; font-size: 11px; }
+    }
   </style>
 </head>
 <body>
@@ -384,6 +761,35 @@
             <span class="stat-label">建议将纳指仓位降至 45% 以下的席位</span>
           </div>
         </div>
+
+        <figure class="product-stage" aria-label="OpenCouncil roundtable with AI Judge audit panel">
+          <div class="stage-chrome">
+            <span class="stage-lights" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="stage-title">AI Judge · OpenCouncil Review</span>
+            <span class="stage-state">case running</span>
+          </div>
+          <div class="stage-shell">
+            <div class="stage-main">
+              <img src="assets/openspark-council.png" alt="OpenCouncil 议院圆桌界面，多个 AI 席位围绕同一决策审议">
+            </div>
+            <aside class="stage-panel" aria-label="AI Judge Nasdaq case audit summary">
+              <div>
+                <span class="label">Live verdict packet</span>
+                <h2>从议院圆桌，到一份可签字裁决。</h2>
+                <p>AI Judge 把每个席位的判断、分歧和证据线索收束成一个审计包，最后交给人类复核和转发。</p>
+              </div>
+              <div class="audit-stack">
+                <div class="audit-row"><strong>11/13</strong><span>纳斯达克贷款抄底案中反对加杠杆的席位比例</span></div>
+                <div class="audit-row"><strong>8/11</strong><span>建议将纳指仓位降至 45% 以下的席位</span></div>
+                <div class="audit-row"><strong>13x</strong><span>每个席位独立审议，同一问题不串场、不混票</span></div>
+              </div>
+              <div class="stage-verdict">
+                <strong>DO NOT BORROW</strong>
+                <p>当前 55% 纳指仓位已经偏高，优先降集中度，不加杠杆。</p>
+              </div>
+            </aside>
+          </div>
+        </figure>
 
         <!-- Capability Marquee -->
         <div class="cap-strip" aria-hidden="true">
@@ -460,11 +866,11 @@
     </section>
 
     <!-- ════════════ SEAT BREAKDOWN ════════════ -->
-    <section class="section" style="border-top:0;padding-top:0;">
+    <section class="section seat-section" style="border-top:0;padding-top:0;">
       <div class="wrap">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;">
-          <h3 style="margin:0;font-size:18px;font-weight:680;">13 个席位，全部反对贷款。</h3>
-          <span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;">第一轮 · 贷款抄底裁决</span>
+        <div class="mini-section-head">
+          <h3>13 个席位，全部反对贷款。</h3>
+          <span>第一轮 · 贷款抄底裁决</span>
         </div>
         <div class="seat-strip" aria-label="13 个 AI 席位对贷款抄底的表决结果">
           <div class="seat-chip against"><span class="sn">Gemini</span><span class="sv">0 元贷款</span></div>
@@ -483,7 +889,7 @@
         </div>
 
         <!-- PORTFOLIO + STRESS TEST -->
-        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:8px;">
+        <div class="case-data-grid">
           <div>
             <div style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0;text-transform:uppercase;">你的持仓结构</div>
             <div class="portfolio-bar" aria-hidden="true">
