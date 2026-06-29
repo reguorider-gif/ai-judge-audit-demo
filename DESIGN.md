@@ -20,16 +20,16 @@ colors:
 
 typography:
   display:
-    fontFamily: "Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
-    fontSize: "64px"
-    fontWeight: 650
-    lineHeight: 0.98
+    fontFamily: "Inter, Noto Sans SC, PingFang SC, Hiragino Sans GB, system-ui, sans-serif"
+    fontSize: "58px"
+    fontWeight: 760
+    lineHeight: 1.14
     letterSpacing: "0"
   body:
-    fontFamily: "Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
-    fontSize: "16px"
+    fontFamily: "Inter, Noto Sans SC, PingFang SC, Hiragino Sans GB, system-ui, sans-serif"
+    fontSize: "17px"
     fontWeight: 400
-    lineHeight: 1.62
+    lineHeight: 1.72
     letterSpacing: "0"
   mono:
     fontFamily: "JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace"
@@ -62,6 +62,7 @@ The current homepage borrows one transferable move from FigCraft-style AI tool p
 - Secondary CTA: white or transparent pill with a hairline border.
 - Cards: white surface, 1px hairline border, subtle stacked shadow only when a product mockup needs depth.
 - Technical labels: mono uppercase, compact, and used only for metadata, claim IDs, status, and workflow numbers.
+- Chinese readability beats density. Keep hero and section headings at line-height 1.12 or above, body copy near 17px with generous line-height, and avoid 10-11px text except for secondary metadata.
 - Product mockups: dark audit workspace surfaces with readable evidence rows, compact chips, and tabular numeric metrics.
 - Primary visual proof: `assets/openspark-council.png`, framed as an OpenSpark/OpenCouncil roundtable surface with seat count and judge status. Use it to make "agent council loop" concrete before showing deeper report mechanics.
 - Hero live mock: overlay the Council screenshot with a restrained "AI Judge lens" and a compact Loop QA Packet preview. The overlay must explain transformation from live council state to packet fields, not behave like decoration.

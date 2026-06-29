@@ -19,7 +19,7 @@
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
@@ -27,8 +27,8 @@
       --canvas-soft: #f4f4f5;
       --surface: #ffffff;
       --ink: #171717;
-      --body: #3f3f46;
-      --muted: #71717a;
+      --body: #2f2f36;
+      --muted: #686871;
       --hairline: #e4e4e7;
       --hairline-strong: #d4d4d8;
       --primary: #171717;
@@ -40,7 +40,7 @@
       --warning: #8a5b2e;
       --warning-soft: #f4eadf;
       --shadow: 0 1px 1px rgba(0, 0, 0, 0.04), 0 18px 44px rgba(0, 0, 0, 0.08);
-      --sans: "Inter", "Aptos", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      --sans: "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Aptos", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
       --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
     }
 
@@ -60,9 +60,9 @@
       color: var(--ink);
       font-family: var(--sans);
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.68;
       letter-spacing: 0;
-      text-rendering: geometricPrecision;
+      text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       font-synthesis: none;
     }
@@ -191,10 +191,10 @@
       border: 1px solid var(--hairline);
       border-radius: 999px;
       background: var(--surface);
-      padding: 7px 10px 7px 8px;
+      padding: 8px 11px 8px 9px;
       color: var(--muted);
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0;
       text-transform: uppercase;
@@ -217,21 +217,21 @@
     }
 
     h1 {
-      max-width: 980px;
+      max-width: 840px;
       margin: 16px 0 12px;
       color: var(--ink);
-      font-size: clamp(40px, 4.7vw, 60px);
-      line-height: 1.06;
-      font-weight: 680;
+      font-size: clamp(38px, 4.5vw, 58px);
+      line-height: 1.14;
+      font-weight: 760;
       letter-spacing: 0;
     }
 
     .lead {
-      max-width: 760px;
+      max-width: 800px;
       margin: 0;
       color: var(--body);
-      font-size: clamp(16px, 1.25vw, 17px);
-      line-height: 1.56;
+      font-size: clamp(17px, 1.32vw, 19px);
+      line-height: 1.78;
     }
 
     .hero-note {
@@ -240,16 +240,16 @@
       border-left: 1px solid var(--hairline-strong);
       padding-left: 20px;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 15px;
+      line-height: 1.74;
     }
 
     .hero-note strong {
       display: block;
       margin-bottom: 8px;
       color: var(--ink);
-      font-size: 16px;
-      line-height: 1.25;
+      font-size: 17px;
+      line-height: 1.42;
     }
 
     .council-stage {
@@ -328,10 +328,10 @@
       border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.86);
-      padding: 7px 10px;
+      padding: 8px 11px;
       color: var(--ink);
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0;
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
@@ -380,11 +380,11 @@
       position: absolute;
       top: 16px;
       right: 18px;
-      width: min(310px, 36%);
+      width: min(340px, 39%);
       border: 1px solid rgba(255, 255, 255, 0.76);
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.9);
-      padding: 12px;
+      padding: 14px;
       color: var(--ink);
       box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
     }
@@ -401,9 +401,9 @@
       justify-content: space-between;
       gap: 10px;
       align-items: baseline;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0;
       text-transform: uppercase;
@@ -415,18 +415,18 @@
 
     .packet-lines {
       display: grid;
-      gap: 7px;
+      gap: 9px;
     }
 
     .packet-line {
       display: grid;
-      grid-template-columns: 68px minmax(0, 1fr);
-      gap: 10px;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 12px;
       align-items: baseline;
       border-top: 1px solid rgba(0, 0, 0, 0.08);
-      padding-top: 7px;
-      font-size: 12px;
-      line-height: 1.35;
+      padding-top: 9px;
+      font-size: 13px;
+      line-height: 1.52;
     }
 
     .packet-line:first-child {
@@ -437,13 +437,14 @@
     .packet-line code {
       color: var(--muted);
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: 0;
     }
 
     .packet-line strong {
-      font-size: 12px;
+      font-size: 13px;
+      line-height: 1.52;
     }
 
     .packet-meter {
@@ -462,14 +463,14 @@
     }
 
     .packet-decision {
-      margin-top: 10px;
+      margin-top: 12px;
       border-radius: 10px;
       background: var(--ink);
       color: var(--surface);
-      padding: 9px 10px;
-      font-size: 12px;
+      padding: 10px 11px;
+      font-size: 13px;
       font-weight: 760;
-      line-height: 1.35;
+      line-height: 1.48;
     }
 
     .audit-rail {
@@ -484,16 +485,16 @@
     }
 
     .audit-chip {
-      min-height: 58px;
+      min-height: 68px;
       background: #fbfbfb;
-      padding: 10px 12px;
+      padding: 13px 14px;
     }
 
     .audit-chip span {
       display: block;
       color: var(--muted);
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0;
       text-transform: uppercase;
@@ -501,16 +502,17 @@
 
     .audit-chip strong {
       display: block;
-      margin-top: 6px;
+      margin-top: 8px;
       color: var(--ink);
-      font-size: 14px;
-      line-height: 1.32;
+      font-size: 15px;
+      line-height: 1.52;
     }
 
     .stage-caption {
       margin: 12px 2px 2px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
+      line-height: 1.64;
       text-align: center;
     }
 
@@ -522,7 +524,7 @@
     }
 
     .button {
-      min-height: 48px;
+      min-height: 50px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -531,9 +533,9 @@
       border-radius: 999px;
       background: var(--surface);
       color: var(--ink);
-      padding: 9px 16px;
+      padding: 10px 18px;
       text-decoration: none;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       white-space: nowrap;
     }
@@ -597,8 +599,8 @@
 
     .state-body h2 {
       margin: 0 0 8px;
-      font-size: clamp(24px, 3vw, 36px);
-      line-height: 1.08;
+      font-size: clamp(24px, 2.8vw, 34px);
+      line-height: 1.18;
       font-weight: 690;
       letter-spacing: 0;
     }
@@ -606,7 +608,8 @@
     .state-body p {
       margin: 0 0 16px;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 15px;
+      line-height: 1.72;
     }
 
     .signal-list {
@@ -626,7 +629,8 @@
       border-radius: 8px;
       padding: 9px 10px;
       color: var(--body);
-      font-size: 13px;
+      font-size: 14px;
+      line-height: 1.52;
     }
 
     .signal-list code {
@@ -691,8 +695,8 @@
 
     .section h2 {
       margin: 12px 0 0;
-      font-size: clamp(31px, 4.7vw, 58px);
-      line-height: 1;
+      font-size: clamp(30px, 4.1vw, 50px);
+      line-height: 1.14;
       font-weight: 680;
       letter-spacing: 0;
     }
@@ -700,8 +704,8 @@
     .section-lede {
       margin: 0;
       color: var(--body);
-      font-size: 16px;
-      line-height: 1.62;
+      font-size: 17px;
+      line-height: 1.78;
     }
 
     .value-grid {
@@ -730,15 +734,16 @@
 
     .value-card h3 {
       margin: 28px 0 8px;
-      font-size: 21px;
-      line-height: 1.18;
+      font-size: 22px;
+      line-height: 1.32;
       letter-spacing: 0;
     }
 
     .value-card p {
       margin: 0;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 15px;
+      line-height: 1.72;
     }
 
     .json-shell {
@@ -757,8 +762,8 @@
 
     .json-copy h3 {
       margin: 20px 0 10px;
-      font-size: 26px;
-      line-height: 1.12;
+      font-size: 27px;
+      line-height: 1.22;
       letter-spacing: 0;
     }
 
@@ -774,7 +779,8 @@
       padding: 0;
       list-style: none;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 15px;
+      line-height: 1.68;
     }
 
     .json-copy li {
@@ -815,14 +821,16 @@
 
     .proof-copy h2 {
       margin: 12px 0 12px;
-      font-size: clamp(31px, 4.6vw, 56px);
-      line-height: 1;
+      font-size: clamp(30px, 4vw, 50px);
+      line-height: 1.14;
       letter-spacing: 0;
     }
 
     .proof-copy p {
       color: var(--body);
       margin: 0 0 20px;
+      font-size: 17px;
+      line-height: 1.78;
     }
 
     .shot {
@@ -861,12 +869,13 @@
     }
 
     .fit-row strong {
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .fit-row span {
       color: var(--muted);
-      font-size: 14px;
+      font-size: 15px;
+      line-height: 1.7;
     }
 
     .closing {
@@ -885,8 +894,8 @@
     .closing h2 {
       max-width: 760px;
       margin: 0 0 12px;
-      font-size: clamp(34px, 5vw, 64px);
-      line-height: 1;
+      font-size: clamp(32px, 4.4vw, 56px);
+      line-height: 1.12;
       letter-spacing: 0;
     }
 
@@ -894,6 +903,8 @@
       max-width: 660px;
       margin: 0;
       color: rgba(255, 255, 255, 0.72);
+      font-size: 17px;
+      line-height: 1.72;
     }
 
     .closing .button {
@@ -971,8 +982,8 @@
       }
 
       h1 {
-        font-size: clamp(34px, 11vw, 46px);
-        line-height: 1.08;
+        font-size: clamp(36px, 10.5vw, 46px);
+        line-height: 1.14;
       }
 
       .hero-note {
@@ -1011,7 +1022,7 @@
         top: 10px;
         left: 10px;
         padding: 6px 8px;
-        font-size: 9px;
+        font-size: 10px;
       }
 
       .lens-hotspot {
@@ -1033,7 +1044,7 @@
 
       .packet-line {
         grid-template-columns: 58px minmax(0, 1fr);
-        font-size: 11px;
+        font-size: 12px;
       }
 
       .packet-line:nth-child(2),
@@ -1044,7 +1055,7 @@
       .packet-decision {
         margin-top: 7px;
         padding: 8px;
-        font-size: 11px;
+        font-size: 12px;
       }
 
       .audit-rail {
@@ -1096,10 +1107,10 @@
         <div class="hero-copy">
           <div>
             <div class="eyebrow">Loop engineering demo</div>
-            <h1>为 AI Agent 时代而生的 Loop QA 审计层。</h1>
-            <p class="lead">不止评测分数。AI Judge 把 OpenCouncil 里的席位、分歧、证据、人工裁决和下一轮控制，整理成可转发、可复盘、可接入工作流的 audit packet。</p>
+            <h1>AI Agent 循环的 QA 审计层。</h1>
+            <p class="lead">不止评测分数。AI Judge 把 OpenCouncil 里的席位、分歧、证据、人工裁决和下一轮控制，整理成可转发、可复盘、可接入工作流的 Loop QA Packet。</p>
             <div class="actions">
-              <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">发送一个循环</a>
+              <a class="button primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20Loop%20QA%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">发送一个失败循环</a>
               <a class="button" href="AI_Judge_Audit_Sample_Report.html">看样例报告</a>
               <a class="button" href="sample-loop-packet.json">打开 JSON Packet</a>
             </div>
@@ -1118,45 +1129,45 @@
           <div class="council-media">
             <img src="assets/openspark-council.png" alt="OpenSpark 的 OpenCouncil 圆桌界面，显示 14 / 15 个评审席位和像素风议院场景">
             <div class="lens-overlay" aria-label="AI Judge 正在把 OpenCouncil 现场整理成 Loop QA Packet">
-              <div class="lens-status">AI Judge lens active</div>
+              <div class="lens-status">AI Judge 审计中</div>
               <span class="lens-hotspot seat-a" aria-hidden="true"></span>
               <span class="lens-hotspot risk seat-b" aria-hidden="true"></span>
               <span class="lens-hotspot seat-c" aria-hidden="true"></span>
               <aside class="packet-panel">
                 <div class="packet-title">
                   <span>Loop QA Packet</span>
-                  <span>building</span>
+                  <span>生成中</span>
                 </div>
                 <div class="packet-lines">
                   <div class="packet-line">
                     <code>SEATS</code>
-                    <strong>14 / 15 已就座，2 个席位给出风险标记</strong>
+                    <strong>14 / 15 已就座；2 个席位给出风险标记</strong>
                   </div>
                   <div class="packet-line">
                     <code>CLAIM</code>
-                    <strong>C3 unsupported · C5 contradicted</strong>
+                    <strong>C3 缺少证据 · C5 与来源冲突</strong>
                   </div>
                   <div class="packet-line">
                     <code>SUPPORT</code>
                     <div class="packet-meter" aria-hidden="true"><span></span></div>
                   </div>
                 </div>
-                <div class="packet-decision">Next run: rewrite then rerun · requires human gate</div>
+                <div class="packet-decision">下一轮：重写后重跑，需要人工确认</div>
               </aside>
             </div>
           </div>
           <div class="audit-rail" aria-label="AI Judge packet outputs">
             <div class="audit-chip">
-              <span>Observe</span>
-              <strong>审计镜头读取席位、模型、分歧和工具上下文</strong>
+              <span>观测</span>
+              <strong>读取席位、模型、分歧和工具上下文</strong>
             </div>
             <div class="audit-chip">
-              <span>Judge</span>
-              <strong>claim ledger 实时标记 unsupported / contradicted 风险</strong>
+              <span>判定</span>
+              <strong>把缺证据、相互冲突的 claim 标进 ledger</strong>
             </div>
             <div class="audit-chip">
-              <span>Control</span>
-              <strong>下一轮只能 rewrite、rerun 或等待 human gate</strong>
+              <span>控制</span>
+              <strong>给出下一轮：重写、重跑，或等待人工确认</strong>
             </div>
           </div>
           <figcaption class="stage-caption">OpenCouncil 是循环发生现场；AI Judge lens 把现场抽成可审计、可交接、可继续运行的 Loop QA Packet。</figcaption>
