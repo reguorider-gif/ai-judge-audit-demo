@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge：把 LLM 评测变成可签字的审计包</title>
-  <meta name="description" content="AI Judge 是 LLM-as-judge、RAG 和 agent 评测后的责任审计层。把分数、claim、证据、分歧和人工签字合成可追溯的审计包。">
+  <title>AI Judge：让好几个 AI 一起帮你判断一个决策</title>
+  <meta name="description" content="把一个拿不准的问题交给多个 AI 独立判断，再汇成一份有证据、有分歧、能让人拍板的报告。">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23171717"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
-  <meta property="og:title" content="AI Judge：把 LLM 评测变成可签字的审计包">
-  <meta property="og:description" content="Your eval says PASS. AI Judge shows whether a reviewer can sign it: claims, evidence, dissent, and human verdict.">
+  <meta property="og:title" content="AI Judge：让好几个 AI 一起帮你判断一个决策">
+  <meta property="og:description" content="把拿不准的问题交给多个 AI 独立判断，最后汇成一份有证据、有分歧、能拍板的报告。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Judge：把 LLM 评测变成可签字的审计包">
-  <meta name="twitter:description" content="把 LLM-as-judge 的分数变成可追溯、可签字、可归档的审计证据包。">
+  <meta name="twitter:title" content="AI Judge：让好几个 AI 一起帮你判断一个决策">
+  <meta name="twitter:description" content="多个 AI 各自判断同一个问题，最后汇成一份能让人拍板的报告。">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -569,9 +569,9 @@
     <div class="wrap nav">
       <a class="brand" href="#main"><span class="mark" aria-hidden="true">AJ</span><span>AI Judge</span></a>
       <nav class="nav-links" aria-label="主要导航">
-        <a href="#packet">审计包</a>
-        <a href="#workflow">流程</a>
-        <a href="#schema">Schema</a>
+        <a href="#packet">判断报告</a>
+        <a href="#workflow">怎么做</a>
+        <a href="#schema">报告结构</a>
         <a href="AI_Judge_Audit_Sample_Report.html">报告</a>
         <a href="sample-loop-packet.json">JSON</a>
       </nav>
@@ -582,82 +582,82 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero-grid">
         <div>
-          <span class="eyebrow">Eval audit layer</span>
-          <h1 id="hero-title">你的评测说 PASS， reviewer 能签字吗？</h1>
-          <p class="lede">AI Judge 不是另一个打分器。它把 LLM-as-judge、RAG 和 agent 的评测结果拆成 claim、证据、分歧和人工签字状态，最后输出一份可追溯、可归档的审计包。</p>
+          <span class="eyebrow">多 AI 联合判断</span>
+          <h1 id="hero-title">让好几个 AI 一起帮你看<br>同一个问题。</h1>
+          <p class="lede">你有一个拿不准的决定：一条 AI 回答能不能发、一个合同有没有坑、一次自动操作要不要放行。把问题和材料丢给多个 AI，各自独立判断。有人赞成、有人反对、有人指出漏掉的证据。最后汇成一份报告，你就知道能不能拍板。</p>
           <div class="hero-actions" aria-label="主要行动">
-            <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个 failed eval</a>
+            <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20case&body=Hi%2C%0A%0AI%20have%20one%20uncertain%20AI%20answer%20or%20decision%20for%20AI%20Judge%3A%0A">给我一个案例试试</a>
             <a class="btn" href="AI_Judge_Audit_Sample_Report.html">查看完整报告</a>
-            <a class="btn" href="sample-loop-packet.json">打开 JSON 包</a>
+            <a class="btn" href="sample-loop-packet.json">打开 JSON 样例</a>
           </div>
-          <p class="hero-note">最适合：RAG faithfulness、客服政策回答、agent 自动操作审批、LLM-as-judge 分数复核。</p>
+          <p class="hero-note">最适合：知识库问答、客服政策回复、AI 自动操作审批、模型评分复核。</p>
         </div>
 
-        <aside class="artifact-panel" aria-label="AI Judge 审计包预览">
+        <aside class="artifact-panel" aria-label="AI Judge 判断报告预览">
           <div class="panel-top">
             <div class="panel-title">
               <span class="status-dot" aria-hidden="true"></span>
               <div>
                 <strong>AJR-2026-06-29-001</strong>
-                <span>customer-support policy claim</span>
+                <span>客服政策回复待复核</span>
               </div>
             </div>
-            <span class="chip bad">hold until signed</span>
+            <span class="chip bad">先别自动发送</span>
           </div>
           <div class="panel-body">
-            <div class="verdict-row" aria-label="审计包摘要">
+            <div class="verdict-row" aria-label="判断报告摘要">
               <div class="metric">
-                <span class="meta">route</span>
-                <strong>judge</strong>
+                <span class="meta">处理方式</span>
+                <strong>交给 AI Judge</strong>
               </div>
               <div class="metric">
-                <span class="meta">audit score</span>
+                <span class="meta">风险等级</span>
                 <strong>9 / 10</strong>
               </div>
               <div class="metric danger">
-                <span class="meta">blockers</span>
-                <strong>3 claims</strong>
+                <span class="meta">拦截点</span>
+                <strong>3 条</strong>
               </div>
               <div class="metric">
-                <span class="meta">signer</span>
-                <strong>pending</strong>
+                <span class="meta">人工确认</span>
+                <strong>待签字</strong>
               </div>
             </div>
 
-            <div class="claim-ledger" aria-label="关键 claim ledger">
+            <div class="claim-ledger" aria-label="关键问题清单">
               <div class="claim-row">
                 <span class="claim-id">C3</span>
-                <span class="claim-text">Enterprise customers always follow the same refund policy.</span>
-                <span class="chip bad claim-state">unsupported</span>
+                <span class="claim-text">把所有企业客户都说成同一套退款规则。</span>
+                <span class="chip bad claim-state">证据不足</span>
               </div>
               <div class="claim-row">
                 <span class="claim-id">C5</span>
-                <span class="claim-text">Priority SLA is guaranteed during maintenance windows.</span>
-                <span class="chip bad claim-state">contradicted</span>
+                <span class="claim-text">维护窗口里的服务承诺例外被漏掉了。</span>
+                <span class="chip bad claim-state">被材料反驳</span>
               </div>
               <div class="claim-row">
                 <span class="claim-id">C6</span>
-                <span class="claim-text">Beta features are fully supported.</span>
-                <span class="chip bad claim-state">contradicted</span>
+                <span class="claim-text">把 Beta 功能说成完全支持。</span>
+                <span class="chip bad claim-state">被材料反驳</span>
               </div>
             </div>
 
-            <div class="packet-flow" aria-label="审计包字段">
+            <div class="packet-flow" aria-label="判断报告字段">
               <div class="flow-item">
-                <strong>Radar Card</strong>
-                <span>先判断是否值得审。</span>
+                <strong>先看值不值得审</strong>
+                <span>判断这件事是否需要多 AI 介入。</span>
               </div>
               <div class="flow-item">
-                <strong>Problem Contract</strong>
-                <span>锁定 owner、风险和 signer。</span>
+                <strong>写清问题和风险</strong>
+                <span>写清负责人、错误代价和签字人。</span>
               </div>
               <div class="flow-item">
-                <strong>Verdict Packet</strong>
-                <span>记录证据链和分歧。</span>
+                <strong>逐条对证据</strong>
+                <span>记录证据、分歧和拦截点。</span>
               </div>
               <div class="flow-item">
-                <strong>Final Report</strong>
-                <span>给 reviewer 签字归档。</span>
+                <strong>给人确认留档</strong>
+                <span>给负责人拍板和归档。</span>
               </div>
             </div>
           </div>
@@ -669,19 +669,19 @@
       <div class="wrap">
         <div class="strip-grid">
           <div class="strip-item">
-            <span class="meta">for eval stacks</span>
-            <strong>不是替代 Ragas、Promptfoo、Langfuse。</strong>
-            <p>它坐在评测之后，把 pass/fail 变成 reviewer 能检查的证据包。</p>
+            <span class="meta">已有评测也能用</span>
+            <strong>不是替代你现在的评测工具。</strong>
+            <p>它接在评测之后，把“通过 / 不通过”变成负责人能检查的材料。</p>
           </div>
           <div class="strip-item">
-            <span class="meta">for reviewers</span>
+            <span class="meta">给复核人</span>
             <strong>分数旁边必须有证据和责任人。</strong>
-            <p>每个 blocker 都能回到 source line、judge finding 和人工签字状态。</p>
+            <p>每个拦截点都能回到原文、判断理由和人工确认状态。</p>
           </div>
           <div class="strip-item">
-            <span class="meta">for operators</span>
+            <span class="meta">给运营和产品</span>
             <strong>一次失败回答会变成下一轮规则。</strong>
-            <p>归档的不只是结论，还有 overclaim pattern 和 safer rewrite。</p>
+            <p>不只留结论，还留下哪里说过头、下次应该怎么改。</p>
           </div>
         </div>
       </div>
@@ -690,25 +690,25 @@
     <section class="band" id="packet">
       <div class="wrap">
         <div class="section-head">
-          <h2>高风险 AI 输出进来，可签字审计包出去。</h2>
-          <p>首页只讲一个核心转换：从一条可能越权的 RAG/agent 回答，到一份带 claim ledger、source evidence、dissent 和 human verdict 的审计记录。</p>
+          <h2>高风险 AI 回答进来，能拍板的判断报告出去。</h2>
+          <p>首页只讲一个核心转换：一条可能越权的 AI 回答，怎么变成一份有证据、有分歧、有负责人确认的记录。</p>
         </div>
         <div class="io-grid">
           <div class="io-card">
-            <h3>Input：已有评测和原始材料</h3>
+            <h3>输入：已有结果和原始材料</h3>
             <ul class="io-list">
-              <li>用户问题、候选回答、RAG source packet。</li>
-              <li>已有 judge score、trace span 或测试结果。</li>
-              <li>业务 owner、错误代价、是否需要人工签字。</li>
+              <li>用户问题、候选回答、引用材料。</li>
+              <li>已有评分、执行轨迹或测试结果。</li>
+              <li>业务负责人、错误代价、是否需要人工确认。</li>
             </ul>
           </div>
           <div class="arrow" aria-hidden="true">→</div>
           <div class="io-card">
-            <h3>Output：可归档的责任链</h3>
+            <h3>输出：能追责的判断记录</h3>
             <ul class="io-list">
-              <li>8 个原子 claim，逐条标记 supported、partial、unsupported、contradicted。</li>
-              <li>3 个 blocker 明确拦截自动回复。</li>
-              <li>最终状态：hold automatic reply until reviewer approval。</li>
+              <li>8 条关键说法，逐条标记：有证据、部分支持、证据不足、被材料反驳。</li>
+              <li>3 个拦截点明确说明为什么不能自动发送。</li>
+              <li>最终状态：先别自动回复，等负责人确认。</li>
             </ul>
           </div>
         </div>
@@ -718,29 +718,29 @@
     <section class="band soft" id="workflow">
       <div class="wrap">
         <div class="section-head center">
-          <h2>四个产物，撑住一次可审计判断。</h2>
-          <p>不要把多模型投票当魔法。AI Judge 的价值在于把判断拆成能被人检查、签字、复盘的结构。</p>
+          <h2>四个小产物，撑住一次能复核的判断。</h2>
+          <p>不要把多 AI 投票当魔法。AI Judge 的价值是把判断拆成人能检查、签字、复盘的结构。</p>
         </div>
         <div class="workflow-grid">
           <article class="workflow-card">
-            <span class="step-id">01 / Radar Card</span>
-            <h3>先问是否值得审</h3>
-            <p>命中真实损失、高频、边界模糊、证据链和明确 owner，才进入 judge route。</p>
+            <span class="step-id">01 / 值不值得审</span>
+            <h3>先问值不值得审</h3>
+            <p>真有损失、经常发生、边界模糊、有材料可查、有人负责，才值得进入多 AI 判断。</p>
           </article>
           <article class="workflow-card">
-            <span class="step-id">02 / Problem Contract</span>
+            <span class="step-id">02 / 问题和代价</span>
             <h3>锁定错误代价</h3>
-            <p>把 whose problem、wrong-decision cost、acceptance 和 signer 写进同一份 contract。</p>
+            <p>写清这是谁的问题、判断错了会损失什么、怎样算通过、最后谁拍板。</p>
           </article>
           <article class="workflow-card">
-            <span class="step-id">03 / Verdict Packet</span>
-            <h3>拆 claim 对证据</h3>
-            <p>每个 judge seat 只负责找风险模式，最后汇总 blocker、warning、dissent 和 safer rewrite。</p>
+            <span class="step-id">03 / 逐条对证据</span>
+            <h3>逐条对证据</h3>
+            <p>每个 AI 席位找不同风险，最后合并拦截点、提醒、分歧和更安全的改写。</p>
           </article>
           <article class="workflow-card">
-            <span class="step-id">04 / Final Report</span>
-            <h3>等待人工签字</h3>
-            <p>报告不是模型结论的装饰，而是客服、合规、QA 或产品 owner 能归档的签字材料。</p>
+            <span class="step-id">04 / 人工确认</span>
+            <h3>等待人工确认</h3>
+            <p>报告不是模型结论的装饰，而是客服、合规、QA 或产品负责人能直接归档的材料。</p>
           </article>
         </div>
       </div>
@@ -750,41 +750,41 @@
       <div class="wrap report-grid">
         <div>
           <div class="section-head">
-            <h2>把“看起来正确”的回答，拆成 reviewer 能追责的 ledger。</h2>
-            <p>这个样例里，候选回答混入了 3 个会制造客户承诺风险的 blocker。AI Judge 的目标不是给高分，而是告诉你为什么不能自动发出。</p>
+            <h2>把“看起来对”的回答，拆成复核人能追责的清单。</h2>
+            <p>这个样例里，候选回答混入 3 条会造成客户承诺风险的问题。AI Judge 不追求高分，它告诉你为什么不能自动发出。</p>
           </div>
-          <div class="table-card" aria-label="Claim ledger 摘要">
+          <div class="table-card" aria-label="关键问题清单摘要">
             <div class="table-row">
-              <span>claim</span>
-              <span>finding</span>
-              <span>status</span>
+              <span>说法</span>
+              <span>问题</span>
+              <span>状态</span>
             </div>
             <div class="table-row">
               <span>C3</span>
-              <span>Enterprise refund policy was overgeneralized.</span>
-              <span class="chip bad">blocker</span>
+              <span>退款政策被说得过于绝对。</span>
+              <span class="chip bad">拦截</span>
             </div>
             <div class="table-row">
               <span>C5</span>
-              <span>Maintenance exception was removed from the SLA claim.</span>
-              <span class="chip bad">blocker</span>
+              <span>服务承诺里的维护例外被漏掉。</span>
+              <span class="chip bad">拦截</span>
             </div>
             <div class="table-row">
               <span>C6</span>
-              <span>Beta features were described as fully supported.</span>
-              <span class="chip bad">blocker</span>
+              <span>Beta 功能被说成完全支持。</span>
+              <span class="chip bad">拦截</span>
             </div>
             <div class="table-row">
               <span>C4</span>
-              <span>4 business hours was compressed into 4 hours.</span>
-              <span class="chip">warning</span>
+              <span>4 个工作小时被压成 4 小时。</span>
+              <span class="chip">提醒</span>
             </div>
           </div>
         </div>
 
         <div class="code-card">
           <div class="code-top">
-            <span class="code-label">minimum integration shape</span>
+            <span class="code-label">最小接入字段</span>
             <button class="copy-btn" type="button" data-copy-schema>复制 JSON</button>
           </div>
 <pre id="schema-snippet">{
@@ -805,22 +805,22 @@
     <section class="council" aria-labelledby="council-title">
       <div class="wrap council-grid">
         <div>
-          <span class="eyebrow">OpenCouncil evidence</span>
-          <h2 id="council-title">多席位审议是输入，不是产品终点。</h2>
-          <p>圆桌让分歧暴露出来。AI Judge 的工作是把这些分歧变成审计结构：哪些 claim 被支持，哪些 claim 被反驳，谁需要签字，下一轮自动化应该学到什么。</p>
+          <span class="eyebrow">多 AI 审议证据</span>
+          <h2 id="council-title">多席位审议是输入，不是终点。</h2>
+          <p>圆桌会把分歧暴露出来。AI Judge 做的是把这些分歧整理成判断结构：哪些说法有证据，哪些被反驳，谁需要确认，下一轮自动化应该学到什么。</p>
           <div class="hero-actions">
             <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">阅读报告样例</a>
-            <a class="btn" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">打开 Public Gist</a>
+            <a class="btn" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">打开公开 Gist</a>
           </div>
         </div>
         <div class="stage">
-          <img src="assets/openspark-council.png" alt="OpenCouncil 多模型审议圆桌界面截图">
+          <img src="assets/openspark-council.png" alt="多 AI 审议圆桌界面截图">
           <div class="stage-caption">
             <div>
-              <strong>13 seats review the same risky output.</strong>
-              <span>AI Judge converts seat findings into a signed audit packet.</span>
+              <strong>13 个 AI 看同一个高风险回答。</strong>
+              <span>AI Judge 把它们的判断整理成一份可签字报告。</span>
             </div>
-            <span class="chip good">evidence first</span>
+            <span class="chip good">证据优先</span>
           </div>
         </div>
       </div>
@@ -828,21 +828,21 @@
 
     <section class="closing">
       <div class="wrap">
-        <h2>发我一条失败或边界模糊的 eval，我还你一份审计包。</h2>
-        <p>最小合作方式：给一条 RAG 回答、source packet、已有 judge 分数或 trace。AI Judge 返回 claim ledger、blockers、safer rewrite 和 human-signature report。</p>
+        <h2>把你拿不准的问题给我，<br>我还你一份能拍板的结论。</h2>
+        <p>一条 AI 回复、一次自动操作、一次模型评分，只要你不确定能不能放行，丢过来。我把多个 AI 的判断汇成一份报告还给你。</p>
         <div class="hero-actions" style="justify-content:center">
-          <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
+          <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20case&body=Hi%2C%0A%0AI%20have%20one%20uncertain%20AI%20answer%20or%20decision%20for%20AI%20Judge%3A%0A">给我一个案例试试</a>
           <a class="btn" href="sample-loop-packet.json">下载 JSON 样例</a>
         </div>
         <p class="meta-links">
-          <a href="AI_Judge_Audit_Sample_Report.html">完整审计报告样例</a> · <a href="sample-loop-packet.json">JSON 数据包</a> · <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Public Gist</a>
+          <a href="AI_Judge_Audit_Sample_Report.html">完整判断报告样例</a> · <a href="sample-loop-packet.json">JSON 数据包</a> · <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">公开 Gist</a>
         </p>
       </div>
     </section>
   </main>
 
   <footer>
-    <span>AI Judge 公开演示。不含私有数据、凭证或生产 trace。</span>
+    <span>AI Judge 公开演示。不含私有数据、凭证或生产轨迹。</span>
   </footer>
 
   <script>
