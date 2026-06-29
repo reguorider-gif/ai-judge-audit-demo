@@ -3,968 +3,289 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge — 多席位 AI 审议引擎</title>
-  <meta name="description" content="AI Judge 用 13 个独立 AI 席位围绕一次决策进行审议、分歧、裁决，产出可转发可签字的审计报告。">
+  <title>AI Judge — 多席位 AI 审议</title>
+  <meta name="description" content="13 个独立 AI 席位同时审议同一个问题。分歧、互评、共振，最后一份可签字的裁决。">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
-  <meta property="og:title" content="AI Judge — 多席位 AI 审议引擎">
-  <meta property="og:description" content="13 个独立 AI 席位，一次决策审议，一份可签字的审计报告。">
+  <meta property="og:title" content="AI Judge — 多席位 AI 审议">
+  <meta property="og:description" content="13 个独立 AI 席位，一次决策审议，一份可签字的裁决。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Judge — 多席位 AI 审议引擎">
-  <meta name="twitter:description" content="13 个独立 AI 席位，一次决策审议，一份可签字的审计报告。">
+  <meta name="twitter:title" content="AI Judge — 多席位 AI 审议">
+  <meta name="twitter:description" content="13 个独立 AI 席位，一次决策审议，一份可签字的裁决。">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
-      --canvas: #fafafa;
-      --canvas-soft: #f4f4f5;
+      --canvas: #f5f5f7;
       --surface: #ffffff;
-      --ink: #171717;
-      --body: #2f2f36;
-      --muted: #686871;
-      --hairline: #e4e4e7;
-      --hairline-strong: #d4d4d8;
-      --primary: #171717;
-      --on-primary: #ffffff;
-      --accent: #0f8f6f;
-      --accent-soft: #ddf7ee;
-      --danger: #96363d;
-      --danger-soft: #f3dfe2;
-      --warning: #8a5b2e;
-      --warning-soft: #f4eadf;
-      --shadow: 0 1px 1px rgba(0, 0, 0, 0.04), 0 18px 44px rgba(0, 0, 0, 0.08);
-      --sans: "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Aptos", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
-      --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
-    }
-
-    * { box-sizing: border-box; }
-    html { background: var(--canvas); scroll-behavior: smooth; }
-    body {
-      min-width: 320px; margin: 0; background: var(--canvas-soft);
-      color: var(--ink); font-family: var(--sans); font-size: 16px;
-      line-height: 1.68; letter-spacing: 0;
-      text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; font-synthesis: none;
-    }
-    a { color: inherit; }
-
-    .skip-link {
-      position: fixed; left: 16px; top: 12px; z-index: 100;
-      transform: translateY(-140%); border-radius: 999px;
-      background: var(--ink); color: var(--surface); padding: 10px 14px; text-decoration: none;
-    }
-    .skip-link:focus { transform: translateY(0); }
-    :focus-visible {
-      outline: 3px solid var(--accent);
-      outline: 3px solid color-mix(in oklab, var(--accent) 74%, white);
-      outline-offset: 4px;
-    }
-    .sr-only {
-      position: absolute; width: 1px; height: 1px; overflow: hidden;
-      clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap;
-    }
-    .wrap { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
-
-    .topbar {
-      position: sticky; top: 14px; z-index: 20;
-      width: min(1120px, calc(100% - 40px)); margin: 14px auto 0;
-      border: 1px solid var(--hairline); border-radius: 8px;
-      background: rgba(255, 255, 255, 0.9); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-    }
-    @supports (backdrop-filter: blur(1px)) {
-      .topbar { background: rgba(255, 255, 255, 0.78); backdrop-filter: blur(18px); }
-    }
-    .nav {
-      min-height: 58px; display: flex; align-items: center; justify-content: space-between;
-      gap: 18px; padding: 0 12px 0 14px;
-    }
-    .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 700; }
-    .mark {
-      width: 30px; height: 30px; display: grid; place-items: center; border-radius: 7px;
-      background: var(--ink); color: var(--surface); font-family: var(--mono); font-size: 11px; font-weight: 700;
-    }
-    .nav-links { display: flex; align-items: center; gap: 2px; color: var(--muted); font-size: 13px; font-weight: 620; }
-    .nav-links a { border-radius: 999px; padding: 8px 10px; text-decoration: none; }
-    .nav-links a:hover, .nav-links a:focus-visible { background: var(--canvas-soft); color: var(--ink); }
-
-    h1, h2, h3, p { text-wrap: balance; text-wrap: pretty; }
-
-    /* ── Hero ── */
-    .hero {
-      padding: clamp(30px, 4vw, 44px) 0 clamp(18px, 2vw, 28px);
-      border-bottom: 1px solid var(--hairline); background: #f5f5f7;
-    }
-    .hero-copy {
-      display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 0.34fr);
-      gap: clamp(22px, 5vw, 56px); align-items: end;
-    }
-    .eyebrow {
-      width: fit-content; display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid var(--hairline); border-radius: 999px; background: var(--surface);
-      padding: 8px 11px 8px 9px; color: var(--muted);
-      font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: uppercase;
-    }
-    .eyebrow::before {
-      content: ""; width: 8px; height: 8px; border-radius: 999px;
-      background: var(--accent); box-shadow: 0 0 0 4px rgba(15, 143, 111, 0.12);
-    }
-    h1 {
-      max-width: 760px; margin: 16px 0 8px; color: var(--ink);
-      font-size: clamp(38px, 4.5vw, 54px); line-height: 1.08; font-weight: 760; letter-spacing: 0;
-    }
-    .lead {
-      max-width: 680px; margin: 0; color: var(--body);
-      font-size: clamp(16px, 1.25vw, 18px); line-height: 1.7;
-    }
-    .hero-side {
-      justify-self: end; max-width: 340px;
-      border-left: 1px solid var(--hairline-strong); padding-left: 20px;
-    }
-    .hero-side .stat { display: block; margin-bottom: 6px; color: var(--ink); font-size: 28px; font-weight: 760; font-variant-numeric: tabular-nums; }
-    .hero-side .stat-label { color: var(--muted); font-size: 13px; line-height: 1.5; }
-
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
-    .button {
-      min-height: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      border: 1px solid var(--hairline-strong); border-radius: 999px;
-      background: var(--surface); color: var(--ink); padding: 10px 18px;
-      text-decoration: none; font-size: 15px; font-weight: 700; white-space: nowrap;
-    }
-    .button.primary { border-color: var(--primary); background: var(--primary); color: var(--on-primary); }
-    .button:hover, .button:focus-visible { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); }
-
-    /* ── Capability Marquee ── */
-    .cap-strip {
-      margin-top: clamp(24px, 4vw, 36px); padding: 12px 0;
-      border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
-      overflow: hidden; white-space: nowrap; position: relative;
-    }
-    .cap-track { display: inline-flex; gap: 28px; animation: marquee 28s linear infinite; }
-    .cap-item { display: inline-flex; align-items: baseline; gap: 6px; color: var(--muted); font-size: 13px; }
-    .cap-item strong { color: var(--ink); font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0; }
-    .cap-dot { color: var(--hairline-strong); font-size: 10px; }
-    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    @media (prefers-reduced-motion: reduce) { .cap-track { animation: none; } }
-
-    /* ── Case Study Header ── */
-    .case-section { padding: 0; border-top: 0; background: var(--canvas); }
-    .case-header-bar {
-      display: grid; grid-template-columns: minmax(0, 1fr) auto;
-      gap: 24px; align-items: end; padding: clamp(32px, 5vw, 52px) 0 20px;
-    }
-    .case-header-bar h2 {
-      margin: 0; font-size: clamp(26px, 3.4vw, 42px); line-height: 1.1; font-weight: 680; letter-spacing: 0;
-    }
-    .case-tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      border: 1px solid var(--hairline); border-radius: 999px;
-      padding: 6px 10px; font-family: var(--mono); font-size: 10px; font-weight: 700;
-      color: var(--muted); letter-spacing: 0; text-transform: uppercase;
-    }
-
-    /* ── Verdict Card ── */
-    .verdict-card {
-      border: 1px solid var(--hairline); border-radius: 12px; background: var(--surface);
-      box-shadow: var(--shadow); overflow: hidden;
-    }
-    .verdict-head {
-      display: flex; align-items: center; gap: 10px;
-      padding: 14px 18px; border-bottom: 1px solid var(--hairline);
-      font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0;
-    }
-    .verdict-badge {
-      border-radius: 999px; padding: 5px 10px;
-      font-size: 11px; font-weight: 760; letter-spacing: 0; text-transform: uppercase;
-    }
-    .verdict-badge.block { background: var(--danger-soft); color: var(--danger); }
-    .verdict-badge.ok { background: var(--accent-soft); color: var(--accent); }
-    .verdict-body { padding: 18px; display: grid; gap: 14px; }
-    .verdict-body .big-line { font-size: 18px; font-weight: 720; line-height: 1.42; color: var(--ink); }
-    .verdict-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-    .vm { border-radius: 8px; background: var(--canvas-soft); padding: 12px; }
-    .vm .v { display: block; font-size: 20px; font-weight: 760; font-variant-numeric: tabular-nums; color: var(--ink); }
-    .vm .l { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); line-height: 1.4; }
-
-    /* ── Step Cards ── */
-    .step-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 20px; padding-bottom: clamp(40px, 6vw, 60px); }
-    .step-card {
-      border: 1px solid var(--hairline); border-radius: 8px; background: var(--surface);
-      padding: 18px; min-height: 200px;
-    }
-    .step-card .step-num { display: block; color: var(--accent); font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0; margin-bottom: 12px; }
-    .step-card h4 { margin: 0 0 6px; font-size: 16px; font-weight: 680; line-height: 1.3; }
-    .step-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
-
-    /* ── Seat Strip ── */
-    .seat-strip {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
-      gap: 4px; margin-top: 16px; padding-bottom: 32px;
-      border-bottom: 1px solid var(--hairline);
-    }
-    .seat-chip {
-      border: 1px solid var(--hairline); border-radius: 8px; background: var(--surface);
-      padding: 9px 7px; text-align: center; font-size: 11px; line-height: 1.35;
-    }
-    .seat-chip .sn { display: block; font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0; margin-bottom: 3px; }
-    .seat-chip .sv { display: block; font-weight: 720; color: var(--ink); font-size: 12px; }
-    .seat-chip.against { border-left: 3px solid var(--danger); }
-    .seat-chip.miss { border-left: 3px solid var(--hairline-strong); opacity: 0.6; }
-
-    /* ── Risk Table ── */
-    .risk-table {
-      width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 16px;
-    }
-    .risk-table th { border-bottom: 2px solid var(--ink); padding: 8px 10px; text-align: left; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0; color: var(--muted); text-transform: uppercase; }
-    .risk-table td { border-bottom: 1px solid var(--hairline); padding: 10px; vertical-align: top; line-height: 1.5; }
-
-    /* ── Portfolio Visual ── */
-    .portfolio-bar {
-      display: flex; height: 12px; border-radius: 999px; overflow: hidden; margin-top: 10px;
-      border: 1px solid var(--hairline);
-    }
-    .portfolio-bar .pb-nq { background: #3b82f6; width: 55%; }
-    .portfolio-bar .pb-sp { background: #6366f1; width: 15%; }
-    .portfolio-bar .pb-au { background: #f59e0b; width: 20%; }
-    .portfolio-bar .pb-ca { background: #94a3b8; width: 10%; }
-    .portfolio-legend { display: flex; gap: 16px; margin-top: 8px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
-    .portfolio-legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; vertical-align: middle; }
-    .portfolio-legend .l-nq::before { background: #3b82f6; }
-    .portfolio-legend .l-sp::before { background: #6366f1; }
-    .portfolio-legend .l-au::before { background: #f59e0b; }
-    .portfolio-legend .l-ca::before { background: #94a3b8; }
-
-    /* ── Don't Do ── */
-    .dont-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
-    .dont-card {
-      border: 1px solid var(--danger-soft); border-radius: 8px; background: var(--danger-soft);
-      padding: 14px; font-size: 13px; line-height: 1.5;
-    }
-    .dont-card strong { display: block; color: var(--danger); font-size: 14px; margin-bottom: 4px; }
-
-    /* ── Delivery Section ── */
-    .delivery-grid {
-      display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 0.5fr);
-      gap: 18px; align-items: start;
-    }
-    .delivery-card {
-      border: 1px solid var(--hairline); border-radius: 8px; background: var(--surface);
-      padding: 18px;
-    }
-    .delivery-card h4 { margin: 0 0 6px; font-size: 16px; }
-    .delivery-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
-    pre {
-      margin: 0; border: 1px solid #27272a; border-radius: 8px;
-      background: #101211; color: #edf7f3; padding: 18px; overflow: auto;
-      font-family: var(--mono); font-size: 12px; line-height: 1.58; tab-size: 2;
-    }
-
-    /* ── Engine Section ── */
-    .engine-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-    .engine-card {
-      border: 1px solid var(--hairline); border-radius: 8px; background: var(--surface);
-      padding: 20px;
-    }
-    .engine-card span { display: block; color: var(--muted); font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
-    .engine-card h4 { margin: 14px 0 6px; font-size: 17px; }
-    .engine-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
-
-    /* ── Section Shared ── */
-    .section { padding: clamp(46px, 7vw, 78px) 0; border-top: 1px solid var(--hairline); background: var(--canvas); }
-    .section h2 {
-      margin: 12px 0 0; font-size: clamp(28px, 3.8vw, 44px); line-height: 1.12; font-weight: 680; letter-spacing: 0;
-    }
-    .section-lede { margin: 0; color: var(--body); font-size: 16px; line-height: 1.72; }
-    .section-head {
-      display: grid; grid-template-columns: minmax(0, 0.78fr) minmax(240px, 0.42fr);
-      gap: clamp(20px, 5vw, 56px); align-items: end; margin-bottom: 26px;
-    }
-
-    /* ── Closing ── */
-    .closing { padding: clamp(48px, 8vw, 88px) 0; background: var(--ink); color: var(--surface); }
-    .closing-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; }
-    .closing h2 { max-width: 660px; margin: 0 0 12px; font-size: clamp(30px, 4vw, 48px); line-height: 1.1; letter-spacing: 0; }
-    .closing p { max-width: 600px; margin: 0; color: rgba(255, 255, 255, 0.72); font-size: 16px; line-height: 1.7; }
-    .closing .button { border-color: rgba(255, 255, 255, 0.26); background: var(--surface); color: var(--ink); }
-
-    footer { padding: 22px 0 30px; background: var(--ink); color: rgba(255, 255, 255, 0.56); font-size: 13px; }
-    footer .wrap { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid rgba(255, 255, 255, 0.14); padding-top: 18px; }
-    footer a { color: rgba(255, 255, 255, 0.78); text-decoration: none; }
-
-    /* ── Responsive ── */
-    @media (max-width: 920px) {
-      .hero-copy, .step-grid, .delivery-grid, .section-head, .closing-inner, .case-header-bar { grid-template-columns: 1fr; }
-      .hero-side { justify-self: start; max-width: 100%; border-left: 0; border-top: 1px solid var(--hairline-strong); padding: 16px 0 0; }
-      .step-grid { grid-template-columns: repeat(2, 1fr); }
-      .dont-grid { grid-template-columns: repeat(2, 1fr); }
-      .engine-grid { grid-template-columns: 1fr; }
-      .verdict-meta { grid-template-columns: repeat(3, 1fr); }
-      .nav-links { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap; pointer-events: auto; }
-      .brand::after { content: "Menu"; color: var(--muted); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0; margin-left: 8px; }
-    }
-    @media (max-width: 640px) {
-      .wrap, .topbar { width: min(100% - 28px, 1120px); }
-      .hero { padding-top: 24px; }
-      h1 { font-size: clamp(32px, 9vw, 40px); }
-      .step-grid { grid-template-columns: 1fr; }
-      .dont-grid { grid-template-columns: 1fr; }
-      .seat-strip { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 3px; }
-      .seat-chip { padding: 7px 5px; font-size: 10px; }
-      .seat-chip .sn { font-size: 9px; }
-      .seat-chip .sv { font-size: 10px; }
-      .verdict-meta { grid-template-columns: 1fr; }
-      .risk-table { font-size: 12px; }
-      .risk-table th, .risk-table td { padding: 6px 7px; }
-      .actions, .button { width: 100%; }
-      footer .wrap { flex-direction: column; }
-    }
-
-    @media print {
-      .topbar, .skip-link, .nav-links { display: none; }
-      *, *::before, *::after { backdrop-filter: none !important; box-shadow: none !important; animation: none !important; transition: none !important; }
-      body { background: white; color: black; font-size: 12pt; }
-      .closing, footer { background: white; color: black; }
-      .closing .button, footer a { border: 1px solid black; background: white; color: black; }
-      .button { border: 1px solid black; background: white; color: black; box-shadow: none; }
-      .button.primary { background: white; color: black; border: 2px solid black; }
-      .verdict-card, .step-card, .engine-card, .delivery-card, .dont-card, .seat-chip, .risk-table, .portfolio-bar { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
-      pre { background: #f5f5f5; color: black; border: 1px solid #ccc; }
-      img { max-width: 100%; break-inside: avoid; }
-      .wrap { width: 100%; max-width: none; margin: 0; padding: 0 12pt; }
-      a { color: black; text-decoration: underline; }
-      .cap-strip { display: none; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-    }
-
-    /* ── v4 Visual Lift · FigCraft-inspired product rhythm ── */
-    :root {
-      --canvas: #f7f7f8;
-      --canvas-soft: #eff0f2;
-      --surface: #ffffff;
-      --ink: #19191d;
-      --body: #3e3e46;
-      --muted: #6d6d76;
-      --hairline: #dedfe3;
-      --hairline-strong: #c9cad0;
+      --ink: #1d1d1f;
+      --muted: #6e6e73;
+      --hairline: rgba(0,0,0,0.08);
       --accent: #0d8f72;
-      --accent-soft: #dff6ee;
-      --stage: #050607;
-      --stage-panel: #0d0e10;
-      --blue: #1264f4;
-      --shadow: 0 1px 1px rgba(0, 0, 0, 0.035), 0 34px 90px rgba(0, 0, 0, 0.11);
+      --danger: #96363d;
+      --sans: "Inter","Noto Sans SC","PingFang SC","Hiragino Sans GB","Aptos","SF Pro Text","Segoe UI",system-ui,sans-serif;
+      --serif: "Cormorant Garamond","Noto Serif SC",serif;
+      --mono: "JetBrains Mono","SFMono-Regular",Menlo,Consolas,monospace;
+    }
+    *{box-sizing:border-box}html{background:var(--canvas);scroll-behavior:smooth}
+    body{min-width:320px;margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.68;-webkit-font-smoothing:antialiased;font-synthesis:none}
+    a{color:inherit;text-decoration:none}
+    :focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap}
+    .wrap{width:min(1232px,calc(100% - 48px));margin-inline:auto}
+
+    /* nav */
+    .topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(245,245,247,0.72);border-bottom:1px solid var(--hairline)}
+    .nav{min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0}
+    .brand{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:720}
+    .mark{width:28px;height:28px;display:grid;place-items:center;border-radius:7px;background:var(--ink);color:#fff;font-family:var(--mono);font-size:10px;font-weight:700}
+    .nav-links{display:flex;align-items:center;gap:24px;color:var(--muted);font-size:13px;font-weight:620}
+    .nav-links a:hover{color:var(--ink)}
+
+    /* hero */
+    .hero{padding:clamp(72px,12vw,140px) 0 clamp(56px,8vw,90px);text-align:center}
+    .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(0,0,0,0.08);border-radius:999px;background:rgba(255,255,255,0.7);padding:8px 13px 8px 10px;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:20px}
+    .hero .eyebrow::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(13,143,114,0.12)}
+    .hero h1{max-width:780px;margin:0 auto 16px;font-size:clamp(46px,7.4vw,92px);line-height:0.97;font-weight:780;letter-spacing:-0.02em}
+    .hero p{max-width:560px;margin:0 auto;color:#54545c;font-size:clamp(16px,1.3vw,18px);line-height:1.72}
+    .hero .stats{margin-top:clamp(28px,4vw,42px);display:flex;justify-content:center;gap:clamp(32px,6vw,72px)}
+    .hero .stats .st{text-align:center}
+    .hero .stats .st b{display:block;font-size:clamp(38px,5vw,60px);font-weight:780;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+    .hero .stats .st span{display:block;margin-top:6px;color:var(--muted);font-size:13px;max-width:180px;margin-inline:auto}
+    .hero .actions{margin-top:clamp(26px,4vw,38px);display:flex;justify-content:center;flex-wrap:wrap;gap:10px}
+    .btn{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(0,0,0,0.1);border-radius:999px;background:#fff;color:var(--ink);padding:10px 22px;font-size:15px;font-weight:700;white-space:nowrap;transition:transform .16s ease,box-shadow .16s ease}
+    .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,0,0,.11)}
+
+    /* capability strip */
+    .cap-strip{border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(0,0,0,0.06);overflow:hidden;white-space:nowrap;padding:13px 0;background:rgba(255,255,255,0.4)}
+    .cap-track{display:inline-flex;gap:32px;animation:marq 26s linear infinite}
+    .cap-track span{color:var(--muted);font-size:13px}.cap-track b{color:var(--ink);font-family:var(--mono);font-size:12px;font-weight:700;margin-right:4px}
+    @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @media(prefers-reduced-motion:reduce){.cap-track{animation:none}}
+
+    /* case dark section */
+    .case-dark{position:relative;overflow:hidden;background:#08090a;color:#fff;padding:0}
+    .case-dark .inner{position:relative;z-index:2;max-width:1232px;margin:0 auto;padding:clamp(64px,10vw,120px) 24px clamp(72px,11vw,130px)}
+    .case-dark .stage-wrapper{position:relative;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 48px 120px -40px rgba(0,0,0,0.7);margin-bottom:clamp(40px,7vw,72px)}
+    .case-dark .stage-wrapper img{display:block;width:100%;height:auto}
+    .case-dark .stage-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(8,9,10,0.85));pointer-events:none;display:grid;align-content:end;padding:clamp(20px,3vw,40px)}
+    .case-dark .stage-overlay .tag{width:fit-content;border:1px solid rgba(255,255,255,0.2);border-radius:999px;padding:6px 12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:12px}
+    .case-dark .stage-overlay h2{max-width:860px;margin:0;font-size:clamp(32px,5vw,62px);line-height:1.04;font-weight:760;letter-spacing:-0.01em}
+    .case-dark .verdict-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:clamp(28px,4vw,44px)}
+    .case-dark .verdict-strip .vs{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px 20px}
+    .case-dark .verdict-strip .vs b{display:block;font-size:clamp(24px,3vw,38px);font-weight:760;line-height:1;color:#fff}
+    .case-dark .verdict-strip .vs span{display:block;margin-top:8px;color:rgba(255,255,255,0.55);font-size:13px;line-height:1.5}
+
+    /* case breakdown light */
+    .steps{padding:clamp(60px,9vw,100px) 0;text-align:center}
+    .steps h2{max-width:700px;margin:0 auto 16px;font-size:clamp(32px,4.8vw,56px);line-height:1.06;font-weight:760;letter-spacing:-0.01em}
+    .steps>p{max-width:520px;margin:0 auto clamp(40px,6vw,64px);color:var(--muted);font-size:17px;line-height:1.7}
+    .steps-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;text-align:left}
+    .steps-grid .sc{border:1px solid rgba(0,0,0,0.07);border-radius:16px;background:#fff;padding:24px;transition:transform .24s ease,box-shadow .24s ease}
+    .steps-grid .sc:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(0,0,0,.08)}
+    .steps-grid .sc .n{display:block;color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;margin-bottom:14px}
+    .steps-grid .sc h4{margin:0 0 6px;font-size:17px;font-weight:680;line-height:1.3}
+    .steps-grid .sc p{margin:0;color:var(--muted);font-size:14px;line-height:1.65}
+
+    /* seats */
+    .seats{padding:0 0 clamp(64px,9vw,96px);text-align:center}
+    .seats h2{max-width:600px;margin:0 auto 8px;font-size:clamp(28px,4vw,48px);line-height:1.08;font-weight:760}
+    .seats>p{color:var(--muted);font-size:15px;margin:0 auto clamp(32px,5vw,48px)}
+    .seat-grid{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:8px}
+    .seat-grid .sg{border:1px solid rgba(150,54,61,0.15);border-radius:12px;background:#fff;padding:12px 6px;text-align:center;transition:transform .2s ease,box-shadow .2s ease;box-shadow:inset 0 3px 0 rgba(150,54,61,0.6)}
+    .seat-grid .sg:hover{transform:scale(1.06);box-shadow:0 8px 22px rgba(0,0,0,.1)}
+    .seat-grid .sg .sn{display:block;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0;margin-bottom:4px}
+    .seat-grid .sg .sv{display:block;font-size:12px;font-weight:720;color:var(--ink)}
+
+    /* engine */
+    .engine{padding:clamp(60px,9vw,96px) 0;background:var(--surface);border-top:1px solid var(--hairline)}
+    .engine h2{max-width:640px;margin:0 0 12px;font-size:clamp(32px,4.6vw,54px);line-height:1.06;font-weight:760;letter-spacing:-0.01em}
+    .engine>p{max-width:480px;color:var(--muted);font-size:16px;line-height:1.7;margin-bottom:clamp(36px,5vw,52px)}
+    .engine-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .engine-grid .eg{border:1px solid rgba(0,0,0,0.06);border-radius:16px;background:var(--canvas);padding:26px;transition:transform .24s ease,box-shadow .24s ease}
+    .engine-grid .eg:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,0,.06)}
+    .engine-grid .eg .elabel{display:block;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:16px}
+    .engine-grid .eg h4{margin:0 0 6px;font-size:18px;font-weight:680;line-height:1.3}
+    .engine-grid .eg p{margin:0;color:var(--muted);font-size:14px;line-height:1.65}
+
+    /* closing */
+    .closing{padding:clamp(64px,9vw,100px) 0;background:var(--ink);color:#fff;text-align:center}
+    .closing h2{max-width:620px;margin:0 auto 12px;font-size:clamp(30px,4.4vw,52px);line-height:1.06;font-weight:760}
+    .closing p{max-width:480px;margin:0 auto clamp(28px,4vw,38px);color:rgba(255,255,255,.6);font-size:16px;line-height:1.7}
+    .closing .btn{border-color:rgba(255,255,255,.2);background:transparent;color:#fff}
+    .closing .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
+
+    footer{padding:20px 0 28px;background:var(--ink);color:rgba(255,255,255,.4);font-size:12px;text-align:center}
+    footer a{color:rgba(255,255,255,.6)}
+
+    /* delivery */
+    .delivery{padding:clamp(50px,8vw,80px) 0;background:var(--surface);border-top:1px solid var(--hairline);text-align:center}
+    .delivery-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,0.48fr);gap:18px;align-items:start;text-align:left;margin-top:clamp(28px,4vw,42px)}
+    .delivery-grid .dc{border:1px solid rgba(0,0,0,0.06);border-radius:16px;background:var(--canvas);padding:26px}
+    .delivery-grid .dc h4{margin:0 0 6px;font-size:18px;font-weight:680}
+    .delivery-grid .dc p{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.65}
+    pre{margin:0;border:1px solid #27272a;border-radius:14px;background:#0a0b0c;color:#e8f5ee;padding:20px;overflow:auto;font-family:var(--mono);font-size:12px;line-height:1.58;tab-size:2;box-shadow:0 22px 64px rgba(0,0,0,.14)}
+
+    /* responsive */
+    @media(max-width:1080px){.seat-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))}}
+    @media(max-width:920px){
+      .wrap,.topbar{width:calc(100% - 32px)}
+      .nav-links{display:none}
+      .steps-grid,.case-dark .verdict-strip,.delivery-grid{grid-template-columns:repeat(2,1fr)}
+      .engine-grid{grid-template-columns:1fr}
+      .hero .stats{flex-direction:column;gap:20px}
+    }
+    @media(max-width:640px){
+      .wrap,.topbar{width:calc(100% - 24px)}
+      .hero h1{font-size:clamp(42px,12vw,56px)}
+      .case-dark .stage-wrapper{border-radius:14px}
+      .case-dark .inner{padding:48px 16px 56px}
+      .steps-grid,.case-dark .verdict-strip,.delivery-grid{grid-template-columns:1fr}
+      .seat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+      .case-dark .stage-overlay h2{font-size:26px}
     }
 
-    body { background: var(--canvas); font-size: 17px; line-height: 1.7; }
-    .wrap { width: min(1192px, calc(100% - 48px)); }
-    .topbar {
-      width: min(1232px, calc(100% - 48px));
-      margin-top: 16px; border: 0; background: transparent; box-shadow: none;
+    @media print{
+      .topbar{display:none}
+      body{background:#fff;color:#000;font-size:12pt}
+      .case-dark{background:#fff;color:#000}
+      .case-dark .verdict-strip .vs{background:#f5f5f5;color:#000;border:1px solid #ccc}
+      .case-dark .verdict-strip .vs b,.case-dark .verdict-strip .vs span{color:#000}
+      .closing,footer{background:#fff;color:#000}
+      .closing .btn{border:1px solid #000;color:#000}
+      pre{background:#f5f5f5;color:#000;border:1px solid #ccc}
+      img{max-width:100%;page-break-inside:avoid}
     }
-    @supports (backdrop-filter: blur(1px)) {
-      .topbar { background: transparent; backdrop-filter: none; }
-    }
-    .nav { min-height: 50px; padding: 0; }
-    .brand { font-size: 16px; font-weight: 760; }
-    .mark { width: 32px; height: 32px; border-radius: 9px; }
-    .nav-links { gap: 18px; color: #303036; font-size: 14px; font-weight: 640; }
-    .nav-links a { padding: 6px 0; border-radius: 0; }
-    .nav-links a:hover, .nav-links a:focus-visible { background: transparent; color: var(--ink); }
-
-    .hero {
-      padding: clamp(58px, 8vw, 108px) 0 clamp(38px, 5vw, 70px);
-      border-bottom: 0;
-      background:
-        linear-gradient(180deg, #f8f8f9 0%, #f1f2f4 100%);
-      overflow: hidden;
-    }
-    .hero-copy {
-      grid-template-columns: minmax(0, 0.7fr) minmax(260px, 0.3fr);
-      align-items: center;
-      gap: clamp(26px, 6vw, 78px);
-      margin-bottom: clamp(26px, 4vw, 42px);
-    }
-    .eyebrow {
-      min-height: 36px;
-      padding: 8px 13px 8px 10px;
-      border-color: rgba(25, 25, 29, 0.1);
-      background: rgba(255, 255, 255, 0.72);
-      color: #5f6068;
-      font-size: 11px;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.035);
-    }
-    h1 {
-      max-width: 820px;
-      margin: 18px 0 18px;
-      font-size: clamp(52px, 7.2vw, 86px);
-      line-height: 0.98;
-      font-weight: 780;
-    }
-    .lead {
-      max-width: 680px;
-      color: #4c4c55;
-      font-size: clamp(17px, 1.35vw, 19px);
-      line-height: 1.76;
-    }
-    .actions { margin-top: 26px; gap: 10px; }
-    .button {
-      min-height: 46px;
-      border-color: rgba(25, 25, 29, 0.12);
-      padding: 10px 20px;
-      font-size: 15px;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.025);
-      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
-    }
-    .button.primary { border-color: var(--ink); background: var(--ink); }
-    .button:hover, .button:focus-visible { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0, 0, 0, 0.11); }
-    .hero-side {
-      justify-self: end;
-      width: min(100%, 330px);
-      max-width: 330px;
-      border-left: 0;
-      padding-left: 0;
-      display: grid;
-      gap: 12px;
-    }
-    .hero-side::before {
-      content: "Nasdaq case study";
-      width: fit-content;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-    .hero-side .stat {
-      margin: 0;
-      padding-top: 14px;
-      border-top: 1px solid rgba(25, 25, 29, 0.14);
-      font-size: clamp(34px, 3.8vw, 48px);
-      line-height: 0.98;
-    }
-    .hero-side .stat-label { max-width: 260px; color: #686974; font-size: 14px; line-height: 1.68; }
-
-    .product-stage {
-      margin: 0 auto;
-      border: 1px solid rgba(0, 0, 0, 0.16);
-      border-radius: 22px;
-      background: var(--stage);
-      box-shadow: 0 42px 110px -44px rgba(0, 0, 0, 0.62);
-      overflow: hidden;
-    }
-    .stage-chrome {
-      min-height: 42px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      padding: 0 16px;
-      color: rgba(255, 255, 255, 0.42);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-    .stage-lights { display: inline-flex; gap: 6px; }
-    .stage-lights span {
-      width: 8px; height: 8px; border-radius: 999px;
-      background: rgba(255, 255, 255, 0.28);
-    }
-    .stage-title { justify-self: center; }
-    .stage-state { justify-self: end; color: rgba(255, 255, 255, 0.56); }
-    .stage-shell {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.34fr);
-      min-height: clamp(430px, 44vw, 560px);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .stage-main {
-      min-width: 0;
-      display: grid;
-      place-items: center;
-      padding: clamp(16px, 2.6vw, 30px);
-      background:
-        radial-gradient(circle at 48% 40%, rgba(255, 255, 255, 0.1), transparent 34%),
-        #050607;
-    }
-    .stage-main img {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: 510px;
-      object-fit: cover;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 14px;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
-    }
-    .stage-panel {
-      display: grid;
-      align-content: space-between;
-      gap: 24px;
-      border-left: 1px solid rgba(255, 255, 255, 0.09);
-      background: var(--stage-panel);
-      color: rgba(255, 255, 255, 0.7);
-      padding: clamp(22px, 2.8vw, 34px);
-    }
-    .stage-panel .label {
-      color: rgba(255, 255, 255, 0.42);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-    .stage-panel h2 {
-      margin: 10px 0 10px;
-      color: #fff;
-      font-size: clamp(26px, 2.8vw, 38px);
-      line-height: 1.08;
-      font-weight: 760;
-      letter-spacing: 0;
-    }
-    .stage-panel p { margin: 0; color: rgba(255, 255, 255, 0.62); font-size: 14px; line-height: 1.68; }
-    .audit-stack { display: grid; gap: 10px; }
-    .audit-row {
-      display: grid;
-      grid-template-columns: 74px minmax(0, 1fr);
-      gap: 12px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .audit-row strong { color: #fff; font-family: var(--mono); font-size: 13px; font-weight: 700; }
-    .stage-verdict {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.045);
-      padding: 14px;
-    }
-    .stage-verdict strong { display: block; color: #ffb7bc; font-family: var(--mono); font-size: 12px; margin-bottom: 6px; }
-
-    .cap-strip {
-      margin-top: clamp(22px, 3vw, 34px);
-      border-color: rgba(25, 25, 29, 0.1);
-      background: rgba(255, 255, 255, 0.35);
-    }
-
-    .case-section { background: var(--surface); }
-    .case-header-bar { padding: clamp(58px, 7vw, 86px) 0 24px; }
-    .case-header-bar h2 {
-      max-width: 920px;
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 1.05;
-      font-weight: 760;
-    }
-    .case-tag { background: var(--surface); font-size: 11px; }
-    .verdict-card {
-      border-radius: 18px;
-      border-color: rgba(25, 25, 29, 0.1);
-      box-shadow: 0 26px 86px rgba(0, 0, 0, 0.08);
-    }
-    .verdict-head { padding: 16px 20px; }
-    .verdict-body { padding: clamp(22px, 3vw, 34px); gap: 18px; }
-    .verdict-body .big-line {
-      max-width: 980px;
-      font-size: clamp(22px, 2.4vw, 32px);
-      line-height: 1.34;
-      font-weight: 760;
-    }
-    .verdict-meta { gap: 14px; }
-    .vm { border-radius: 14px; background: #f3f4f6; padding: 18px; }
-    .vm .v { font-size: clamp(24px, 2.6vw, 34px); line-height: 1; }
-    .vm .l { font-size: 13px; line-height: 1.55; }
-
-    .step-grid { gap: 14px; margin-top: 22px; padding-bottom: clamp(54px, 7vw, 82px); }
-    .step-card {
-      min-height: 226px;
-      border-radius: 14px;
-      border-color: rgba(25, 25, 29, 0.1);
-      padding: 22px;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.025);
-    }
-    .step-card .step-num { margin-bottom: 16px; }
-    .step-card h4 { font-size: 18px; line-height: 1.35; }
-    .step-card p { font-size: 14px; line-height: 1.72; }
-
-    .seat-section { background: var(--surface); }
-    .mini-section-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 16px;
-    }
-    .mini-section-head h3 { margin: 0; font-size: 22px; font-weight: 760; line-height: 1.25; }
-    .mini-section-head span {
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-    .seat-strip { grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 7px; margin-top: 18px; padding-bottom: 34px; }
-    .seat-chip {
-      min-height: 74px;
-      display: grid;
-      place-items: center;
-      align-content: center;
-      border-radius: 12px;
-      border-color: rgba(150, 54, 61, 0.2);
-      background: #fff;
-      border-left-width: 1px;
-    }
-    .seat-chip.against { border-left-width: 1px; box-shadow: inset 0 3px 0 rgba(150, 54, 61, 0.72); }
-    .seat-chip .sn { font-size: 10px; }
-    .seat-chip .sv { font-size: 12px; }
-    .case-data-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
-      gap: clamp(18px, 4vw, 46px);
-      margin-top: 26px;
-      align-items: start;
-    }
-    .portfolio-bar { height: 16px; margin-top: 12px; }
-    .risk-table { margin-top: 12px; border: 1px solid var(--hairline); border-radius: 14px; border-collapse: separate; border-spacing: 0; overflow: hidden; background: #fff; }
-    .risk-table th { border-bottom-color: var(--hairline-strong); padding: 12px 14px; }
-    .risk-table td { padding: 13px 14px; }
-
-    .section { padding: clamp(60px, 8vw, 96px) 0; background: var(--canvas); }
-    .section h2 { font-size: clamp(34px, 4.7vw, 58px); line-height: 1.08; font-weight: 760; }
-    .section-head { margin-bottom: 34px; }
-    .section-lede { font-size: 17px; line-height: 1.74; }
-    .dont-grid, .engine-grid { gap: 14px; }
-    .dont-card {
-      min-height: 136px;
-      border-color: rgba(150, 54, 61, 0.2);
-      border-radius: 14px;
-      background: #fff;
-      padding: 18px;
-      box-shadow: inset 0 3px 0 rgba(150, 54, 61, 0.68);
-      font-size: 14px;
-      line-height: 1.68;
-    }
-    .dont-card strong { font-size: 16px; }
-    .delivery-grid { grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr); gap: 22px; }
-    .delivery-card, .engine-card {
-      border-radius: 16px;
-      border-color: rgba(25, 25, 29, 0.1);
-      padding: 24px;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.025);
-    }
-    .delivery-card h4, .engine-card h4 { font-size: 20px; line-height: 1.35; }
-    .delivery-card p, .engine-card p { font-size: 15px; line-height: 1.72; }
-    pre {
-      min-height: 360px;
-      border-radius: 18px;
-      border-color: rgba(255, 255, 255, 0.08);
-      background: #070908;
-      box-shadow: 0 28px 78px rgba(0, 0, 0, 0.18);
-    }
-    .closing { padding: clamp(66px, 9vw, 110px) 0; }
-
-    @media (max-width: 1080px) {
-      .seat-strip { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
-    }
-    @media (max-width: 920px) {
-      .topbar { width: min(100% - 32px, 1232px); }
-      .brand::after { content: none; }
-      .hero-copy, .case-data-grid { grid-template-columns: 1fr; }
-      .hero-side {
-        justify-self: start;
-        width: 100%;
-        max-width: none;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .hero-side::before { grid-column: 1 / -1; }
-      .hero-side .stat-label { max-width: none; }
-      .step-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-    @media (max-width: 760px) {
-      .stage-shell { grid-template-columns: 1fr; }
-      .stage-panel { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.09); }
-    }
-    @media (max-width: 640px) {
-      .wrap, .topbar { width: min(100% - 28px, 1192px); }
-      .hero { padding-top: 44px; }
-      h1 { font-size: clamp(42px, 13vw, 54px); line-height: 1.02; }
-      .lead { font-size: 16px; line-height: 1.74; }
-      .hero-side { grid-template-columns: 1fr; }
-      .actions, .button { width: 100%; }
-      .product-stage { border-radius: 16px; }
-      .stage-chrome {
-        grid-template-columns: auto 1fr;
-        gap: 10px;
-        padding: 0 12px;
-      }
-      .stage-title { justify-self: start; }
-      .stage-state { display: none; }
-      .stage-main { padding: 10px; }
-      .stage-main img { max-height: 270px; border-radius: 10px; }
-      .stage-panel { padding: 20px; }
-      .audit-row { grid-template-columns: 64px minmax(0, 1fr); }
-      .case-header-bar h2, .section h2 { font-size: clamp(30px, 9vw, 40px); }
-      .step-grid, .dont-grid, .verdict-meta { grid-template-columns: 1fr; }
-      .step-card { min-height: 0; }
-      .mini-section-head { align-items: flex-start; flex-direction: column; }
-      .seat-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-      .seat-chip { min-height: 60px; }
-      .delivery-grid { grid-template-columns: 1fr; }
-      pre { min-height: 0; font-size: 11px; }
-    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link sr-only" href="#main">Skip to content</a>
   <header class="topbar">
-    <nav class="nav" aria-label="Primary">
-      <a class="brand" href="#main" aria-label="AI Judge home">
-        <span class="mark" aria-hidden="true">AJ</span>
-        <span>AI Judge</span>
-      </a>
-      <h2 class="sr-only" id="nav-heading">页面栏目</h2>
-      <div class="nav-links" role="navigation" aria-labelledby="nav-heading">
+    <div class="wrap nav">
+      <a class="brand" href="#main"><span class="mark" aria-hidden="true">AJ</span><span>AI Judge</span></a>
+      <nav class="nav-links" aria-label="Primary">
         <a href="#case">案例</a>
         <a href="#engine">引擎</a>
         <a href="#delivery">交付</a>
         <a href="AI_Judge_Audit_Sample_Report.html">报告</a>
-      </div>
-    </nav>
+      </nav>
+    </div>
   </header>
 
   <main id="main">
-    <!-- ════════════ HERO ════════════ -->
+    <!-- HERO -->
     <section class="hero">
       <div class="wrap">
-        <div class="hero-copy">
-          <div>
-            <div class="eyebrow">Multi‑seat AI deliberation engine</div>
-            <h1>13 个独立的 AI 席位。<br>一次决策审议。</h1>
-            <p class="lead">不是一个模型打分。13 个 AI 同时围着一张桌子审议同一个问题——分歧、互评、共振，最后输出一份能拿去签字、转发、上 review queue 的审计报告。</p>
-            <div class="actions">
-              <a class="button primary" href="AI_Judge_Audit_Sample_Report.html">打开一份真实审计报告</a>
-              <a class="button" href="sample-loop-packet.json">检查 JSON 输出</a>
-            </div>
-          </div>
-          <div class="hero-side">
-            <span class="stat">11/13</span>
-            <span class="stat-label">纳斯达克贷款抄底案中反对加杠杆的席位比例</span>
-            <span class="stat" style="margin-top:10px;">8/11</span>
-            <span class="stat-label">建议将纳指仓位降至 45% 以下的席位</span>
-          </div>
+        <div class="eyebrow">Multi‑seat deliberation</div>
+        <h1>13 个 AI 席位。<br>一次裁决。</h1>
+        <p>不是一个模型打分。13 个独立 AI 围着同一个问题审议，分歧、互评、共振，最后一份能签字能转发的审计报告。</p>
+        <div class="stats">
+          <div class="st"><b>11/11</b><span>纳斯达克贷款抄底案中，全部有效席位反对加杠杆</span></div>
+          <div class="st"><b>8/11</b><span>建议将纳指仓位降至 45% 以下</span></div>
+          <div class="st"><b>9 页</b><span>一份报告，三档方案，30 天复盘表</span></div>
         </div>
-
-        <figure class="product-stage" aria-label="OpenCouncil roundtable with AI Judge audit panel">
-          <div class="stage-chrome">
-            <span class="stage-lights" aria-hidden="true"><span></span><span></span><span></span></span>
-            <span class="stage-title">AI Judge · OpenCouncil Review</span>
-            <span class="stage-state">case running</span>
-          </div>
-          <div class="stage-shell">
-            <div class="stage-main">
-              <img src="assets/openspark-council.png" alt="OpenCouncil 议院圆桌界面，多个 AI 席位围绕同一决策审议">
-            </div>
-            <aside class="stage-panel" aria-label="AI Judge Nasdaq case audit summary">
-              <div>
-                <span class="label">Live verdict packet</span>
-                <h2>从议院圆桌，到一份可签字裁决。</h2>
-                <p>AI Judge 把每个席位的判断、分歧和证据线索收束成一个审计包，最后交给人类复核和转发。</p>
-              </div>
-              <div class="audit-stack">
-                <div class="audit-row"><strong>11/13</strong><span>纳斯达克贷款抄底案中反对加杠杆的席位比例</span></div>
-                <div class="audit-row"><strong>8/11</strong><span>建议将纳指仓位降至 45% 以下的席位</span></div>
-                <div class="audit-row"><strong>13x</strong><span>每个席位独立审议，同一问题不串场、不混票</span></div>
-              </div>
-              <div class="stage-verdict">
-                <strong>DO NOT BORROW</strong>
-                <p>当前 55% 纳指仓位已经偏高，优先降集中度，不加杠杆。</p>
-              </div>
-            </aside>
-          </div>
-        </figure>
-
-        <!-- Capability Marquee -->
-        <div class="cap-strip" aria-hidden="true">
-          <div class="cap-track">
-            <span class="cap-item"><strong>金融</strong> 贷款抄底裁决</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>体育</strong> NBA 总决赛预测</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>法律</strong> 宅基地拆迁纠纷</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>合规</strong> 游戏宝箱玩法评估</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>投资</strong> 董事减持纸面交易</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>客服</strong> RAG 回答审计</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>金融</strong> 贷款抄底裁决</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>体育</strong> NBA 总决赛预测</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>法律</strong> 宅基地拆迁纠纷</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>合规</strong> 游戏宝箱玩法评估</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>投资</strong> 董事减持纸面交易</span><span class="cap-dot">·</span>
-            <span class="cap-item"><strong>客服</strong> RAG 回答审计</span>
-          </div>
+        <div class="actions">
+          <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">打开真实审计报告</a>
+          <a class="btn" href="sample-loop-packet.json">JSON 输出</a>
         </div>
       </div>
     </section>
 
-    <!-- ════════════ CASE STUDY ════════════ -->
-    <section class="case-section" id="case">
-      <div class="wrap">
-        <div class="case-header-bar">
-          <div>
-            <span class="eyebrow">真实案例 · 2026-06-10</span>
-            <h2>"我现在该不该贷款 100 万抄底纳斯达克？"</h2>
-          </div>
-          <span class="case-tag">13 SEATS · 2 ROUNDS · 11 VALID</span>
-        </div>
+    <!-- CAP STRIP -->
+    <div class="cap-strip" aria-hidden="true">
+      <div class="cap-track">
+        <span><b>金融</b>贷款抄底裁决</span> · <span><b>体育</b>NBA 总决赛预测</span> · <span><b>法律</b>宅基地拆迁纠纷</span> · <span><b>合规</b>游戏宝箱评估</span> · <span><b>投资</b>董事减持纸面交易</span> · <span><b>客服</b>RAG 回答审计</span> · <span><b>金融</b>贷款抄底裁决</span> · <span><b>体育</b>NBA 总决赛预测</span> · <span><b>法律</b>宅基地拆迁纠纷</span> · <span><b>合规</b>游戏宝箱评估</span> · <span><b>投资</b>董事减持纸面交易</span> · <span><b>客服</b>RAG 回答审计</span>
+      </div>
+    </div>
 
-        <!-- VERDICT CARD -->
-        <div class="verdict-card">
-          <div class="verdict-head">
-            <span class="verdict-badge block">DO NOT BORROW</span>
-            <span>AI Judge 两轮议会综合报告 · 2026-06-10</span>
-          </div>
-          <div class="verdict-body">
-            <div class="big-line">别贷。你当前 55% 纳指仓位已经偏高，应该优先降低集中度，而不是加杠杆。</div>
-            <div class="verdict-meta">
-              <div class="vm"><span class="v">11/11</span><span class="l">第一轮有效席位全部反对贷款</span></div>
-              <div class="vm"><span class="v">12/12</span><span class="l">第二轮一致认为纳指集中度过高</span></div>
-              <div class="vm"><span class="v">三档</span><span class="l">防御/基准/进攻三套再平衡方案</span></div>
-            </div>
-            <div style="color:var(--muted);font-size:13px;">基准：纳斯达克综合指数 25,678.82 · 总持仓 100 万元 · 观察窗口 30 天</div>
+    <!-- CASE DARK SECTION -->
+    <section class="case-dark" id="case">
+      <div class="inner">
+        <div class="stage-wrapper">
+          <img src="assets/openspark-council.png" alt="OpenCouncil 议院圆桌，13 个 AI 席位同时审议">
+          <div class="stage-overlay">
+            <span class="tag">2026-06-10 · Nasdaq 25,678.82</span>
+            <h2>"我现在该不该贷款 100 万<br>抄底纳斯达克？"</h2>
           </div>
         </div>
-
-        <!-- 4 STEP CARDS -->
-        <div class="step-grid">
-          <div class="step-card">
-            <span class="step-num">01 · 输入</span>
-            <h4>一个问题，一份持仓</h4>
-            <p>用户提交：「现在贷款 100 万抄底纳斯达克合适吗？」附带当前持仓：55% 纳指 + 15% 标普 + 20% 黄金 + 10% 现金。</p>
-          </div>
-          <div class="step-card">
-            <span class="step-num">02 · 审议</span>
-            <h4>13 个席位独立表决</h4>
-            <p>Gemini、ChatGPT、DeepSeek、Kimi、Qwen、MiMo、Doubao、Meta AI……各自给出方向判断、波动区间和贷款额度。没有一票赞成。</p>
-          </div>
-          <div class="step-card">
-            <span class="step-num">03 · 裁决</span>
-            <h4>融合 26 份意见</h4>
-            <p>第一轮裁决贷款（11/11 反对），第二轮裁决持仓优化（12/12 一致），两轮方向完全重合：降集中度、保现金缓冲、分批再平衡、不加杠杆。</p>
-          </div>
-          <div class="step-card">
-            <span class="step-num">04 · 交付</span>
-            <h4>一份可打印的审计报告</h4>
-            <p>9 页正式文书，包含三档风险方案、压力测试表、席位立场拆解、禁止动作清单和 30 天复盘验收表。</p>
-          </div>
+        <div class="verdict-strip">
+          <div class="vs"><b>DO NOT BORROW</b><span>融合裁决 · 两轮议会方向完全一致</span></div>
+          <div class="vs"><b>11/11 反对</b><span>第一轮全部有效席位反对贷款</span></div>
+          <div class="vs"><b>三档方案</b><span>防御 / 基准 / 进攻 · 分批再平衡</span></div>
         </div>
       </div>
     </section>
 
-    <!-- ════════════ SEAT BREAKDOWN ════════════ -->
-    <section class="section seat-section" style="border-top:0;padding-top:0;">
+    <!-- STEPS -->
+    <section class="steps">
       <div class="wrap">
-        <div class="mini-section-head">
-          <h3>13 个席位，全部反对贷款。</h3>
-          <span>第一轮 · 贷款抄底裁决</span>
-        </div>
-        <div class="seat-strip" aria-label="13 个 AI 席位对贷款抄底的表决结果">
-          <div class="seat-chip against"><span class="sn">Gemini</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">ChatGPT</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">DeepSeek</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">Qwen</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">Kimi</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">Yuanbao</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">MiMo</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">Doubao</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">MiniMax</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">Zhipu</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">Meta AI</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">Grok</span><span class="sv">0 元贷款</span></div>
-          <div class="seat-chip against"><span class="sn">Wenxin</span><span class="sv">0 元贷款</span></div>
-        </div>
-
-        <!-- PORTFOLIO + STRESS TEST -->
-        <div class="case-data-grid">
-          <div>
-            <div style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0;text-transform:uppercase;">你的持仓结构</div>
-            <div class="portfolio-bar" aria-hidden="true">
-              <div class="pb-nq"></div><div class="pb-sp"></div><div class="pb-au"></div><div class="pb-ca"></div>
-            </div>
-            <div class="portfolio-legend">
-              <span class="l-nq">纳指相关 55%</span>
-              <span class="l-sp">标普 500 15%</span>
-              <span class="l-au">黄金 20%</span>
-              <span class="l-ca">现金 10%</span>
-            </div>
-            <p style="color:var(--muted);font-size:13px;line-height:1.6;margin:10px 0 0;">核心诊断：70% 美股权益暴露，当纳指和标普同向回撤时（历史相关性 > 0.8），组合保护层只有 20% 黄金和 10% 现金。</p>
-          </div>
-          <div>
-            <div style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0;text-transform:uppercase;">压力测试</div>
-            <table class="risk-table">
-              <tr><th>情景</th><th>纳指</th><th>组合影响</th></tr>
-              <tr><td>温和回撤</td><td>-5%</td><td>约 -2.5~3 万</td></tr>
-              <tr><td>中度回撤</td><td>-10%</td><td>约 -5~6 万</td></tr>
-              <tr><td>重度回撤</td><td>-15%</td><td>约 -8~9 万</td></tr>
-              <tr><td>完美风暴</td><td>-20%</td><td>约 -12~13 万</td></tr>
-            </table>
-          </div>
+        <h2>从一次提问，到一份裁决。</h2>
+        <p>不是看分数，不是读日志。输入一个问题和它的上下文，拿到可以签字转发的结果。</p>
+        <div class="steps-grid">
+          <div class="sc"><span class="n">01 · 提问</span><h4>一个决策问题</h4><p>用户提交问题 + 持仓数据。55% 纳指 + 15% 标普 + 20% 黄金 + 10% 现金。总持仓 100 万。</p></div>
+          <div class="sc"><span class="n">02 · 审议</span><h4>13 个席位独立表决</h4><p>Gemini 看宏观、DeepSeek 算期望值、Kimi 盯波动率。不串通，不混票，各自给出判断。</p></div>
+          <div class="sc"><span class="n">03 · 裁决</span><h4>融合 26 份意见</h4><p>两轮方向完全重合：降集中度、保现金缓冲、分批再平衡、不加杠杆。</p></div>
+          <div class="sc"><span class="n">04 · 交付</span><h4>可打印的审计报告</h4><p>9 页正式文书。含压力测试表、席位立场拆解、禁止动作清单和 30 天复盘验收表。</p></div>
         </div>
       </div>
     </section>
 
-    <!-- ════════════ DONT DO ════════════ -->
-    <section class="section" style="padding-top:clamp(24px,4vw,36px);">
+    <!-- ALL 13 SEATS SAY NO -->
+    <section class="seats">
       <div class="wrap">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:6px;">
-          <h3 style="margin:0;font-size:18px;font-weight:680;">30 天内禁止动作清单</h3>
-          <span style="color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;">13 席位共识</span>
-        </div>
-        <div class="dont-grid">
-          <div class="dont-card"><strong>贷款加仓纳指</strong>11/11 席位一致反对。贷款成本刚性，市场恢复不确定。</div>
-          <div class="dont-card"><strong>一次性全仓换仓</strong>CPI/FOMC 前大幅调仓等于用新赌局替代旧赌局。</div>
-          <div class="dont-card"><strong>清空全部黄金</strong>黄金是你唯一的非权益对冲，清空后组合保护层消失。</div>
-          <div class="dont-card"><strong>追涨杀跌</strong>看到预测后情绪化操作是最高频的亏损来源。</div>
+        <h2>13 个席位，全部反对贷款。</h2>
+        <p>第一轮 · 贷款抄底裁决 · 没有一票赞成</p>
+        <div class="seat-grid" aria-label="13 个 AI 席位表决结果">
+          <div class="sg"><span class="sn">Gemini</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">ChatGPT</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">DeepSeek</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">Qwen</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">Kimi</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">Yuanbao</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">MiMo</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">Doubao</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">MiniMax</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">Zhipu</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">Meta AI</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">Grok</span><span class="sv">0 元</span></div>
+          <div class="sg"><span class="sn">Wenxin</span><span class="sv">0 元</span></div>
         </div>
       </div>
     </section>
 
-    <!-- ════════════ DELIVERY ════════════ -->
-    <section class="section" id="delivery">
+    <!-- DELIVERY -->
+    <section class="delivery" id="delivery">
       <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="eyebrow">你拿到什么</div>
-            <h2>一份 JSON · 一份报告 · 一次裁决。</h2>
-          </div>
-          <p class="section-lede">不是看板，不是分数墙。AI Judge 的产出可以直接上 GitHub issue、内部 review queue、合规记录，或接入下一轮 agent 控制。</p>
-        </div>
+        <h2 style="text-align:center;margin:0 0 8px;font-size:clamp(28px,4vw,48px);line-height:1.08;font-weight:760;">一份 JSON · 一份报告。</h2>
+        <p style="text-align:center;color:var(--muted);font-size:15px;margin:0 auto clamp(28px,4vw,40px);max-width:440px;">可以进 GitHub issue、内部 review queue、合规记录，或接入下一轮 agent 控制。</p>
         <div class="delivery-grid">
-          <div class="delivery-card">
+          <div class="dc">
             <h4>审计报告（可打印 PDF / HTML）</h4>
-            <p>席位立场拆解、claim ledger、压力测试、禁止动作清单、30 天复盘验收表。不需要打开任何 eval 工具就能看懂。</p>
-            <div style="margin-top:14px;">
-              <a class="button" href="AI_Judge_Audit_Sample_Report.html">打开样例报告</a>
-            </div>
+            <p>席位立场拆解、claim ledger、压力测试、禁止动作清单、30 天复盘验收表。</p>
+            <a class="btn" href="AI_Judge_Audit_Sample_Report.html">打开样例报告</a>
           </div>
           <pre>{
   "loop_id": "nasdaq-margin-buy",
   "audit": {
     "seats": 13,
     "valid": 11,
-    "loan_against": "11/11",
-    "concentration_flag": true
+    "loan_against": "11/11"
   },
   "verdict": {
     "decision": "do_not_borrow",
-    "reason": "55% nasdaq exposure already high"
+    "reason": "55% exposure already high"
   },
   "next_run": {
-    "action": "rebalance_with_human_review",
+    "action": "rebalance_with_review",
     "risk_tiers": ["defensive","baseline","offensive"]
   }
 }</pre>
@@ -972,154 +293,60 @@
       </div>
     </section>
 
-    <!-- ════════════ ENGINE ════════════ -->
-    <section class="section" id="engine">
+    <!-- ENGINE -->
+    <section class="engine" id="engine">
       <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="eyebrow">不止评分</div>
-            <h2>多席位审议，不是单模型打分。</h2>
-          </div>
-          <p class="section-lede">AI Judge 接在你已经在用的 eval 和 trace 工具后面。把被选中的 case 拆成席位辩论、证据对齐和最终裁决。</p>
-        </div>
+        <h2>不是单模型打分。</h2>
+        <p>接在你已经在用的 eval 和 trace 工具后面。把被选中的 case 拆成多席位审议、证据对齐和最终裁决。</p>
         <div class="engine-grid">
-          <div class="engine-card">
-            <span>01 · 多席位</span>
-            <h4>13 个 AI 独立审议同一个问题</h4>
-            <p>Gemini 看宏观、DeepSeek 拆算期望值、Kimi 盯波动率数据。席位之间互不串通，分歧本身比共识更有价值。</p>
-          </div>
-          <div class="engine-card">
-            <span>02 · 证据对齐</span>
-            <h4>每条主张对回源文档核查</h4>
-            <p>拆成逐条 claim，逐条比对 source。有证据、缺证据、还是被源文档直接推翻——标进 ledger，不模糊。</p>
-          </div>
-          <div class="engine-card">
-            <span>03 · 裁决可交付</span>
-            <h4>一份能进审批流的审计报告</h4>
-            <p>不是"faithfulness 偏低"，是"C3 缺证据、C5 与源文档冲突、结论：禁止发布，重写后人工复核"。</p>
-          </div>
+          <div class="eg"><span class="elabel">01 · 多席位</span><h4>13 个 AI 独立审议同一个问题</h4><p>Gemini 看宏观、DeepSeek 拆算期望值、Kimi 盯波动率。席位之间互不串通，分歧本身比共识更有价值。</p></div>
+          <div class="eg"><span class="elabel">02 · 证据对齐</span><h4>每条主张对回源文档核查</h4><p>拆成逐条 claim，逐条比对 source。有证据、缺证据、被源文档直接推翻——标进 ledger。</p></div>
+          <div class="eg"><span class="elabel">03 · 可交付裁决</span><h4>一份能进审批流的审计报告</h4><p>不是"faithfulness 偏低"，是"C3 缺证据、C5 与源文档冲突、结论：禁止发布，重写后人工复核"。</p></div>
         </div>
       </div>
     </section>
 
-    <!-- ════════════ CLOSING ════════════ -->
+    <!-- CLOSING -->
     <section class="closing">
-      <div class="wrap closing-inner">
-        <div>
-          <h2>给我一个失败案例，换回一份审计报告。</h2>
-          <p>最低成本的验证就是一次真实的失败：一条 RAG 回答、一份 agent 自动回复、一条被 eval 判定为不合格的输出。把你已经有的评测结果给我，我把审计包给你。</p>
-        </div>
-        <a class="button" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
+      <div class="wrap">
+        <h2>给我一个失败案例，<br>换回一份审计报告。</h2>
+        <p>一条 RAG 回答、一份 agent 自动回复、一条 eval 判定为不合格的输出——把你已经有的评测结果给我，我把审计包给你。</p>
+        <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
       </div>
     </section>
   </main>
 
   <footer>
     <div class="wrap">
-      <span>AI Judge 公开演示页面。不含任何私有用户数据或生产 trace。</span>
-      <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">公开 Gist</a>
+      <span>AI Judge 公开演示页面 · 不含私有数据或生产 trace</span>
+      <span style="margin-left:16px"><a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">Public Gist</a></span>
     </div>
   </footer>
+
   <script>
-(function(){
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  (function(){
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
 
-  /* Reveal on scroll */
-  const revealEls = document.querySelectorAll(
-    '.step-card, .engine-card, .delivery-card, .dont-card, .vm, .verdict-card, .section-head, .audit-row, .stage-verdict'
-  );
-  revealEls.forEach((el, i) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(28px)';
-    el.style.transition = 'opacity 0.72s cubic-bezier(0.16,1,0.3,1), transform 0.72s cubic-bezier(0.16,1,0.3,1)';
-    el.style.transitionDelay = (i % 4) * 55 + 'ms';
-  });
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        revealObserver.unobserve(e.target);
-      }
+    /* scroll reveal */
+    const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';obs.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -20px 0px'});
+    document.querySelectorAll('.sc,.eg,.dc,.vs,.sg').forEach((el,i)=>{
+      el.style.opacity='0';el.style.transform='translateY(26px)';
+      el.style.transition='opacity .68s cubic-bezier(.16,1,.3,1),transform .68s cubic-bezier(.16,1,.3,1)';
+      el.style.transitionDelay=(i%4)*50+'ms';
+      obs.observe(el);
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
-  revealEls.forEach(el => revealObserver.observe(el));
 
-  /* Seat chips stagger reveal */
-  const seatStrip = document.querySelector('.seat-strip');
-  if (seatStrip) {
-    const seatChips = seatStrip.querySelectorAll('.seat-chip');
-    seatChips.forEach((chip, i) => {
-      chip.style.opacity = '0';
-      chip.style.transform = 'scale(0.88)';
-      chip.style.transition = 'opacity 0.42s cubic-bezier(0.16,1,0.3,1), transform 0.42s cubic-bezier(0.16,1,0.3,1)';
-      chip.style.transitionDelay = i * 38 + 'ms';
-    });
-    new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          seatChips.forEach((chip, i) => {
-            setTimeout(() => {
-              chip.style.opacity = '1';
-              chip.style.transform = 'scale(1)';
-            }, i * 38);
-          });
-        }
-      });
-    }, { threshold: 0.18 }).observe(seatStrip);
-  }
+    /* seat stagger */
+    const sg=document.querySelector('.seat-grid');
+    if(sg){new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){sg.querySelectorAll('.sg').forEach((c,i)=>{setTimeout(()=>{c.style.opacity='1';c.style.transform='scale(1)'},i*36)})}})},{threshold:.18}).observe(sg)}
 
-  /* Portfolio bar widths animate from zero */
-  const barEls = document.querySelectorAll('.portfolio-bar [class^="pb-"]');
-  barEls.forEach(el => { el.style.transition = 'width 0.9s cubic-bezier(0.16,1,0.3,1)'; el.dataset.w = getComputedStyle(el).width; el.style.width = '0'; });
-  const barContainer = document.querySelector('.portfolio-bar');
-  if (barContainer) {
-    new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          barContainer.querySelectorAll('[class^="pb-"]').forEach(b => { b.style.width = b.dataset.w; });
-        }
-      });
-    }, { threshold: 0.3 }).observe(barContainer.parentElement);
-  }
+    /* hero stats */
+    setTimeout(()=>{document.querySelectorAll('.hero .stats .st').forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(12px)';el.style.transition='opacity .56s ease,transform .56s ease';el.style.transitionDelay=i*80+'ms';requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='translateY(0)'})})},300);
 
-  /* Hero stats fade in on load */
-  setTimeout(() => {
-    document.querySelectorAll('.hero-side .stat, .hero-side .stat-label').forEach((el, i) => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(14px)';
-      el.style.transition = 'opacity 0.56s ease, transform 0.56s ease';
-      el.style.transitionDelay = i * 80 + 'ms';
-      requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
-    });
-  }, 300);
-
-  /* Product stage subtle breathing */
-  const stage = document.querySelector('.product-stage');
-  if (stage) {
-    let floatY = 0;
-    const floatInterval = setInterval(() => {
-      floatY = -2 + Math.sin(Date.now() / 1900) * 2;
-      stage.style.transform = 'translateY(' + floatY + 'px)';
-    }, 60);
-    stage.addEventListener('mouseenter', () => { clearInterval(floatInterval); stage.style.transform = 'translateY(-4px) scale(1.004)'; });
-    stage.addEventListener('mouseleave', () => { stage.style.transform = 'translateY(0) scale(1)'; });
-  }
-
-  /* Card hover micro-lift */
-  document.querySelectorAll('.step-card, .engine-card, .delivery-card, .dont-card, .verdict-card').forEach(card => {
-    card.style.transition = 'transform 0.24s cubic-bezier(0.16,1,0.3,1), box-shadow 0.24s cubic-bezier(0.16,1,0.3,1)';
-    card.addEventListener('mouseenter', function(){ this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 18px 44px rgba(0,0,0,0.1)'; });
-    card.addEventListener('mouseleave', function(){ this.style.transform = 'translateY(0)'; this.style.boxShadow = ''; });
-  });
-
-  /* Seat chip hover pop */
-  document.querySelectorAll('.seat-chip').forEach(chip => {
-    chip.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
-    chip.addEventListener('mouseenter', function(){ this.style.transform = 'scale(1.08)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.12)'; });
-    chip.addEventListener('mouseleave', function(){ this.style.transform = 'scale(1)'; this.style.boxShadow = ''; });
-  });
-})();
-</script>
+    /* stage float */
+    const sw=document.querySelector('.stage-wrapper');
+    if(sw){sw.style.transition='transform .6s cubic-bezier(.16,1,.3,1)';let f=setInterval(()=>{sw.style.transform='translateY('+(-1.5+Math.sin(Date.now()/2000)*1.5)+'px)'},60);sw.addEventListener('mouseenter',()=>{clearInterval(f);sw.style.transform='translateY(-3px) scale(1.004)'});sw.addEventListener('mouseleave',()=>{sw.style.transform='translateY(0) scale(1)'})}
+  })();
+  </script>
 </body>
 </html>
