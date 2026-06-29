@@ -3,138 +3,449 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge：让好几个 AI 一起帮你判断一个决策</title>
-  <meta name="description" content="拿不准的决定丢给 13 个 AI，各自给出判断，汇总成一份能拍板的报告。">
-  <meta name="theme-color" content="#fafafa">
+  <title>AI Judge：13 个 AI 同场审议，一份能拍板的结论</title>
+  <meta name="description" content="把拿不准的问题交给 13 个 AI 独立审议，形成证据、分歧和人类可签字的判断报告。">
+  <meta name="theme-color" content="#f7f7f4">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
-  <meta property="og:title" content="AI Judge：让好几个 AI 一起帮你判断一个决策">
-  <meta property="og:description" content="拿不准的决定丢给 13 个 AI，各自给出判断，汇总成一份能拍板的报告。">
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%23171717"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
+  <meta property="og:title" content="AI Judge：13 个 AI 同场审议，一份能拍板的结论">
+  <meta property="og:description" content="把拿不准的问题交给 13 个 AI 独立审议，形成证据、分歧和人类可签字的判断报告。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Judge：让好几个 AI 一起帮你判断一个决策">
-  <meta name="twitter:description" content="拿不准的决定丢给 13 个 AI，各自给出判断，汇总成一份能拍板的报告。">
+  <meta name="twitter:title" content="AI Judge：13 个 AI 同场审议，一份能拍板的结论">
+  <meta name="twitter:description" content="把拿不准的问题交给 13 个 AI 独立审议，形成证据、分歧和人类可签字的判断报告。">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --canvas: #f5f5f7;
+      color-scheme: light;
+      --canvas: #f7f7f4;
+      --canvas-soft: #eeeeea;
       --surface: #ffffff;
-      --ink: #1d1d1f;
-      --muted: #6e6e73;
-      --hairline: rgba(0,0,0,0.08);
-      --accent: #0d8f72;
+      --ink: #171717;
+      --body: #3f3f46;
+      --muted: #72726c;
+      --line: rgba(23,23,23,0.1);
+      --line-strong: rgba(23,23,23,0.18);
+      --primary: #171717;
+      --accent: #0f8f6f;
+      --accent-soft: #ddf7ee;
       --danger: #96363d;
+      --danger-soft: #f3dfe2;
+      --amber: #9a6717;
+      --amber-soft: #f8edd6;
+      --dark: #080909;
+      --dark-2: #101211;
       --sans: "Inter","Noto Sans SC","PingFang SC","Hiragino Sans GB","Aptos","SF Pro Text","Segoe UI",system-ui,sans-serif;
       --mono: "JetBrains Mono","SFMono-Regular",Menlo,Consolas,monospace;
     }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{min-width:320px;margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.68;letter-spacing:0;-webkit-font-smoothing:antialiased;font-synthesis:none;overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-    :focus-visible{outline:3px solid var(--accent);outline-offset:4px}
-    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap}
-    .wrap{width:min(1080px,calc(100% - 48px));margin-inline:auto}
 
-    .topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(245,245,247,0.72);border-bottom:1px solid var(--hairline)}
-    .nav{min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-    .brand{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:720}
-    .mark{width:28px;height:28px;display:grid;place-items:center;border-radius:7px;background:var(--ink);color:#fff;font-family:var(--mono);font-size:10px;font-weight:700}
-    .nav-links{display:flex;align-items:center;gap:28px;color:var(--muted);font-size:13px;font-weight:620}
-    .nav-links a:hover{color:var(--ink)}
-    .btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(0,0,0,0.1);border-radius:999px;background:var(--surface);color:var(--ink);padding:10px 20px;font-size:14px;font-weight:700;white-space:nowrap;transition:transform .16s ease,box-shadow .16s ease}
-    .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
-    .btn:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,0,0,.11)}
-
-    .hero{padding:clamp(64px,11vw,120px) 0 clamp(36px,6vw,64px);text-align:center;background:radial-gradient(ellipse 70% 60% at 50% 0%, rgba(210,225,220,0.35), transparent 60%), var(--canvas)}
-    .hero .tag{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(0,0,0,0.07);border-radius:999px;background:rgba(255,255,255,0.7);padding:7px 12px 7px 9px;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:20px}
-    .hero .tag::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(13,143,114,0.12)}
-    .hero h1{max-width:680px;margin:0 auto 14px;font-size:clamp(40px,6vw,64px);line-height:1.08;font-weight:780;letter-spacing:0}
-    .hero p{max-width:580px;margin:0 auto;color:#54545c;font-size:17px;line-height:1.72}
-    .hero .actions{margin-top:24px;display:flex;justify-content:center;gap:10px}
-
-    .product-stage{max-width:880px;margin:clamp(22px,3.5vw,38px) auto 0;border:1px solid rgba(0,0,0,0.14);border-radius:18px;background:#0a0b0c;box-shadow:0 34px 100px -32px rgba(0,0,0,0.55);overflow:hidden}
-    .stage-chrome{min-height:40px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 14px;color:rgba(255,255,255,0.4);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;text-transform:uppercase}
-    .stage-chrome .lights{display:inline-flex;gap:5px}
-    .stage-chrome .lights span{width:7px;height:7px;border-radius:999px;background:rgba(255,255,255,0.25)}
-    .stage-chrome .title{justify-self:center}
-    .stage-chrome .state{justify-self:end;color:rgba(255,255,255,0.5)}
-    .stage-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,0.36fr);min-height:clamp(340px,40vw,460px);border-top:1px solid rgba(255,255,255,0.07)}
-    .stage-main{display:grid;place-items:center;padding:clamp(12px,1.8vw,22px);background:radial-gradient(circle at 48% 40%, rgba(255,255,255,0.08), transparent 34%), #050607}
-    .stage-main img{display:block;width:100%;height:auto;max-height:420px;object-fit:cover;border:1px solid rgba(255,255,255,0.12);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.45)}
-    .stage-panel{display:grid;align-content:space-between;gap:18px;border-left:1px solid rgba(255,255,255,0.08);background:#0c0d0e;color:rgba(255,255,255,0.65);padding:clamp(18px,2.4vw,28px)}
-    .stage-panel .label{color:rgba(255,255,255,0.38);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;text-transform:uppercase}
-    .stage-panel h2{margin:8px 0 8px;color:#fff;font-size:clamp(22px,2.4vw,32px);line-height:1.1;font-weight:760}
-    .stage-panel p{margin:0;color:rgba(255,255,255,0.55);font-size:13px;line-height:1.6}
-    .panel-rows{display:grid;gap:8px}
-    .panel-row{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);font-size:12px;line-height:1.45}
-    .panel-row strong{color:#fff;font-family:var(--mono);font-size:12px;font-weight:700}
-    .panel-verdict{border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:rgba(255,255,255,0.04);padding:12px}
-    .panel-verdict strong{display:block;color:#f4b8bc;font-family:var(--mono);font-size:11px;margin-bottom:4px}
-    .panel-verdict p{color:rgba(255,255,255,0.7);font-size:12px;margin-top:4px}
-
-    .cases{padding:clamp(48px,7vw,78px) 0}
-    .case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .case-card{border:1px solid var(--hairline);border-radius:16px;background:var(--surface);padding:22px;transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 1px 1px rgba(0,0,0,0.02)}
-    .case-card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,0.07)}
-    .case-card .cc-domain{display:inline-block;padding:3px 8px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;margin-bottom:14px}
-    .cc-domain.fin{background:#e8f5f0;color:#0a745d}
-    .cc-domain.sports{background:#fef3c7;color:#92400e}
-    .cc-domain.legal{background:#f3e8ff;color:#6b21a8}
-    .case-card .cc-question{display:block;font-size:16px;font-weight:720;line-height:1.42;color:var(--ink);margin-bottom:8px}
-    .case-card .cc-verdict{display:block;color:var(--muted);font-size:13px;line-height:1.55}
-    .case-card .cc-meta{display:block;margin-top:12px;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0}
-
-    .how{padding:clamp(52px,7vw,80px) 0;border-top:1px solid var(--hairline);background:var(--surface)}
-    .how h2{max-width:560px;margin:0 0 8px;font-size:clamp(26px,3.4vw,38px);line-height:1.1;font-weight:760}
-    .how>p{max-width:480px;color:var(--muted);font-size:15px;line-height:1.7;margin-bottom:clamp(32px,5vw,46px)}
-    .how-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-    .how-card{border:1px solid rgba(0,0,0,0.06);border-radius:14px;background:var(--canvas);padding:24px;transition:transform .2s ease,box-shadow .2s ease}
-    .how-card:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,0,.06)}
-    .how-card .hc-num{display:block;color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;margin-bottom:12px}
-    .how-card h4{margin:0 0 6px;font-size:17px;font-weight:680}
-    .how-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
-
-    .closing{padding:clamp(52px,8vw,84px) 0;background:var(--ink);color:#fff;text-align:center}
-    .closing h2{max-width:520px;margin:0 auto 10px;font-size:clamp(26px,3.6vw,38px);line-height:1.12;font-weight:760}
-    .closing p{max-width:440px;margin:0 auto clamp(24px,4vw,32px);color:rgba(255,255,255,0.6);font-size:15px;line-height:1.7}
-    .closing .btn{border-color:rgba(255,255,255,0.2);background:transparent;color:#fff}
-    .closing .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
-    .closing .meta-links{margin-top:22px;font-size:12px;color:rgba(255,255,255,0.35)}
-    .closing .meta-links a{color:rgba(255,255,255,0.5)}
-
-    footer{padding:16px 0 22px;background:var(--ink);color:rgba(255,255,255,0.3);font-size:11px;text-align:center}
-    footer a{color:rgba(255,255,255,0.4)}
-
-    @media(max-width:760px){
-      .stage-shell{grid-template-columns:1fr}
-      .stage-panel{border-left:0;border-top:1px solid rgba(255,255,255,0.07)}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--canvas); }
+    body {
+      min-width: 320px;
+      margin: 0;
+      background:
+        linear-gradient(rgba(23,23,23,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23,23,23,0.035) 1px, transparent 1px),
+        var(--canvas);
+      background-size: 42px 42px;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.68;
+      letter-spacing: 0;
+      -webkit-font-smoothing: antialiased;
+      font-synthesis: none;
+      overflow-x: hidden;
     }
-    @media(max-width:640px){
-      .wrap{width:calc(100% - 32px)}
-      .nav-links{display:none}
-      .hero h1{font-size:2.2rem}
-      .hero .actions{display:grid}
-      .case-grid,.how-grid{grid-template-columns:1fr}
-      .btn{width:100%;white-space:normal;text-align:center}
-      .stage-chrome{grid-template-columns:auto 1fr;gap:8px}
-      .stage-chrome .state{display:none}
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 3px solid rgba(15,143,111,0.45); outline-offset: 4px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); clip-path: inset(50%); white-space: nowrap; }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
+    .mono { font-family: var(--mono); letter-spacing: 0; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247,247,244,0.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
-    @media print{
-      .topbar{display:none}
-      body{background:#fff;color:#000;font-size:12pt}
-      .closing,footer{background:#fff;color:#000}
-      .product-stage{background:#fff;border:1px solid #000;box-shadow:none}
-      .stage-shell,.stage-panel,.stage-main{background:#fff;color:#000}
-      .stage-panel h2,.panel-row strong,.panel-verdict strong{color:#000}
-      .closing .btn{border:1px solid #000;color:#000}
-      img{max-width:100%;page-break-inside:avoid}
+    .nav { min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 760; }
+    .mark { width: 29px; height: 29px; display: grid; place-items: center; border-radius: 7px; background: var(--ink); color: #fff; font-family: var(--mono); font-size: 10px; font-weight: 700; }
+    .nav-links { display: flex; align-items: center; gap: 24px; color: var(--muted); font-size: 13px; font-weight: 660; }
+    .nav-links a:hover { color: var(--ink); }
+
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink);
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 760;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
     }
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,0,0,0.1); }
+
+    .hero { padding: clamp(56px, 9vw, 94px) 0 28px; }
+    .hero-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+    .eyebrow {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 auto 18px;
+      padding: 8px 12px 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.72);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--accent); box-shadow: 0 0 0 4px rgba(15,143,111,0.12); }
+    h1 {
+      max-width: 860px;
+      margin: 0 auto 16px;
+      font-size: clamp(38px, 6vw, 74px);
+      line-height: 1.06;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    .lede { max-width: 680px; margin: 0 auto; color: var(--body); font-size: 17px; line-height: 1.78; }
+    .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px; }
+    .metadata-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      max-width: 880px;
+      margin: 28px auto 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--line);
+      text-align: left;
+    }
+    .meta-cell { min-height: 78px; padding: 14px 16px; background: rgba(255,255,255,0.72); }
+    .meta-cell span { display: block; color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 760; text-transform: uppercase; letter-spacing: 0; }
+    .meta-cell strong { display: block; margin-top: 8px; font-size: 15px; line-height: 1.35; }
+
+    .tribunal-wrap { padding: 22px 0 clamp(44px, 7vw, 74px); }
+    .tribunal-stage {
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--dark);
+      box-shadow: 0 38px 110px -34px rgba(0,0,0,0.58);
+    }
+    .stage-chrome {
+      min-height: 42px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.42);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .lights { display: inline-flex; gap: 5px; }
+    .lights span { width: 7px; height: 7px; border-radius: 999px; background: rgba(255,255,255,0.24); }
+    .stage-chrome .stage-title { justify-self: center; }
+    .stage-chrome .stage-state { justify-self: end; color: rgba(221,247,238,0.72); }
+    .tribunal-grid {
+      display: grid;
+      grid-template-columns: 168px minmax(0, 1fr) 310px;
+      min-height: 500px;
+    }
+    .seat-rail {
+      display: grid;
+      align-content: start;
+      gap: 9px;
+      padding: 18px 14px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      background: #090a0a;
+    }
+    .rail-label,
+    .sheet-label,
+    .ticker-label {
+      color: rgba(255,255,255,0.42);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .seat {
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      min-height: 42px;
+      padding: 9px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.035);
+      color: rgba(255,255,255,0.68);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+    .seat-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(15,143,111,0.12);
+      animation: seatPulse 2.4s ease-in-out infinite;
+    }
+    .seat:nth-child(4) .seat-dot,
+    .seat:nth-child(6) .seat-dot { background: var(--amber); box-shadow: 0 0 0 5px rgba(154,103,23,0.14); animation-delay: .5s; }
+    .seat strong { display: block; color: #fff; font-family: var(--mono); font-size: 11px; font-weight: 760; }
+    .seat span { display: block; color: rgba(255,255,255,0.48); font-size: 11px; }
+    @keyframes seatPulse {
+      0%, 100% { transform: scale(1); opacity: .85; }
+      50% { transform: scale(1.18); opacity: 1; }
+    }
+
+    .council-core {
+      display: grid;
+      align-content: center;
+      gap: 14px;
+      padding: clamp(16px, 2.4vw, 26px);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        #050606;
+      background-size: 34px 34px;
+    }
+    .council-frame {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      box-shadow: 0 28px 72px rgba(0,0,0,0.45);
+      background: #111;
+    }
+    .council-frame img { display: block; width: 100%; height: auto; max-height: 380px; object-fit: cover; }
+    .frame-caption {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      background: rgba(5,7,7,0.84);
+      color: rgba(255,255,255,0.72);
+      backdrop-filter: blur(10px);
+    }
+    .frame-caption strong { color: #fff; font-size: 13px; line-height: 1.35; }
+    .frame-caption span { color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.35; }
+    .evidence-ticker {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .ticker-item {
+      min-height: 82px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+    }
+    .ticker-item strong { display: block; margin-top: 6px; color: #fff; font-size: 13px; line-height: 1.35; }
+    .ticker-item span { color: rgba(255,255,255,0.52); font-size: 12px; line-height: 1.35; }
+
+    .verdict-sheet {
+      display: grid;
+      align-content: start;
+      gap: 14px;
+      padding: 18px;
+      border-left: 1px solid rgba(255,255,255,0.08);
+      background: var(--dark-2);
+      color: rgba(255,255,255,0.68);
+    }
+    .verdict-sheet h2 { margin: 8px 0 0; color: #fff; font-size: clamp(24px, 2.6vw, 34px); line-height: 1.08; font-weight: 800; letter-spacing: 0; }
+    .verdict-sheet p { margin: 0; color: rgba(255,255,255,0.58); font-size: 13px; line-height: 1.62; }
+    .verdict-lock {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .lock-cell {
+      min-height: 76px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+    }
+    .lock-cell span { display: block; color: rgba(255,255,255,0.42); font-family: var(--mono); font-size: 10px; font-weight: 760; text-transform: uppercase; letter-spacing: 0; }
+    .lock-cell strong { display: block; margin-top: 8px; color: #fff; font-size: 16px; line-height: 1.25; }
+    .lock-cell.danger strong { color: #f4b8bc; }
+    .decision-card {
+      border: 1px solid rgba(244,184,188,0.25);
+      border-radius: 10px;
+      background: rgba(150,54,61,0.1);
+      padding: 14px;
+    }
+    .decision-card strong { display: block; margin-bottom: 6px; color: #f4b8bc; font-family: var(--mono); font-size: 11px; letter-spacing: 0; text-transform: uppercase; }
+    .decision-card p { color: rgba(255,255,255,0.76); }
+
+    .section { padding: clamp(54px, 8vw, 86px) 0; border-top: 1px solid var(--line); background: rgba(255,255,255,0.54); }
+    .section-head { max-width: 700px; margin-bottom: 28px; }
+    .section-head.center { margin-inline: auto; text-align: center; }
+    .section h2 { margin: 0 0 10px; font-size: clamp(28px, 3.8vw, 44px); line-height: 1.12; font-weight: 800; letter-spacing: 0; }
+    .section-head p { margin: 0; color: var(--body); font-size: 16px; line-height: 1.72; }
+
+    .case-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .case-file {
+      min-height: 250px;
+      display: grid;
+      align-content: space-between;
+      gap: 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      padding: 20px;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.02);
+    }
+    .case-domain {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+    .case-domain.finance { background: var(--accent-soft); color: #0a745d; }
+    .case-domain.sports { background: var(--amber-soft); color: #7c4f10; }
+    .case-domain.legal { background: #efe7ff; color: #5b28a5; }
+    .case-file h3 { margin: 14px 0 8px; font-size: 19px; line-height: 1.32; font-weight: 800; letter-spacing: 0; }
+    .case-file p { margin: 0; color: var(--body); font-size: 14px; line-height: 1.62; }
+    .docket-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--line);
+    }
+    .docket-row span {
+      min-height: 58px;
+      padding: 10px;
+      background: #fbfbfa;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 760;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+    .docket-row strong { display: block; margin-top: 5px; color: var(--ink); font-family: var(--sans); font-size: 13px; line-height: 1.25; }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .pipe-card {
+      min-height: 198px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      padding: 20px;
+    }
+    .pipe-card .step { color: var(--accent); font-family: var(--mono); font-size: 11px; font-weight: 760; letter-spacing: 0; }
+    .pipe-card h3 { margin: 16px 0 8px; font-size: 18px; line-height: 1.32; font-weight: 800; }
+    .pipe-card p { margin: 0; color: var(--body); font-size: 14px; line-height: 1.62; }
+
+    .closing {
+      padding: clamp(58px, 8vw, 88px) 0;
+      background: var(--ink);
+      color: #fff;
+      text-align: center;
+    }
+    .closing h2 { max-width: 680px; margin: 0 auto 12px; font-size: clamp(28px, 4vw, 44px); line-height: 1.12; font-weight: 800; letter-spacing: 0; }
+    .closing p { max-width: 560px; margin: 0 auto 26px; color: rgba(255,255,255,0.64); font-size: 16px; line-height: 1.72; }
+    .closing .btn { border-color: rgba(255,255,255,0.2); background: transparent; color: #fff; }
+    .closing .btn.primary { background: #fff; color: var(--ink); border-color: #fff; }
+    .meta-links { margin-top: 22px; color: rgba(255,255,255,0.42); font-size: 12px; line-height: 1.7; }
+    .meta-links a { color: rgba(255,255,255,0.68); text-decoration: underline; text-decoration-color: rgba(255,255,255,0.28); text-underline-offset: 4px; }
+    footer { padding: 16px 0 22px; background: var(--ink); color: rgba(255,255,255,0.34); font-size: 11px; text-align: center; }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .56s ease, transform .56s ease; }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 980px) {
+      .tribunal-grid { grid-template-columns: 1fr; }
+      .seat-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); border-right: 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .rail-label { grid-column: 1 / -1; }
+      .verdict-sheet { border-left: 0; border-top: 1px solid rgba(255,255,255,0.08); }
+      .case-grid,
+      .pipeline { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 32px); }
+      .nav-links { display: none; }
+      .hero { padding-top: 42px; }
+      h1 { font-size: 2.18rem; line-height: 1.12; }
+      .lede { font-size: 15px; line-height: 1.72; }
+      .hero-actions { display: grid; }
+      .btn { width: 100%; white-space: normal; text-align: center; }
+      .metadata-strip { grid-template-columns: 1fr 1fr; }
+      .meta-cell { min-height: 70px; padding: 12px; }
+      .stage-chrome { grid-template-columns: auto 1fr; }
+      .stage-chrome .stage-title { justify-self: start; }
+      .stage-chrome .stage-state { display: none; }
+      .council-core { order: 1; }
+      .verdict-sheet { order: 2; }
+      .seat-rail { order: 3; }
+      .seat-rail { grid-template-columns: 1fr 1fr; }
+      .seat { min-height: 38px; }
+      .council-core { padding: 12px; }
+      .frame-caption { position: static; border-width: 1px 0 0; border-radius: 0; }
+      .evidence-ticker,
+      .verdict-lock { grid-template-columns: 1fr; }
+      .section { padding: 46px 0; }
+      .docket-row { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
   </style>
 </head>
 <body>
@@ -143,8 +454,8 @@
     <div class="wrap nav">
       <a class="brand" href="#main"><span class="mark" aria-hidden="true">AJ</span><span>AI Judge</span></a>
       <nav class="nav-links" aria-label="主要导航">
-        <a href="#cases">案例</a>
-        <a href="#how">怎么用</a>
+        <a href="#cases">案例卷宗</a>
+        <a href="#pipeline">流程</a>
         <a href="AI_Judge_Audit_Sample_Report.html">报告</a>
         <a href="sample-loop-packet.json">JSON</a>
       </nav>
@@ -152,94 +463,163 @@
   </header>
 
   <main id="main">
-    <section class="hero">
-      <div class="wrap">
-        <span class="tag">多 AI 联合判断</span>
-        <h1>让好几个 AI 一起帮你<br>看同一个问题。</h1>
-        <p>你有一个拿不准的决定：要不要贷款加仓？这场球谁赢？这个合同有没有坑？丢给 13 个 AI，各自给出判断。有人赞成、有人反对、有人看到别人漏掉的细节。汇总成一份报告，你看一眼就能拍板。</p>
-        <div class="actions">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-inner">
+        <span class="eyebrow">AI 审议庭 · 证据优先</span>
+        <h1 id="hero-title">13 个 AI 同场审议，<br>最后给你一份能拍板的结论。</h1>
+        <p class="lede">不是再多一个聊天机器人。AI Judge 把一个拿不准的问题交给多个 AI 独立判断，再把证据、分歧、风险和人类签字状态整理成一份报告。</p>
+        <div class="hero-actions">
           <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">打开一份真实报告</a>
-          <a class="btn" href="sample-loop-packet.json">JSON 数据包</a>
+          <a class="btn" href="sample-loop-packet.json">查看 JSON 数据包</a>
+        </div>
+        <div class="metadata-strip" aria-label="AI Judge 关键状态">
+          <div class="meta-cell"><span>案例编号</span><strong>AJR-2026-06-29</strong></div>
+          <div class="meta-cell"><span>席位</span><strong>13 个 AI 独立判断</strong></div>
+          <div class="meta-cell"><span>证据</span><strong>证据、分歧、风险</strong></div>
+          <div class="meta-cell"><span>签字人</span><strong>人类最后拍板</strong></div>
         </div>
       </div>
     </section>
 
-    <div class="wrap">
-      <figure class="product-stage" aria-label="AI Judge 审议界面预览">
-        <div class="stage-chrome">
-          <span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>
-          <span class="title">AI Judge · 审议现场</span>
-          <span class="state">13 models running</span>
-        </div>
-        <div class="stage-shell">
-          <div class="stage-main">
-            <img src="assets/openspark-council.png" alt="OpenCouncil 议院圆桌，多个 AI 模型同时审议同一个决策问题">
-          </div>
-          <aside class="stage-panel" aria-label="审议摘要">
-            <div>
-              <span class="label">审议中</span>
-              <h2>从圆桌辩论<br>到一份能拍板的结论。</h2>
-              <p>每个 AI 独立判断，不看别人答案。意见不统一的地方，反而是最该认真看的地方。</p>
-            </div>
-            <div class="panel-rows">
-              <div class="panel-row"><strong>11/13</strong><span>NASDAQ 贷款案中反对加杠杆的 AI 比例</span></div>
-              <div class="panel-row"><strong>8/11</strong><span>建议纳指仓位降到 45% 以下的 AI</span></div>
-              <div class="panel-row"><strong>3 个</strong><span>金融、体育、法律三个公开案例，不挑领域</span></div>
-            </div>
-            <div class="panel-verdict">
-              <strong>一个案例：</strong>
-              <p>问了 11 个 AI“要不要贷款抄底 NASDAQ”，<br>全部说不要。你的钱太集中了，先分散，别借钱加仓。</p>
-            </div>
-          </aside>
-        </div>
-      </figure>
-    </div>
-
-    <section class="cases" id="cases">
+    <section class="tribunal-wrap" aria-label="AI Judge 审议庭">
       <div class="wrap">
+        <div class="tribunal-stage">
+          <div class="stage-chrome">
+            <span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="stage-title">AI Judge 审议室</span>
+            <span class="stage-state">实时证据包</span>
+          </div>
+          <div class="tribunal-grid">
+            <aside class="seat-rail" aria-label="AI 席位状态">
+              <span class="rail-label">13 个席位审议中</span>
+              <div class="seat"><span class="seat-dot" aria-hidden="true"></span><div><strong>Seat 01</strong><span>宏观风险</span></div></div>
+              <div class="seat"><span class="seat-dot" aria-hidden="true"></span><div><strong>Seat 02</strong><span>证据一致性</span></div></div>
+              <div class="seat"><span class="seat-dot" aria-hidden="true"></span><div><strong>Seat 03</strong><span>反对意见</span></div></div>
+              <div class="seat"><span class="seat-dot" aria-hidden="true"></span><div><strong>Seat 04</strong><span>行动建议</span></div></div>
+              <div class="seat"><span class="seat-dot" aria-hidden="true"></span><div><strong>Seat 05</strong><span>签字条件</span></div></div>
+            </aside>
+
+            <div class="council-core">
+              <div class="council-frame">
+                <img src="assets/openspark-council.png" alt="OpenCouncil 圆桌界面，多个 AI 围绕同一个问题进行审议">
+                <div class="frame-caption">
+                  <div>
+                    <strong>同一个问题，同时交给多个 AI 看。</strong>
+                    <span>AI Judge 负责把圆桌分歧整理成证据报告。</span>
+                  </div>
+                  <span class="mono">2 rounds</span>
+                </div>
+              </div>
+              <div class="evidence-ticker" aria-label="证据轨道">
+                <div class="ticker-item">
+                  <span class="ticker-label">主张</span>
+                  <strong>8 条关键说法</strong>
+                  <span>逐条对材料，不让大话混过去。</span>
+                </div>
+                <div class="ticker-item">
+                  <span class="ticker-label">分歧</span>
+                  <strong>2 个反对路径</strong>
+                  <span>分歧会被保存，不被平均掉。</span>
+                </div>
+                <div class="ticker-item">
+                  <span class="ticker-label">下一轮</span>
+                  <strong>写回下一轮规则</strong>
+                  <span>这次失败回答会变成下次防线。</span>
+                </div>
+              </div>
+            </div>
+
+            <aside class="verdict-sheet" aria-label="拍板报告摘要">
+              <div>
+                <span class="sheet-label">拍板台</span>
+                <h2>从审议现场，<br>到一份能签字的报告。</h2>
+                <p>每个 AI 可以有不同判断，但最后给人的不是噪音，而是清楚的结论、证据和下一步动作。</p>
+              </div>
+              <div class="verdict-lock">
+                <div class="lock-cell"><span>多数意见</span><strong>11 / 13 反对加杠杆</strong></div>
+                <div class="lock-cell danger"><span>风险</span><strong>集中度过高</strong></div>
+                <div class="lock-cell"><span>动作</span><strong>先降仓位</strong></div>
+                <div class="lock-cell"><span>签字人</span><strong>等待人类确认</strong></div>
+              </div>
+              <div class="decision-card">
+                <strong>结论锁定</strong>
+                <p>不要贷款抄底 NASDAQ。你的科技股仓位已经偏高，先分散风险，再讨论加仓。</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cases">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>案例不是展示卡，是可复核的卷宗。</h2>
+          <p>把 garden-skills 的展览标签能力迁移过来：每个案例都有领域、问题、席位结果、风险和动作。页面不只好看，还能让人知道为什么可信。</p>
+        </div>
         <div class="case-grid">
-          <article class="case-card">
-            <span class="cc-domain fin">金融决策</span>
-            <span class="cc-question">“我要不要贷款 100 万抄底纳斯达克？”</span>
-            <span class="cc-verdict">问了 11 个 AI，全部说不要贷。你的钱太集中在科技股上了，先分散风险，别借钱加仓。</span>
-            <span class="cc-meta">13 个 AI 参与 · 两轮审议</span>
+          <article class="case-file reveal">
+            <div>
+              <span class="case-domain finance">金融决策</span>
+              <h3>“我要不要贷款 100 万抄底纳斯达克？”</h3>
+              <p>问了 11 个 AI，全部说不要贷。你的钱太集中在科技股上了，先分散风险，别借钱加仓。</p>
+            </div>
+            <div class="docket-row">
+              <span>席位<strong>13</strong></span>
+              <span>轮次<strong>2</strong></span>
+              <span>动作<strong>先降风险</strong></span>
+            </div>
           </article>
-          <article class="case-card">
-            <span class="cc-domain sports">体育预测</span>
-            <span class="cc-question">“今年 NBA 总决赛尼克斯打马刺，谁会赢？”</span>
-            <span class="cc-verdict">8 个 AI 说尼克斯 4-2 赢，2 个说马刺会翻盘。连每一场谁赢都预测了。</span>
-            <span class="cc-meta">13 个 AI 参与 · 比赛当晚开打</span>
+          <article class="case-file reveal">
+            <div>
+              <span class="case-domain sports">体育预测</span>
+              <h3>“今年 NBA 总决赛尼克斯打马刺，谁会赢？”</h3>
+              <p>8 个 AI 说尼克斯 4-2 赢，2 个说马刺会翻盘。连每一场谁赢都预测了。</p>
+            </div>
+            <div class="docket-row">
+              <span>席位<strong>13</strong></span>
+              <span>分歧<strong>2</strong></span>
+              <span>动作<strong>赛后复盘</strong></span>
+            </div>
           </article>
-          <article class="case-card">
-            <span class="cc-domain legal">法律分析</span>
-            <span class="cc-question">“宅基地拆迁，不是村里的人能不能分钱？”</span>
-            <span class="cc-verdict">10 个 AI 一致认为：赶紧告，先把钱冻住再说。等补偿款发下去就晚了。</span>
-            <span class="cc-meta">11 个 AI 参与 · 6 页法律报告</span>
+          <article class="case-file reveal">
+            <div>
+              <span class="case-domain legal">法律分析</span>
+              <h3>“宅基地拆迁，不是村里的人能不能分钱？”</h3>
+              <p>10 个 AI 一致认为：赶紧告，先把钱冻住再说。等补偿款发下去就晚了。</p>
+            </div>
+            <div class="docket-row">
+              <span>席位<strong>11</strong></span>
+              <span>报告<strong>6 页</strong></span>
+              <span>动作<strong>先保全</strong></span>
+            </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="how" id="how">
+    <section class="section" id="pipeline">
       <div class="wrap">
-        <h2>怎么用？三步。</h2>
-        <p>给你那三张案例卡的，都是同一套流程跑出来的。不挑领域，不挑模型。</p>
-        <div class="how-grid">
-          <div class="how-card">
-            <span class="hc-num">01 · 把你的问题丢进去</span>
-            <h4>带上你知道的信息</h4>
-            <p>不管是“要不要加仓”还是“这场球谁赢”，把你手头有的资料一起给出来就行。</p>
-          </div>
-          <div class="how-card">
-            <span class="hc-num">02 · 13 个 AI 各自判断</span>
-            <h4>不串通、不跟票</h4>
-            <p>每个 AI 用自己的方式分析。有的看宏观，有的算数据。意见不统一的地方，反而是关键。</p>
-          </div>
-          <div class="how-card">
-            <span class="hc-num">03 · 拿到一份能拍板的结论</span>
-            <h4>不是打分，是说清楚能不能干</h4>
-            <p>每个 AI 说了什么、为什么这么说、最终建议干还是不干。一份报告，能直接贴进工单。</p>
-          </div>
+        <div class="section-head center">
+          <h2>从问题到拍板，只有三步。</h2>
+          <p>视觉上更像审议庭，流程上仍然很直接：给问题，独立判断，输出结论和证据。</p>
+        </div>
+        <div class="pipeline">
+          <article class="pipe-card reveal">
+            <span class="step">01 · 收件</span>
+            <h3>把问题和材料放进来</h3>
+            <p>问题、背景、材料、已有评分、错误代价。先把判断边界写清楚。</p>
+          </article>
+          <article class="pipe-card reveal">
+            <span class="step">02 · 审议</span>
+            <h3>多个 AI 独立审议</h3>
+            <p>不串通、不跟票。每个席位用不同角度看风险，分歧不会被抹平。</p>
+          </article>
+          <article class="pipe-card reveal">
+            <span class="step">03 · 拍板</span>
+            <h3>输出能签字的报告</h3>
+            <p>谁支持、谁反对、证据在哪、下一步做什么。人类最后拍板。</p>
+          </article>
         </div>
       </div>
     </section>
@@ -248,7 +628,10 @@
       <div class="wrap">
         <h2>把你不确定的问题给我，<br>我还你一份能拍板的结论。</h2>
         <p>一条 RAG 回复、一次投资决策、一份合同，只要你拿不准，丢过来。我把 13 个 AI 的判断汇成一份报告还给你。</p>
-        <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20case&body=Hi%2C%0A%0AI%20have%20one%20uncertain%20AI%20answer%20or%20decision%20for%20AI%20Judge%3A%0A">给我一个案例试试</a>
+        <div class="hero-actions">
+          <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20case&body=Hi%2C%0A%0AI%20have%20one%20uncertain%20AI%20answer%20or%20decision%20for%20AI%20Judge%3A%0A">给我一个案例试试</a>
+          <a class="btn" href="AI_Judge_Audit_Sample_Report.html">查看完整报告</a>
+        </div>
         <p class="meta-links">
           <a href="AI_Judge_Audit_Sample_Report.html">完整报告样例</a> · <a href="sample-loop-packet.json">JSON 数据包</a> · <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">公开 Gist</a>
         </p>
@@ -257,20 +640,38 @@
   </main>
 
   <footer>
-    <span>AI Judge 公开演示 · 不含私有数据或生产轨迹</span>
+    <span>AI Judge 公开演示。不含私有数据、凭证或生产轨迹。</span>
   </footer>
 
   <script>
-  (function(){
-    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-    const reveal=(el)=>{el.style.opacity='1';el.style.transform='translateY(0)'};
-    const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){reveal(e.target);obs.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -20px 0px'});
-    const cards=document.querySelectorAll('.case-card,.how-card');
-    cards.forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(22px)';el.style.transition='opacity .6s ease,transform .6s ease';el.style.transitionDelay=(i%3)*60+'ms';obs.observe(el)});
-    window.setTimeout(()=>{cards.forEach(reveal)},2200);
-    const ps=document.querySelector('.product-stage');
-    if(ps){ps.style.transition='transform .6s cubic-bezier(.16,1,.3,1)';let f=setInterval(()=>{ps.style.transform='translateY('+(-0.6+Math.sin(Date.now()/2400)*0.6)+'px)'},60);ps.addEventListener('mouseenter',()=>{clearInterval(f);ps.style.transform='translateY(-2px) scale(1.003)'});ps.addEventListener('mouseleave',()=>{ps.style.transform='translateY(0) scale(1)'})}
-  })();
+    (function () {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.querySelectorAll(".reveal").forEach(function (el) {
+          el.classList.add("is-visible");
+        });
+        return;
+      }
+
+      var revealTargets = document.querySelectorAll(".reveal");
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.14, rootMargin: "0px 0px -20px 0px" });
+
+      revealTargets.forEach(function (el, index) {
+        el.style.transitionDelay = (index % 3) * 70 + "ms";
+        observer.observe(el);
+      });
+      window.setTimeout(function () {
+        revealTargets.forEach(function (el) {
+          el.classList.add("is-visible");
+        });
+      }, 2200);
+    })();
   </script>
 </body>
 </html>
