@@ -4,563 +4,137 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AI Judge：让好几个 AI 一起帮你判断一个决策</title>
-  <meta name="description" content="把一个拿不准的问题交给多个 AI 独立判断，再汇成一份有证据、有分歧、能让人拍板的报告。">
+  <meta name="description" content="拿不准的决定丢给 13 个 AI，各自给出判断，汇总成一份能拍板的报告。">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23171717"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
   <meta property="og:title" content="AI Judge：让好几个 AI 一起帮你判断一个决策">
-  <meta property="og:description" content="把拿不准的问题交给多个 AI 独立判断，最后汇成一份有证据、有分歧、能拍板的报告。">
+  <meta property="og:description" content="拿不准的决定丢给 13 个 AI，各自给出判断，汇总成一份能拍板的报告。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="AI Judge：让好几个 AI 一起帮你判断一个决策">
-  <meta name="twitter:description" content="多个 AI 各自判断同一个问题，最后汇成一份能让人拍板的报告。">
+  <meta name="twitter:description" content="拿不准的决定丢给 13 个 AI，各自给出判断，汇总成一份能拍板的报告。">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: light;
-      --canvas: #fafafa;
-      --canvas-soft: #f4f4f5;
+      --canvas: #f5f5f7;
       --surface: #ffffff;
-      --ink: #171717;
-      --body: #3f3f46;
-      --muted: #71717a;
-      --line: #e4e4e7;
-      --line-strong: #d4d4d8;
-      --primary: #171717;
-      --on-primary: #ffffff;
-      --accent: #0f8f6f;
-      --accent-soft: #ddf7ee;
-      --warn: #8a5b2e;
-      --warn-soft: #f4eadf;
+      --ink: #1d1d1f;
+      --muted: #6e6e73;
+      --hairline: rgba(0,0,0,0.08);
+      --accent: #0d8f72;
       --danger: #96363d;
-      --danger-soft: #f3dfe2;
-      --dark: #090a0a;
       --sans: "Inter","Noto Sans SC","PingFang SC","Hiragino Sans GB","Aptos","SF Pro Text","Segoe UI",system-ui,sans-serif;
       --mono: "JetBrains Mono","SFMono-Regular",Menlo,Consolas,monospace;
     }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{min-width:320px;margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.68;letter-spacing:0;-webkit-font-smoothing:antialiased;font-synthesis:none;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    :focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap}
+    .wrap{width:min(1080px,calc(100% - 48px));margin-inline:auto}
 
-    * { box-sizing: border-box; }
-    html { background: var(--canvas); scroll-behavior: smooth; }
-    body {
-      min-width: 320px;
-      margin: 0;
-      background: var(--canvas);
-      color: var(--ink);
-      font-family: var(--sans);
-      font-size: 17px;
-      line-height: 1.68;
-      letter-spacing: 0;
-      -webkit-font-smoothing: antialiased;
-      font-synthesis: none;
-      overflow-x: hidden;
-    }
-    a { color: inherit; text-decoration: none; }
-    button { font: inherit; }
-    :focus-visible { outline: 3px solid rgba(15, 143, 111, 0.45); outline-offset: 4px; }
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
-    .eyebrow,
-    .meta,
-    .chip,
-    .btn,
-    .step-id,
-    .code-label {
-      font-family: var(--mono);
-      letter-spacing: 0;
-    }
+    .topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(245,245,247,0.72);border-bottom:1px solid var(--hairline)}
+    .nav{min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:720}
+    .mark{width:28px;height:28px;display:grid;place-items:center;border-radius:7px;background:var(--ink);color:#fff;font-family:var(--mono);font-size:10px;font-weight:700}
+    .nav-links{display:flex;align-items:center;gap:28px;color:var(--muted);font-size:13px;font-weight:620}
+    .nav-links a:hover{color:var(--ink)}
+    .btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(0,0,0,0.1);border-radius:999px;background:var(--surface);color:var(--ink);padding:10px 20px;font-size:14px;font-weight:700;white-space:nowrap;transition:transform .16s ease,box-shadow .16s ease}
+    .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,0,0,.11)}
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      background: rgba(250, 250, 250, 0.78);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-    .nav {
-      min-height: 58px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-    .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 760; }
-    .mark {
-      width: 30px;
-      height: 30px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
-      background: var(--ink);
-      color: var(--surface);
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 700;
-    }
-    .nav-links { display: flex; align-items: center; gap: 26px; color: var(--muted); font-size: 13px; font-weight: 660; }
-    .nav-links a:hover { color: var(--ink); }
+    .hero{padding:clamp(64px,11vw,120px) 0 clamp(36px,6vw,64px);text-align:center;background:radial-gradient(ellipse 70% 60% at 50% 0%, rgba(210,225,220,0.35), transparent 60%), var(--canvas)}
+    .hero .tag{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(0,0,0,0.07);border-radius:999px;background:rgba(255,255,255,0.7);padding:7px 12px 7px 9px;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:20px}
+    .hero .tag::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(13,143,114,0.12)}
+    .hero h1{max-width:680px;margin:0 auto 14px;font-size:clamp(40px,6vw,64px);line-height:1.08;font-weight:780;letter-spacing:0}
+    .hero p{max-width:580px;margin:0 auto;color:#54545c;font-size:17px;line-height:1.72}
+    .hero .actions{margin-top:24px;display:flex;justify-content:center;gap:10px}
 
-    .hero { padding: clamp(54px, 9vw, 96px) 0 38px; }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
-      align-items: center;
-      gap: clamp(28px, 5vw, 64px);
-    }
-    .eyebrow {
-      width: fit-content;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      padding: 8px 11px 8px 9px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--surface);
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 760;
-      text-transform: uppercase;
-    }
-    .eyebrow::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 4px rgba(15, 143, 111, 0.12);
-    }
-    h1 {
-      max-width: 650px;
-      margin: 0 0 18px;
-      font-size: clamp(38px, 5.2vw, 64px);
-      line-height: 1.12;
-      font-weight: 790;
-      letter-spacing: 0;
-    }
-    .lede {
-      max-width: 590px;
-      margin: 0;
-      color: var(--body);
-      font-size: 17px;
-      line-height: 1.76;
-    }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
-    .btn {
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      border: 1px solid var(--line-strong);
-      border-radius: 999px;
-      background: var(--surface);
-      color: var(--ink);
-      padding: 10px 18px;
-      font-size: 13px;
-      font-weight: 760;
-      white-space: nowrap;
-      cursor: pointer;
-      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-    }
-    .btn.primary { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,0,0,0.10); }
-    .hero-note { margin-top: 18px; color: var(--muted); font-size: 13px; line-height: 1.62; }
+    .product-stage{max-width:880px;margin:clamp(22px,3.5vw,38px) auto 0;border:1px solid rgba(0,0,0,0.14);border-radius:18px;background:#0a0b0c;box-shadow:0 34px 100px -32px rgba(0,0,0,0.55);overflow:hidden}
+    .stage-chrome{min-height:40px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 14px;color:rgba(255,255,255,0.4);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;text-transform:uppercase}
+    .stage-chrome .lights{display:inline-flex;gap:5px}
+    .stage-chrome .lights span{width:7px;height:7px;border-radius:999px;background:rgba(255,255,255,0.25)}
+    .stage-chrome .title{justify-self:center}
+    .stage-chrome .state{justify-self:end;color:rgba(255,255,255,0.5)}
+    .stage-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,0.36fr);min-height:clamp(340px,40vw,460px);border-top:1px solid rgba(255,255,255,0.07)}
+    .stage-main{display:grid;place-items:center;padding:clamp(12px,1.8vw,22px);background:radial-gradient(circle at 48% 40%, rgba(255,255,255,0.08), transparent 34%), #050607}
+    .stage-main img{display:block;width:100%;height:auto;max-height:420px;object-fit:cover;border:1px solid rgba(255,255,255,0.12);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.45)}
+    .stage-panel{display:grid;align-content:space-between;gap:18px;border-left:1px solid rgba(255,255,255,0.08);background:#0c0d0e;color:rgba(255,255,255,0.65);padding:clamp(18px,2.4vw,28px)}
+    .stage-panel .label{color:rgba(255,255,255,0.38);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;text-transform:uppercase}
+    .stage-panel h2{margin:8px 0 8px;color:#fff;font-size:clamp(22px,2.4vw,32px);line-height:1.1;font-weight:760}
+    .stage-panel p{margin:0;color:rgba(255,255,255,0.55);font-size:13px;line-height:1.6}
+    .panel-rows{display:grid;gap:8px}
+    .panel-row{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);font-size:12px;line-height:1.45}
+    .panel-row strong{color:#fff;font-family:var(--mono);font-size:12px;font-weight:700}
+    .panel-verdict{border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:rgba(255,255,255,0.04);padding:12px}
+    .panel-verdict strong{display:block;color:#f4b8bc;font-family:var(--mono);font-size:11px;margin-bottom:4px}
+    .panel-verdict p{color:rgba(255,255,255,0.7);font-size:12px;margin-top:4px}
 
-    .artifact-panel {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--surface);
-      box-shadow: 0 26px 80px rgba(0,0,0,0.08);
-      overflow: hidden;
-    }
-    .panel-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--line);
-      background: #fcfcfc;
-    }
-    .panel-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 0 4px rgba(150,54,61,0.11); flex: 0 0 auto; }
-    .panel-title strong { display: block; font-size: 14px; line-height: 1.35; }
-    .panel-title span { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 8px;
-      border-radius: 999px;
-      background: var(--canvas-soft);
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 760;
-      white-space: nowrap;
-    }
-    .chip.good { background: var(--accent-soft); color: var(--accent); }
-    .chip.bad { background: var(--danger-soft); color: var(--danger); }
-    .panel-body { padding: 18px; }
-    .verdict-row {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--line);
-    }
-    .metric {
-      min-height: 86px;
-      padding: 14px;
-      background: var(--surface);
-    }
-    .metric .meta { color: var(--muted); font-size: 10px; font-weight: 760; text-transform: uppercase; }
-    .metric strong { display: block; margin-top: 8px; font-size: 17px; line-height: 1.3; }
-    .metric.danger strong { color: var(--danger); }
-    .claim-ledger { margin-top: 16px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-    .claim-row {
-      display: grid;
-      grid-template-columns: 54px minmax(0, 1fr) 116px;
-      align-items: center;
-      gap: 12px;
-      min-height: 50px;
-      padding: 10px 12px;
-      border-top: 1px solid var(--line);
-      background: var(--surface);
-    }
-    .claim-row:first-child { border-top: 0; }
-    .claim-id { font-family: var(--mono); font-size: 12px; font-weight: 760; color: var(--muted); }
-    .claim-text { min-width: 0; color: var(--body); font-size: 13px; line-height: 1.48; }
-    .claim-state { justify-content: center; }
-    .packet-flow {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .flow-item {
-      min-height: 74px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 11px;
-      background: var(--canvas-soft);
-    }
-    .flow-item strong { display: block; margin-bottom: 4px; font-size: 13px; }
-    .flow-item span { display: block; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .cases{padding:clamp(48px,7vw,78px) 0}
+    .case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .case-card{border:1px solid var(--hairline);border-radius:16px;background:var(--surface);padding:22px;transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 1px 1px rgba(0,0,0,0.02)}
+    .case-card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,0.07)}
+    .case-card .cc-domain{display:inline-block;padding:3px 8px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;margin-bottom:14px}
+    .cc-domain.fin{background:#e8f5f0;color:#0a745d}
+    .cc-domain.sports{background:#fef3c7;color:#92400e}
+    .cc-domain.legal{background:#f3e8ff;color:#6b21a8}
+    .case-card .cc-question{display:block;font-size:16px;font-weight:720;line-height:1.42;color:var(--ink);margin-bottom:8px}
+    .case-card .cc-verdict{display:block;color:var(--muted);font-size:13px;line-height:1.55}
+    .case-card .cc-meta{display:block;margin-top:12px;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0}
 
-    .proof-strip { padding: 24px 0 54px; }
-    .strip-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--line);
-    }
-    .strip-item { min-height: 128px; padding: 20px; background: var(--surface); }
-    .strip-item .meta { color: var(--accent); font-size: 11px; font-weight: 760; text-transform: uppercase; }
-    .strip-item strong { display: block; margin: 10px 0 6px; font-size: 17px; line-height: 1.35; }
-    .strip-item p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.62; }
+    .how{padding:clamp(52px,7vw,80px) 0;border-top:1px solid var(--hairline);background:var(--surface)}
+    .how h2{max-width:560px;margin:0 0 8px;font-size:clamp(26px,3.4vw,38px);line-height:1.1;font-weight:760}
+    .how>p{max-width:480px;color:var(--muted);font-size:15px;line-height:1.7;margin-bottom:clamp(32px,5vw,46px)}
+    .how-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .how-card{border:1px solid rgba(0,0,0,0.06);border-radius:14px;background:var(--canvas);padding:24px;transition:transform .2s ease,box-shadow .2s ease}
+    .how-card:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,0,.06)}
+    .how-card .hc-num{display:block;color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;margin-bottom:12px}
+    .how-card h4{margin:0 0 6px;font-size:17px;font-weight:680}
+    .how-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
 
-    section.band { padding: clamp(56px, 8vw, 86px) 0; border-top: 1px solid var(--line); background: var(--surface); }
-    section.band.soft { background: var(--canvas); }
-    .section-head { max-width: 690px; margin-bottom: 32px; }
-    .section-head.center { margin-inline: auto; text-align: center; }
-    h2 { margin: 0 0 12px; font-size: clamp(28px, 3.8vw, 44px); line-height: 1.14; font-weight: 760; letter-spacing: 0; }
-    .section-head p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.72; }
+    .closing{padding:clamp(52px,8vw,84px) 0;background:var(--ink);color:#fff;text-align:center}
+    .closing h2{max-width:520px;margin:0 auto 10px;font-size:clamp(26px,3.6vw,38px);line-height:1.12;font-weight:760}
+    .closing p{max-width:440px;margin:0 auto clamp(24px,4vw,32px);color:rgba(255,255,255,0.6);font-size:15px;line-height:1.7}
+    .closing .btn{border-color:rgba(255,255,255,0.2);background:transparent;color:#fff}
+    .closing .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
+    .closing .meta-links{margin-top:22px;font-size:12px;color:rgba(255,255,255,0.35)}
+    .closing .meta-links a{color:rgba(255,255,255,0.5)}
 
-    .io-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr);
-      gap: 18px;
-      align-items: stretch;
-    }
-    .io-card {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--surface);
-      padding: 20px;
-    }
-    .io-card h3 { margin: 0 0 14px; font-size: 18px; line-height: 1.3; }
-    .io-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-    .io-list li {
-      display: flex;
-      gap: 10px;
-      color: var(--body);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-    .io-list li::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      margin-top: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      flex: 0 0 auto;
-    }
-    .arrow {
-      display: grid;
-      place-items: center;
-      width: 52px;
-      min-height: 52px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      color: var(--accent);
-      font-family: var(--mono);
-      font-weight: 760;
-      align-self: center;
-    }
+    footer{padding:16px 0 22px;background:var(--ink);color:rgba(255,255,255,0.3);font-size:11px;text-align:center}
+    footer a{color:rgba(255,255,255,0.4)}
 
-    .workflow-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+    @media(max-width:760px){
+      .stage-shell{grid-template-columns:1fr}
+      .stage-panel{border-left:0;border-top:1px solid rgba(255,255,255,0.07)}
     }
-    .workflow-card {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--surface);
-      padding: 20px;
-      min-height: 178px;
+    @media(max-width:640px){
+      .wrap{width:calc(100% - 32px)}
+      .nav-links{display:none}
+      .hero h1{font-size:2.2rem}
+      .hero .actions{display:grid}
+      .case-grid,.how-grid{grid-template-columns:1fr}
+      .btn{width:100%;white-space:normal;text-align:center}
+      .stage-chrome{grid-template-columns:auto 1fr;gap:8px}
+      .stage-chrome .state{display:none}
     }
-    .step-id { display: block; margin-bottom: 18px; color: var(--accent); font-size: 11px; font-weight: 760; text-transform: uppercase; }
-    .workflow-card h3 { margin: 0 0 8px; font-size: 17px; line-height: 1.35; }
-    .workflow-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.62; }
-
-    .report-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(380px, .98fr);
-      gap: 22px;
-      align-items: start;
+    @media print{
+      .topbar{display:none}
+      body{background:#fff;color:#000;font-size:12pt}
+      .closing,footer{background:#fff;color:#000}
+      .product-stage{background:#fff;border:1px solid #000;box-shadow:none}
+      .stage-shell,.stage-panel,.stage-main{background:#fff;color:#000}
+      .stage-panel h2,.panel-row strong,.panel-verdict strong{color:#000}
+      .closing .btn{border:1px solid #000;color:#000}
+      img{max-width:100%;page-break-inside:avoid}
     }
-    .table-card {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      overflow: hidden;
-      background: var(--surface);
-    }
-    .table-row {
-      display: grid;
-      grid-template-columns: 64px minmax(0, 1fr) 116px;
-      gap: 12px;
-      align-items: center;
-      min-height: 52px;
-      padding: 10px 14px;
-      border-top: 1px solid var(--line);
-      font-size: 13px;
-    }
-    .table-row:first-child { border-top: 0; background: var(--canvas-soft); color: var(--muted); font-family: var(--mono); font-size: 11px; font-weight: 760; text-transform: uppercase; }
-    .table-row span:nth-child(2) { color: var(--body); line-height: 1.48; }
-
-    .code-card {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: #101211;
-      color: #edf7f3;
-      overflow: hidden;
-    }
-    .code-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
-    }
-    .code-label { color: rgba(255,255,255,0.58); font-size: 11px; font-weight: 760; text-transform: uppercase; }
-    .copy-btn {
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 999px;
-      background: transparent;
-      color: #ffffff;
-      padding: 6px 10px;
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 760;
-      cursor: pointer;
-    }
-    pre {
-      margin: 0;
-      padding: 16px;
-      overflow: auto;
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.58;
-      white-space: pre-wrap;
-    }
-
-    .council {
-      background: var(--dark);
-      color: #ffffff;
-      padding: clamp(58px, 8vw, 92px) 0;
-    }
-    .council-grid {
-      display: grid;
-      grid-template-columns: minmax(0, .86fr) minmax(440px, 1.14fr);
-      gap: clamp(22px, 4vw, 46px);
-      align-items: center;
-    }
-    .council h2 { color: #ffffff; }
-    .council p { color: rgba(255,255,255,0.64); }
-    .stage {
-      position: relative;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 40px 100px -32px rgba(0,0,0,0.75);
-      background: #060707;
-    }
-    .stage img { display: block; width: 100%; height: auto; }
-    .stage-caption {
-      position: absolute;
-      inset: auto 16px 16px 16px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: end;
-      padding: 14px;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      background: rgba(5,7,7,0.82);
-      backdrop-filter: blur(12px);
-    }
-    .stage-caption strong { display: block; font-size: 14px; line-height: 1.4; }
-    .stage-caption span { display: block; color: rgba(255,255,255,0.62); font-size: 12px; line-height: 1.45; }
-
-    .closing {
-      padding: clamp(56px, 8vw, 88px) 0;
-      background: var(--ink);
-      color: #ffffff;
-      text-align: center;
-    }
-    .closing h2 { max-width: 720px; margin-inline: auto; color: #ffffff; }
-    .closing p { max-width: 560px; margin: 0 auto 28px; color: rgba(255,255,255,0.64); font-size: 16px; line-height: 1.72; }
-    .closing .btn { border-color: rgba(255,255,255,0.2); background: transparent; color: #ffffff; }
-    .closing .btn.primary { background: #ffffff; color: var(--ink); border-color: #ffffff; }
-    .closing .meta-links { margin-top: 22px; color: rgba(255,255,255,0.42); font-size: 12px; line-height: 1.7; }
-    .closing .meta-links a { color: rgba(255,255,255,0.68); text-decoration: underline; text-decoration-color: rgba(255,255,255,0.28); text-underline-offset: 4px; }
-    footer {
-      padding: 16px 0 22px;
-      background: var(--ink);
-      color: rgba(255,255,255,0.34);
-      font-size: 11px;
-      text-align: center;
-    }
-
-    @media (max-width: 900px) {
-      .hero-grid,
-      .report-grid,
-      .council-grid {
-        grid-template-columns: 1fr;
-      }
-      .io-grid {
-        grid-template-columns: 1fr;
-      }
-      .arrow {
-        width: 44px;
-        min-height: 44px;
-        transform: rotate(90deg);
-        justify-self: center;
-      }
-      .workflow-grid,
-      .strip-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 640px) {
-      .wrap { width: calc(100% - 32px); }
-      .nav-links { display: none; }
-      .hero { padding: 42px 0 28px; }
-      h1 { font-size: 2.18rem; line-height: 1.14; }
-      .lede { font-size: 15px; line-height: 1.72; }
-      .hero-actions { display: grid; }
-      .btn { width: 100%; min-height: 46px; white-space: normal; text-align: center; }
-      .artifact-panel { border-radius: 14px; }
-      .panel-top { align-items: flex-start; }
-      .panel-top > .chip { display: none; }
-      .panel-body { padding: 14px; }
-      .verdict-row,
-      .packet-flow,
-      .workflow-grid,
-      .strip-grid {
-        grid-template-columns: 1fr;
-      }
-      .metric { min-height: auto; }
-      .claim-row,
-      .table-row {
-        grid-template-columns: 42px minmax(0, 1fr);
-      }
-      .claim-state,
-      .table-row span:last-child {
-        grid-column: 2;
-        justify-self: start;
-      }
-      section.band { padding: 46px 0; }
-      .io-card,
-      .workflow-card,
-      .strip-item { padding: 17px; }
-      .report-grid { gap: 16px; }
-      .stage-caption {
-        position: static;
-        grid-template-columns: 1fr;
-        margin: 0;
-        border-width: 1px 0 0 0;
-        border-radius: 0;
-      }
-      .council { padding: 48px 0; }
-    }
-
-    @media print {
-      .topbar,
-      .hero-actions,
-      .copy-btn { display: none; }
-      body { background: #ffffff; color: #000000; font-size: 12pt; }
-      .artifact-panel,
-      .io-card,
-      .workflow-card,
-      .table-card,
-      .code-card,
-      .strip-grid { box-shadow: none; break-inside: avoid; }
-      .council,
-      .closing,
-      footer { background: #ffffff; color: #000000; }
-      .council h2,
-      .closing h2 { color: #000000; }
-      .council p,
-      .closing p { color: #333333; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
   </style>
 </head>
 <body>
@@ -569,9 +143,8 @@
     <div class="wrap nav">
       <a class="brand" href="#main"><span class="mark" aria-hidden="true">AJ</span><span>AI Judge</span></a>
       <nav class="nav-links" aria-label="主要导航">
-        <a href="#packet">判断报告</a>
-        <a href="#workflow">怎么做</a>
-        <a href="#schema">报告结构</a>
+        <a href="#cases">案例</a>
+        <a href="#how">怎么用</a>
         <a href="AI_Judge_Audit_Sample_Report.html">报告</a>
         <a href="sample-loop-packet.json">JSON</a>
       </nav>
@@ -579,248 +152,93 @@
   </header>
 
   <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="wrap hero-grid">
-        <div>
-          <span class="eyebrow">多 AI 联合判断</span>
-          <h1 id="hero-title">让好几个 AI 一起帮你看<br>同一个问题。</h1>
-          <p class="lede">你有一个拿不准的决定：一条 AI 回答能不能发、一个合同有没有坑、一次自动操作要不要放行。把问题和材料丢给多个 AI，各自独立判断。有人赞成、有人反对、有人指出漏掉的证据。最后汇成一份报告，你就知道能不能拍板。</p>
-          <div class="hero-actions" aria-label="主要行动">
-            <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20case&body=Hi%2C%0A%0AI%20have%20one%20uncertain%20AI%20answer%20or%20decision%20for%20AI%20Judge%3A%0A">给我一个案例试试</a>
-            <a class="btn" href="AI_Judge_Audit_Sample_Report.html">查看完整报告</a>
-            <a class="btn" href="sample-loop-packet.json">打开 JSON 样例</a>
-          </div>
-          <p class="hero-note">最适合：知识库问答、客服政策回复、AI 自动操作审批、模型评分复核。</p>
-        </div>
-
-        <aside class="artifact-panel" aria-label="AI Judge 判断报告预览">
-          <div class="panel-top">
-            <div class="panel-title">
-              <span class="status-dot" aria-hidden="true"></span>
-              <div>
-                <strong>AJR-2026-06-29-001</strong>
-                <span>客服政策回复待复核</span>
-              </div>
-            </div>
-            <span class="chip bad">先别自动发送</span>
-          </div>
-          <div class="panel-body">
-            <div class="verdict-row" aria-label="判断报告摘要">
-              <div class="metric">
-                <span class="meta">处理方式</span>
-                <strong>交给 AI Judge</strong>
-              </div>
-              <div class="metric">
-                <span class="meta">风险等级</span>
-                <strong>9 / 10</strong>
-              </div>
-              <div class="metric danger">
-                <span class="meta">拦截点</span>
-                <strong>3 条</strong>
-              </div>
-              <div class="metric">
-                <span class="meta">人工确认</span>
-                <strong>待签字</strong>
-              </div>
-            </div>
-
-            <div class="claim-ledger" aria-label="关键问题清单">
-              <div class="claim-row">
-                <span class="claim-id">C3</span>
-                <span class="claim-text">把所有企业客户都说成同一套退款规则。</span>
-                <span class="chip bad claim-state">证据不足</span>
-              </div>
-              <div class="claim-row">
-                <span class="claim-id">C5</span>
-                <span class="claim-text">维护窗口里的服务承诺例外被漏掉了。</span>
-                <span class="chip bad claim-state">被材料反驳</span>
-              </div>
-              <div class="claim-row">
-                <span class="claim-id">C6</span>
-                <span class="claim-text">把 Beta 功能说成完全支持。</span>
-                <span class="chip bad claim-state">被材料反驳</span>
-              </div>
-            </div>
-
-            <div class="packet-flow" aria-label="判断报告字段">
-              <div class="flow-item">
-                <strong>先看值不值得审</strong>
-                <span>判断这件事是否需要多 AI 介入。</span>
-              </div>
-              <div class="flow-item">
-                <strong>写清问题和风险</strong>
-                <span>写清负责人、错误代价和签字人。</span>
-              </div>
-              <div class="flow-item">
-                <strong>逐条对证据</strong>
-                <span>记录证据、分歧和拦截点。</span>
-              </div>
-              <div class="flow-item">
-                <strong>给人确认留档</strong>
-                <span>给负责人拍板和归档。</span>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="proof-strip" aria-label="产品证据">
+    <section class="hero">
       <div class="wrap">
-        <div class="strip-grid">
-          <div class="strip-item">
-            <span class="meta">已有评测也能用</span>
-            <strong>不是替代你现在的评测工具。</strong>
-            <p>它接在评测之后，把“通过 / 不通过”变成负责人能检查的材料。</p>
-          </div>
-          <div class="strip-item">
-            <span class="meta">给复核人</span>
-            <strong>分数旁边必须有证据和责任人。</strong>
-            <p>每个拦截点都能回到原文、判断理由和人工确认状态。</p>
-          </div>
-          <div class="strip-item">
-            <span class="meta">给运营和产品</span>
-            <strong>一次失败回答会变成下一轮规则。</strong>
-            <p>不只留结论，还留下哪里说过头、下次应该怎么改。</p>
-          </div>
+        <span class="tag">多 AI 联合判断</span>
+        <h1>让好几个 AI 一起帮你<br>看同一个问题。</h1>
+        <p>你有一个拿不准的决定：要不要贷款加仓？这场球谁赢？这个合同有没有坑？丢给 13 个 AI，各自给出判断。有人赞成、有人反对、有人看到别人漏掉的细节。汇总成一份报告，你看一眼就能拍板。</p>
+        <div class="actions">
+          <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">打开一份真实报告</a>
+          <a class="btn" href="sample-loop-packet.json">JSON 数据包</a>
         </div>
       </div>
     </section>
 
-    <section class="band" id="packet">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>高风险 AI 回答进来，能拍板的判断报告出去。</h2>
-          <p>首页只讲一个核心转换：一条可能越权的 AI 回答，怎么变成一份有证据、有分歧、有负责人确认的记录。</p>
+    <div class="wrap">
+      <figure class="product-stage" aria-label="AI Judge 审议界面预览">
+        <div class="stage-chrome">
+          <span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="title">AI Judge · 审议现场</span>
+          <span class="state">13 models running</span>
         </div>
-        <div class="io-grid">
-          <div class="io-card">
-            <h3>输入：已有结果和原始材料</h3>
-            <ul class="io-list">
-              <li>用户问题、候选回答、引用材料。</li>
-              <li>已有评分、执行轨迹或测试结果。</li>
-              <li>业务负责人、错误代价、是否需要人工确认。</li>
-            </ul>
+        <div class="stage-shell">
+          <div class="stage-main">
+            <img src="assets/openspark-council.png" alt="OpenCouncil 议院圆桌，多个 AI 模型同时审议同一个决策问题">
           </div>
-          <div class="arrow" aria-hidden="true">→</div>
-          <div class="io-card">
-            <h3>输出：能追责的判断记录</h3>
-            <ul class="io-list">
-              <li>8 条关键说法，逐条标记：有证据、部分支持、证据不足、被材料反驳。</li>
-              <li>3 个拦截点明确说明为什么不能自动发送。</li>
-              <li>最终状态：先别自动回复，等负责人确认。</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="band soft" id="workflow">
-      <div class="wrap">
-        <div class="section-head center">
-          <h2>四个小产物，撑住一次能复核的判断。</h2>
-          <p>不要把多 AI 投票当魔法。AI Judge 的价值是把判断拆成人能检查、签字、复盘的结构。</p>
-        </div>
-        <div class="workflow-grid">
-          <article class="workflow-card">
-            <span class="step-id">01 / 值不值得审</span>
-            <h3>先问值不值得审</h3>
-            <p>真有损失、经常发生、边界模糊、有材料可查、有人负责，才值得进入多 AI 判断。</p>
-          </article>
-          <article class="workflow-card">
-            <span class="step-id">02 / 问题和代价</span>
-            <h3>锁定错误代价</h3>
-            <p>写清这是谁的问题、判断错了会损失什么、怎样算通过、最后谁拍板。</p>
-          </article>
-          <article class="workflow-card">
-            <span class="step-id">03 / 逐条对证据</span>
-            <h3>逐条对证据</h3>
-            <p>每个 AI 席位找不同风险，最后合并拦截点、提醒、分歧和更安全的改写。</p>
-          </article>
-          <article class="workflow-card">
-            <span class="step-id">04 / 人工确认</span>
-            <h3>等待人工确认</h3>
-            <p>报告不是模型结论的装饰，而是客服、合规、QA 或产品负责人能直接归档的材料。</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="band" id="schema">
-      <div class="wrap report-grid">
-        <div>
-          <div class="section-head">
-            <h2>把“看起来对”的回答，拆成复核人能追责的清单。</h2>
-            <p>这个样例里，候选回答混入 3 条会造成客户承诺风险的问题。AI Judge 不追求高分，它告诉你为什么不能自动发出。</p>
-          </div>
-          <div class="table-card" aria-label="关键问题清单摘要">
-            <div class="table-row">
-              <span>说法</span>
-              <span>问题</span>
-              <span>状态</span>
-            </div>
-            <div class="table-row">
-              <span>C3</span>
-              <span>退款政策被说得过于绝对。</span>
-              <span class="chip bad">拦截</span>
-            </div>
-            <div class="table-row">
-              <span>C5</span>
-              <span>服务承诺里的维护例外被漏掉。</span>
-              <span class="chip bad">拦截</span>
-            </div>
-            <div class="table-row">
-              <span>C6</span>
-              <span>Beta 功能被说成完全支持。</span>
-              <span class="chip bad">拦截</span>
-            </div>
-            <div class="table-row">
-              <span>C4</span>
-              <span>4 个工作小时被压成 4 小时。</span>
-              <span class="chip">提醒</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="code-card">
-          <div class="code-top">
-            <span class="code-label">最小接入字段</span>
-            <button class="copy-btn" type="button" data-copy-schema>复制 JSON</button>
-          </div>
-<pre id="schema-snippet">{
-  "question": "...",
-  "answer": "...",
-  "sources": [
-    { "id": "A", "text": "..." }
-  ],
-  "judge_scores": [
-    { "judge": "seat_1", "score": 0.58 }
-  ],
-  "human_verdict": "do_not_ship"
-}</pre>
-        </div>
-      </div>
-    </section>
-
-    <section class="council" aria-labelledby="council-title">
-      <div class="wrap council-grid">
-        <div>
-          <span class="eyebrow">多 AI 审议证据</span>
-          <h2 id="council-title">多席位审议是输入，不是终点。</h2>
-          <p>圆桌会把分歧暴露出来。AI Judge 做的是把这些分歧整理成判断结构：哪些说法有证据，哪些被反驳，谁需要确认，下一轮自动化应该学到什么。</p>
-          <div class="hero-actions">
-            <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">阅读报告样例</a>
-            <a class="btn" href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">打开公开 Gist</a>
-          </div>
-        </div>
-        <div class="stage">
-          <img src="assets/openspark-council.png" alt="多 AI 审议圆桌界面截图">
-          <div class="stage-caption">
+          <aside class="stage-panel" aria-label="审议摘要">
             <div>
-              <strong>13 个 AI 看同一个高风险回答。</strong>
-              <span>AI Judge 把它们的判断整理成一份可签字报告。</span>
+              <span class="label">审议中</span>
+              <h2>从圆桌辩论<br>到一份能拍板的结论。</h2>
+              <p>每个 AI 独立判断，不看别人答案。意见不统一的地方，反而是最该认真看的地方。</p>
             </div>
-            <span class="chip good">证据优先</span>
+            <div class="panel-rows">
+              <div class="panel-row"><strong>11/13</strong><span>NASDAQ 贷款案中反对加杠杆的 AI 比例</span></div>
+              <div class="panel-row"><strong>8/11</strong><span>建议纳指仓位降到 45% 以下的 AI</span></div>
+              <div class="panel-row"><strong>3 个</strong><span>金融、体育、法律三个公开案例，不挑领域</span></div>
+            </div>
+            <div class="panel-verdict">
+              <strong>一个案例：</strong>
+              <p>问了 11 个 AI“要不要贷款抄底 NASDAQ”，<br>全部说不要。你的钱太集中了，先分散，别借钱加仓。</p>
+            </div>
+          </aside>
+        </div>
+      </figure>
+    </div>
+
+    <section class="cases" id="cases">
+      <div class="wrap">
+        <div class="case-grid">
+          <article class="case-card">
+            <span class="cc-domain fin">金融决策</span>
+            <span class="cc-question">“我要不要贷款 100 万抄底纳斯达克？”</span>
+            <span class="cc-verdict">问了 11 个 AI，全部说不要贷。你的钱太集中在科技股上了，先分散风险，别借钱加仓。</span>
+            <span class="cc-meta">13 个 AI 参与 · 两轮审议</span>
+          </article>
+          <article class="case-card">
+            <span class="cc-domain sports">体育预测</span>
+            <span class="cc-question">“今年 NBA 总决赛尼克斯打马刺，谁会赢？”</span>
+            <span class="cc-verdict">8 个 AI 说尼克斯 4-2 赢，2 个说马刺会翻盘。连每一场谁赢都预测了。</span>
+            <span class="cc-meta">13 个 AI 参与 · 比赛当晚开打</span>
+          </article>
+          <article class="case-card">
+            <span class="cc-domain legal">法律分析</span>
+            <span class="cc-question">“宅基地拆迁，不是村里的人能不能分钱？”</span>
+            <span class="cc-verdict">10 个 AI 一致认为：赶紧告，先把钱冻住再说。等补偿款发下去就晚了。</span>
+            <span class="cc-meta">11 个 AI 参与 · 6 页法律报告</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="how" id="how">
+      <div class="wrap">
+        <h2>怎么用？三步。</h2>
+        <p>给你那三张案例卡的，都是同一套流程跑出来的。不挑领域，不挑模型。</p>
+        <div class="how-grid">
+          <div class="how-card">
+            <span class="hc-num">01 · 把你的问题丢进去</span>
+            <h4>带上你知道的信息</h4>
+            <p>不管是“要不要加仓”还是“这场球谁赢”，把你手头有的资料一起给出来就行。</p>
+          </div>
+          <div class="how-card">
+            <span class="hc-num">02 · 13 个 AI 各自判断</span>
+            <h4>不串通、不跟票</h4>
+            <p>每个 AI 用自己的方式分析。有的看宏观，有的算数据。意见不统一的地方，反而是关键。</p>
+          </div>
+          <div class="how-card">
+            <span class="hc-num">03 · 拿到一份能拍板的结论</span>
+            <h4>不是打分，是说清楚能不能干</h4>
+            <p>每个 AI 说了什么、为什么这么说、最终建议干还是不干。一份报告，能直接贴进工单。</p>
           </div>
         </div>
       </div>
@@ -828,60 +246,31 @@
 
     <section class="closing">
       <div class="wrap">
-        <h2>把你拿不准的问题给我，<br>我还你一份能拍板的结论。</h2>
-        <p>一条 AI 回复、一次自动操作、一次模型评分，只要你不确定能不能放行，丢过来。我把多个 AI 的判断汇成一份报告还给你。</p>
-        <div class="hero-actions" style="justify-content:center">
-          <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20case&body=Hi%2C%0A%0AI%20have%20one%20uncertain%20AI%20answer%20or%20decision%20for%20AI%20Judge%3A%0A">给我一个案例试试</a>
-          <a class="btn" href="sample-loop-packet.json">下载 JSON 样例</a>
-        </div>
+        <h2>把你不确定的问题给我，<br>我还你一份能拍板的结论。</h2>
+        <p>一条 RAG 回复、一次投资决策、一份合同，只要你拿不准，丢过来。我把 13 个 AI 的判断汇成一份报告还给你。</p>
+        <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20case&body=Hi%2C%0A%0AI%20have%20one%20uncertain%20AI%20answer%20or%20decision%20for%20AI%20Judge%3A%0A">给我一个案例试试</a>
         <p class="meta-links">
-          <a href="AI_Judge_Audit_Sample_Report.html">完整判断报告样例</a> · <a href="sample-loop-packet.json">JSON 数据包</a> · <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">公开 Gist</a>
+          <a href="AI_Judge_Audit_Sample_Report.html">完整报告样例</a> · <a href="sample-loop-packet.json">JSON 数据包</a> · <a href="https://gist.github.com/reguorider-gif/c5f4e3b5731cd51366dd7c214e8c70e8" rel="noopener" target="_blank">公开 Gist</a>
         </p>
       </div>
     </section>
   </main>
 
   <footer>
-    <span>AI Judge 公开演示。不含私有数据、凭证或生产轨迹。</span>
+    <span>AI Judge 公开演示 · 不含私有数据或生产轨迹</span>
   </footer>
 
   <script>
-    (function () {
-      var copyButton = document.querySelector("[data-copy-schema]");
-      var schema = document.getElementById("schema-snippet");
-      if (!copyButton || !schema) return;
-
-      function fallbackCopy(text) {
-        var area = document.createElement("textarea");
-        area.value = text;
-        area.setAttribute("readonly", "");
-        area.style.position = "fixed";
-        area.style.left = "-9999px";
-        document.body.appendChild(area);
-        area.select();
-        document.execCommand("copy");
-        document.body.removeChild(area);
-      }
-
-      copyButton.addEventListener("click", function () {
-        var text = schema.textContent.trim();
-        var done = function () {
-          copyButton.textContent = "已复制";
-          window.setTimeout(function () {
-            copyButton.textContent = "复制 JSON";
-          }, 1800);
-        };
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(done).catch(function () {
-            fallbackCopy(text);
-            done();
-          });
-        } else {
-          fallbackCopy(text);
-          done();
-        }
-      });
-    })();
+  (function(){
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+    const reveal=(el)=>{el.style.opacity='1';el.style.transform='translateY(0)'};
+    const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){reveal(e.target);obs.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -20px 0px'});
+    const cards=document.querySelectorAll('.case-card,.how-card');
+    cards.forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(22px)';el.style.transition='opacity .6s ease,transform .6s ease';el.style.transitionDelay=(i%3)*60+'ms';obs.observe(el)});
+    window.setTimeout(()=>{cards.forEach(reveal)},2200);
+    const ps=document.querySelector('.product-stage');
+    if(ps){ps.style.transition='transform .6s cubic-bezier(.16,1,.3,1)';let f=setInterval(()=>{ps.style.transform='translateY('+(-0.6+Math.sin(Date.now()/2400)*0.6)+'px)'},60);ps.addEventListener('mouseenter',()=>{clearInterval(f);ps.style.transform='translateY(-2px) scale(1.003)'});ps.addEventListener('mouseleave',()=>{ps.style.transform='translateY(0) scale(1)'})}
+  })();
   </script>
 </body>
 </html>
