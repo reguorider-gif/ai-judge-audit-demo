@@ -58,6 +58,8 @@ The current homepage borrows one transferable move from FigCraft-style AI tool p
 
 2026-06-29 visual lift note: use FigCraft only as a rhythm reference. The transferable moves are a calmer top nav, a strong CJK headline, pill CTAs, a large dark product stage, a horizontal capability strip, and a case-study sequence below the fold. AI Judge should keep its own operational trust language, monochrome precision, green evidence accent, and OpenCouncil/AI Judge audit imagery.
 
+2026-06-29 module auto-match note: treat the homepage as Landing/marketing primary and Data-viz/report secondary. The first viewport must explain "risky AI output in, signed audit packet out" before showing multi-seat theater. Use the four product artifacts as the story spine: Radar Card, Problem Contract, Verdict Packet, and Final Report. Finance/investment examples can appear only as secondary cases; the primary buyer path is eval/RAG/agent teams sending one failed or borderline output for review.
+
 ## Component Rules
 
 - Primary CTA: black pill with white text.

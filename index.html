@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Judge — 多席位 AI 审议</title>
-  <meta name="description" content="13 个独立 AI 席位同时审议同一个问题。分歧、互评、共振，最后一份可签字的裁决。">
+  <title>AI Judge — 可签字的 AI 审计包</title>
+  <meta name="description" content="把高风险 AI 输出、RAG 回答和 agent loop 失败样本，变成有证据链、异议记录和人工签字位的审计包。">
   <meta name="theme-color" content="#fafafa">
   <link rel="canonical" href="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23121212"/><text x="32" y="39" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="%23ffffff">AJ</text></svg>'>
-  <meta property="og:title" content="AI Judge — 多席位 AI 审议">
-  <meta property="og:description" content="13 个独立 AI 席位，一次决策审议，一份可签字的裁决。">
+  <meta property="og:title" content="AI Judge — 可签字的 AI 审计包">
+  <meta property="og:description" content="把高风险 AI 输出变成 Radar Card、Problem Contract、Verdict Packet 和 Final Report。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reguorider-gif.github.io/ai-judge-audit-demo/">
   <meta property="og:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Judge — 多席位 AI 审议">
-  <meta name="twitter:description" content="13 个独立 AI 席位，一次决策审议，一份可签字的裁决。">
+  <meta name="twitter:title" content="AI Judge — 可签字的 AI 审计包">
+  <meta name="twitter:description" content="高风险 AI 输出进来，可归档、可复核、可签字的审计包出去。">
   <meta name="twitter:image" content="https://reguorider-gif.github.io/ai-judge-audit-demo/assets/openspark-council.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..760&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
@@ -31,11 +31,10 @@
       --accent: #0d8f72;
       --danger: #96363d;
       --sans: "Inter","Noto Sans SC","PingFang SC","Hiragino Sans GB","Aptos","SF Pro Text","Segoe UI",system-ui,sans-serif;
-      --serif: "Cormorant Garamond","Noto Serif SC",serif;
       --mono: "JetBrains Mono","SFMono-Regular",Menlo,Consolas,monospace;
     }
     *{box-sizing:border-box}html{background:var(--canvas);scroll-behavior:smooth}
-    body{min-width:320px;margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.68;-webkit-font-smoothing:antialiased;font-synthesis:none}
+    body{min-width:320px;margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.68;-webkit-font-smoothing:antialiased;font-synthesis:none;overflow-x:hidden}
     a{color:inherit;text-decoration:none}
     :focus-visible{outline:3px solid var(--accent);outline-offset:4px}
     .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap}
@@ -50,11 +49,11 @@
     .nav-links a:hover{color:var(--ink)}
 
     /* hero */
-    .hero{padding:clamp(72px,12vw,140px) 0 clamp(56px,8vw,90px);text-align:center}
+    .hero{padding:82px 0 56px;text-align:center}
     .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(0,0,0,0.08);border-radius:999px;background:rgba(255,255,255,0.7);padding:8px 13px 8px 10px;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:20px}
     .hero .eyebrow::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(13,143,114,0.12)}
-    .hero h1{max-width:780px;margin:0 auto 16px;font-size:clamp(46px,7.4vw,92px);line-height:0.97;font-weight:780;letter-spacing:-0.02em}
-    .hero p{max-width:560px;margin:0 auto;color:#54545c;font-size:clamp(16px,1.3vw,18px);line-height:1.72}
+    .hero h1{max-width:860px;margin:0 auto 18px;font-size:5.2rem;line-height:1.06;font-weight:780;letter-spacing:0;overflow-wrap:anywhere}
+    .hero p{max-width:690px;margin:0 auto;color:#54545c;font-size:18px;line-height:1.72}
     .hero .stats{margin-top:clamp(28px,4vw,42px);display:flex;justify-content:center;gap:clamp(32px,6vw,72px)}
     .hero .stats .st{text-align:center}
     .hero .stats .st b{display:block;font-size:clamp(38px,5vw,60px);font-weight:780;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
@@ -63,6 +62,11 @@
     .btn{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(0,0,0,0.1);border-radius:999px;background:#fff;color:var(--ink);padding:10px 22px;font-size:15px;font-weight:700;white-space:nowrap;transition:transform .16s ease,box-shadow .16s ease}
     .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
     .btn:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,0,0,.11)}
+    .proof-strip{max-width:1000px;margin:34px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;text-align:left}
+    .proof-card{min-width:0;min-height:118px;border:1px solid rgba(0,0,0,0.08);border-radius:16px;background:rgba(255,255,255,0.72);padding:18px;box-shadow:0 16px 42px rgba(0,0,0,.04)}
+    .proof-card b{display:block;color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:10px}
+    .proof-card strong{display:block;font-size:16px;line-height:1.35;font-weight:720;color:var(--ink)}
+    .proof-card span{display:block;margin-top:7px;color:var(--muted);font-size:13px;line-height:1.5;overflow-wrap:anywhere}
 
     /* capability strip */
     .cap-strip{border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(0,0,0,0.06);overflow:hidden;white-space:nowrap;padding:13px 0;background:rgba(255,255,255,0.4)}
@@ -76,9 +80,16 @@
     .case-dark .inner{position:relative;z-index:2;max-width:1232px;margin:0 auto;padding:clamp(64px,10vw,120px) 24px clamp(72px,11vw,130px)}
     .case-dark .stage-wrapper{position:relative;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 48px 120px -40px rgba(0,0,0,0.7);margin-bottom:clamp(40px,7vw,72px)}
     .case-dark .stage-wrapper img{display:block;width:100%;height:auto}
-    .case-dark .stage-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(8,9,10,0.85));pointer-events:none;display:grid;align-content:end;padding:clamp(20px,3vw,40px)}
-    .case-dark .stage-overlay .tag{width:fit-content;border:1px solid rgba(255,255,255,0.2);border-radius:999px;padding:6px 12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:12px}
-    .case-dark .stage-overlay h2{max-width:860px;margin:0;font-size:clamp(32px,5vw,62px);line-height:1.04;font-weight:760;letter-spacing:-0.01em}
+    .case-dark .stage-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,9,10,0.08) 36%,rgba(8,9,10,0.92));pointer-events:none;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:40px}
+    .case-dark .stage-overlay .tag{width:fit-content;border:1px solid rgba(255,255,255,0.2);border-radius:999px;padding:6px 12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0;text-transform:uppercase;color:rgba(255,255,255,0.74);margin-bottom:12px}
+    .case-dark .stage-overlay h2{max-width:720px;margin:0;font-size:3.7rem;line-height:1.08;font-weight:760;letter-spacing:0}
+    .packet-panel{width:min(360px,34%);border:1px solid rgba(255,255,255,0.16);border-radius:16px;background:rgba(9,10,12,0.78);padding:16px;box-shadow:0 24px 80px rgba(0,0,0,.44);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+    .packet-panel .packet-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+    .packet-panel .packet-title b{font-size:13px;font-weight:740}
+    .packet-panel .packet-title span{border-radius:999px;background:rgba(13,143,114,.18);color:#bff4e3;padding:4px 8px;font-family:var(--mono);font-size:10px;font-weight:700}
+    .packet-row{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;border-top:1px solid rgba(255,255,255,.1);padding:10px 0;color:rgba(255,255,255,.72);font-size:12px;line-height:1.42}
+    .packet-row:first-of-type{border-top:0}
+    .packet-row code{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.46)}
     .case-dark .verdict-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:clamp(28px,4vw,44px)}
     .case-dark .verdict-strip .vs{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px 20px}
     .case-dark .verdict-strip .vs b{display:block;font-size:clamp(24px,3vw,38px);font-weight:760;line-height:1;color:#fff}
@@ -86,10 +97,10 @@
 
     /* case breakdown light */
     .steps{padding:clamp(60px,9vw,100px) 0;text-align:center}
-    .steps h2{max-width:700px;margin:0 auto 16px;font-size:clamp(32px,4.8vw,56px);line-height:1.06;font-weight:760;letter-spacing:-0.01em}
+    .steps h2{max-width:720px;margin:0 auto 16px;font-size:3.3rem;line-height:1.08;font-weight:760;letter-spacing:0}
     .steps>p{max-width:520px;margin:0 auto clamp(40px,6vw,64px);color:var(--muted);font-size:17px;line-height:1.7}
     .steps-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;text-align:left}
-    .steps-grid .sc{border:1px solid rgba(0,0,0,0.07);border-radius:16px;background:#fff;padding:24px;transition:transform .24s ease,box-shadow .24s ease}
+    .steps-grid .sc{min-width:0;border:1px solid rgba(0,0,0,0.07);border-radius:16px;background:#fff;padding:24px;transition:transform .24s ease,box-shadow .24s ease}
     .steps-grid .sc:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(0,0,0,.08)}
     .steps-grid .sc .n{display:block;color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;margin-bottom:14px}
     .steps-grid .sc h4{margin:0 0 6px;font-size:17px;font-weight:680;line-height:1.3}
@@ -104,13 +115,23 @@
     .seat-grid .sg:hover{transform:scale(1.06);box-shadow:0 8px 22px rgba(0,0,0,.1)}
     .seat-grid .sg .sn{display:block;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0;margin-bottom:4px}
     .seat-grid .sg .sv{display:block;font-size:12px;font-weight:720;color:var(--ink)}
+    .ledger{padding:0 0 92px;text-align:center}
+    .ledger h2{max-width:680px;margin:0 auto 10px;font-size:3rem;line-height:1.1;font-weight:760;letter-spacing:0}
+    .ledger>p{max-width:560px;color:var(--muted);font-size:15px;line-height:1.7;margin:0 auto 36px}
+    .ledger-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;text-align:left}
+    .claim{min-width:0;border:1px solid rgba(0,0,0,0.07);border-radius:14px;background:#fff;padding:16px;min-height:132px}
+    .claim .cid{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted)}
+    .claim .status{border-radius:999px;padding:4px 8px;font-family:var(--mono);font-size:10px;font-weight:700;background:#eef8f4;color:#0a745d}
+    .claim .status.warn{background:#fff6d7;color:#8a5d00}
+    .claim .status.bad{background:#f7e5e8;color:var(--danger)}
+    .claim p{margin:0;color:#3f3f46;font-size:13px;line-height:1.58}
 
     /* engine */
     .engine{padding:clamp(60px,9vw,96px) 0;background:var(--surface);border-top:1px solid var(--hairline)}
-    .engine h2{max-width:640px;margin:0 0 12px;font-size:clamp(32px,4.6vw,54px);line-height:1.06;font-weight:760;letter-spacing:-0.01em}
+    .engine h2{max-width:680px;margin:0 0 12px;font-size:3.2rem;line-height:1.08;font-weight:760;letter-spacing:0}
     .engine>p{max-width:480px;color:var(--muted);font-size:16px;line-height:1.7;margin-bottom:clamp(36px,5vw,52px)}
     .engine-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-    .engine-grid .eg{border:1px solid rgba(0,0,0,0.06);border-radius:16px;background:var(--canvas);padding:26px;transition:transform .24s ease,box-shadow .24s ease}
+    .engine-grid .eg{min-width:0;border:1px solid rgba(0,0,0,0.06);border-radius:16px;background:var(--canvas);padding:26px;transition:transform .24s ease,box-shadow .24s ease}
     .engine-grid .eg:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,0,.06)}
     .engine-grid .eg .elabel{display:block;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0;text-transform:uppercase;margin-bottom:16px}
     .engine-grid .eg h4{margin:0 0 6px;font-size:18px;font-weight:680;line-height:1.3}
@@ -118,7 +139,7 @@
 
     /* closing */
     .closing{padding:clamp(64px,9vw,100px) 0;background:var(--ink);color:#fff;text-align:center}
-    .closing h2{max-width:620px;margin:0 auto 12px;font-size:clamp(30px,4.4vw,52px);line-height:1.06;font-weight:760}
+    .closing h2{max-width:680px;margin:0 auto 12px;font-size:3.05rem;line-height:1.08;font-weight:760;letter-spacing:0}
     .closing p{max-width:480px;margin:0 auto clamp(28px,4vw,38px);color:rgba(255,255,255,.6);font-size:16px;line-height:1.7}
     .closing .btn{border-color:rgba(255,255,255,.2);background:transparent;color:#fff}
     .closing .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
@@ -129,7 +150,7 @@
     /* delivery */
     .delivery{padding:clamp(50px,8vw,80px) 0;background:var(--surface);border-top:1px solid var(--hairline);text-align:center}
     .delivery-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,0.48fr);gap:18px;align-items:start;text-align:left;margin-top:clamp(28px,4vw,42px)}
-    .delivery-grid .dc{border:1px solid rgba(0,0,0,0.06);border-radius:16px;background:var(--canvas);padding:26px}
+    .delivery-grid .dc{min-width:0;border:1px solid rgba(0,0,0,0.06);border-radius:16px;background:var(--canvas);padding:26px}
     .delivery-grid .dc h4{margin:0 0 6px;font-size:18px;font-weight:680}
     .delivery-grid .dc p{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.65}
     pre{margin:0;border:1px solid #27272a;border-radius:14px;background:#0a0b0c;color:#e8f5ee;padding:20px;overflow:auto;font-family:var(--mono);font-size:12px;line-height:1.58;tab-size:2;box-shadow:0 22px 64px rgba(0,0,0,.14)}
@@ -139,18 +160,35 @@
     @media(max-width:920px){
       .wrap,.topbar{width:calc(100% - 32px)}
       .nav-links{display:none}
-      .steps-grid,.case-dark .verdict-strip,.delivery-grid{grid-template-columns:repeat(2,1fr)}
+      .hero h1{font-size:4rem}
+      .proof-strip,.steps-grid,.case-dark .verdict-strip,.delivery-grid,.ledger-grid{grid-template-columns:repeat(2,1fr)}
+      .case-dark .stage-overlay{padding:26px;align-items:flex-end}
+      .case-dark .stage-overlay h2{font-size:2.8rem}
+      .packet-panel{display:none}
       .engine-grid{grid-template-columns:1fr}
       .hero .stats{flex-direction:column;gap:20px}
     }
     @media(max-width:640px){
-      .wrap,.topbar{width:calc(100% - 24px)}
-      .hero h1{font-size:clamp(42px,12vw,56px)}
+      .wrap{width:100%;padding-inline:14px}
+      .topbar{width:100%}
+      .hero{padding:58px 0 42px;text-align:left}
+      .hero .eyebrow,.hero h1,.hero p{margin-left:0;margin-right:0}
+      .hero h1{max-width:300px;font-size:1.78rem;line-height:1.16}
+      .hero p{max-width:285px;font-size:16px;overflow-wrap:anywhere}
+      .hero p,.proof-card,.proof-card *,.steps-grid .sc,.steps-grid .sc *,.claim,.claim *,.engine-grid .eg,.engine-grid .eg *,.delivery-grid .dc,.delivery-grid .dc *,.closing p{overflow-wrap:anywhere;word-break:break-all}
+      .hero .actions{width:min(100%,320px);display:grid;grid-template-columns:1fr;gap:10px;padding-inline:0;margin-inline:0}
+      .btn{width:100%;white-space:normal;text-align:center}
+      .proof-strip,.steps-grid,.case-dark .verdict-strip,.delivery-grid,.ledger-grid{width:100%;grid-template-columns:minmax(0,1fr)}
       .case-dark .stage-wrapper{border-radius:14px}
       .case-dark .inner{padding:48px 16px 56px}
-      .steps-grid,.case-dark .verdict-strip,.delivery-grid{grid-template-columns:1fr}
       .seat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-      .case-dark .stage-overlay h2{font-size:26px}
+      .case-dark .stage-overlay{padding:18px}
+      .case-dark .stage-overlay h2{max-width:290px;font-size:1.35rem;line-height:1.15;overflow-wrap:anywhere}
+      .steps,.ledger,.delivery,.engine,.closing{text-align:left}
+      .steps h2,.ledger h2,.engine h2,.closing h2{max-width:300px;margin-left:0;margin-right:0;font-size:2rem;line-height:1.14;text-align:left;overflow-wrap:anywhere}
+      .steps>p,.ledger>p,.engine>p,.closing p{max-width:300px;margin-left:0;margin-right:0;text-align:left}
+      .delivery h2:first-of-type{font-size:2rem!important;line-height:1.14!important;text-align:left!important}
+      .delivery>p{margin-left:0!important;margin-right:0!important;text-align:left!important}
     }
 
     @media print{
@@ -165,6 +203,103 @@
       img{max-width:100%;page-break-inside:avoid}
     }
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+    /* v5 final-pass color rhythm, adapted to the audit-packet narrative */
+    .hero {
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(210,225,220,0.35), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 80%, rgba(200,210,205,0.18), transparent 50%),
+        var(--canvas);
+    }
+    .hero h1 {
+      background: linear-gradient(180deg, #1d1d1f 60%, #3a3d3c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .proof-card {
+      transition: border-color .3s ease, transform .24s ease, box-shadow .24s ease;
+    }
+    .proof-card:hover {
+      border-color: rgba(13,143,114,0.22);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 48px rgba(0,0,0,.07);
+    }
+
+    .case-dark {
+      background:
+        radial-gradient(ellipse 60% 50% at 30% 20%, #0f1613, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 70% 80%, #0d1317, transparent 50%),
+        #08090a;
+    }
+    .case-dark .stage-overlay .tag {
+      border-color: rgba(13,143,114,0.3);
+      color: rgba(139,237,211,0.9);
+    }
+    .case-dark .verdict-strip .vs:nth-child(1) {
+      box-shadow: inset 0 3px 0 #96363d;
+      border-color: rgba(150,54,61,0.22);
+    }
+    .case-dark .verdict-strip .vs:nth-child(2) {
+      box-shadow: inset 0 3px 0 #0d8f72;
+      border-color: rgba(13,143,114,0.22);
+    }
+    .case-dark .verdict-strip .vs:nth-child(3) {
+      box-shadow: inset 0 3px 0 #3b82f6;
+      border-color: rgba(59,130,246,0.22);
+    }
+    .case-dark .verdict-strip .vs:nth-child(1) b { color: #f4b8bc; }
+    .case-dark .verdict-strip .vs:nth-child(2) b { color: #5ee6c4; }
+    .case-dark .verdict-strip .vs:nth-child(3) b { color: #93c5fd; }
+
+    .steps {
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(13,143,114,0.035), transparent 60%),
+        #ffffff;
+    }
+    .steps-grid .sc,
+    .engine-grid .eg,
+    .claim {
+      transition: border-color .3s ease, transform .24s ease, box-shadow .24s ease;
+    }
+    .steps-grid .sc:hover,
+    .engine-grid .eg:hover,
+    .claim:hover {
+      border-color: rgba(13,143,114,0.24);
+    }
+    .steps h2,
+    .ledger h2,
+    .delivery h2:first-of-type,
+    .engine h2 {
+      background: linear-gradient(135deg, #1d1d1f 30%, #0d8f72);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .ledger {
+      background: linear-gradient(180deg, #ffffff 0%, #f9faf9 100%);
+    }
+    .delivery {
+      background: linear-gradient(180deg, #f5f7f6 0%, #fafbfa 100%);
+    }
+    .engine {
+      background: #ffffff;
+      border-top-color: rgba(0,0,0,0.05);
+    }
+    .closing {
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 10%, #1a1d1c, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 30% 90%, #0f1a16, transparent 50%),
+        #121415;
+    }
+    .closing .btn.primary:hover { background: #f0faf7; color: #0d8f72; }
+
+    @media print{
+      .case-dark,.closing,footer{background:#fff;color:#000}
+      .case-dark .verdict-strip .vs{background:#f5f5f5;color:#000;border:1px solid #ccc;box-shadow:none}
+      .case-dark .verdict-strip .vs b,.case-dark .verdict-strip .vs span{color:#000}
+    }
   </style>
 </head>
 <body>
@@ -174,6 +309,7 @@
       <a class="brand" href="#main"><span class="mark" aria-hidden="true">AJ</span><span>AI Judge</span></a>
       <nav class="nav-links" aria-label="Primary">
         <a href="#case">案例</a>
+        <a href="#ledger">证据包</a>
         <a href="#engine">引擎</a>
         <a href="#delivery">交付</a>
         <a href="AI_Judge_Audit_Sample_Report.html">报告</a>
@@ -185,17 +321,18 @@
     <!-- HERO -->
     <section class="hero">
       <div class="wrap">
-        <div class="eyebrow">Multi‑seat deliberation</div>
-        <h1>13 个 AI 席位。<br>一次裁决。</h1>
-        <p>不是一个模型打分。13 个独立 AI 围着同一个问题审议，分歧、互评、共振，最后一份能签字能转发的审计报告。</p>
-        <div class="stats">
-          <div class="st"><b>11/11</b><span>纳斯达克贷款抄底案中，全部有效席位反对加杠杆</span></div>
-          <div class="st"><b>8/11</b><span>建议将纳指仓位降至 45% 以下</span></div>
-          <div class="st"><b>9 页</b><span>一份报告，三档方案，30 天复盘表</span></div>
+        <div class="eyebrow">Loop QA Packet</div>
+        <h1>高风险 AI 输出，<br>可签字审计包。</h1>
+        <p>接在 agent / RAG / eval 后面，输出证据、异议和动作。</p>
+        <div class="proof-strip" aria-label="AI Judge packet stages">
+          <div class="proof-card"><b>01 · Radar Card</b><strong>先判断值不值得审</strong><span>真实损失、边界模糊、可复现，才进入审计。</span></div>
+          <div class="proof-card"><b>02 · Problem Contract</b><strong>锁定问题和责任人</strong><span>记录错误成本、验收标准、签字人和判断红线。</span></div>
+          <div class="proof-card"><b>03 · Verdict Packet</b><strong>逐条 claim 对证据</strong><span>支持、部分支持、缺证据、反证，全部落进账本。</span></div>
+          <div class="proof-card"><b>04 · Final Report</b><strong>交付可归档裁决</strong><span>交给复核人、工单、合规记录和下一轮控制。</span></div>
         </div>
         <div class="actions">
-          <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">打开真实审计报告</a>
-          <a class="btn" href="sample-loop-packet.json">JSON 输出</a>
+          <a class="btn primary" href="AI_Judge_Audit_Sample_Report.html">打开样例审计报告</a>
+          <a class="btn" href="sample-loop-packet.json">查看 JSON 包</a>
         </div>
       </div>
     </section>
@@ -203,7 +340,7 @@
     <!-- CAP STRIP -->
     <div class="cap-strip" aria-hidden="true">
       <div class="cap-track">
-        <span><b>金融</b>贷款抄底裁决</span> · <span><b>体育</b>NBA 总决赛预测</span> · <span><b>法律</b>宅基地拆迁纠纷</span> · <span><b>合规</b>游戏宝箱评估</span> · <span><b>投资</b>董事减持纸面交易</span> · <span><b>客服</b>RAG 回答审计</span> · <span><b>金融</b>贷款抄底裁决</span> · <span><b>体育</b>NBA 总决赛预测</span> · <span><b>法律</b>宅基地拆迁纠纷</span> · <span><b>合规</b>游戏宝箱评估</span> · <span><b>投资</b>董事减持纸面交易</span> · <span><b>客服</b>RAG 回答审计</span>
+        <span><b>RAG</b>unsupported claim</span> · <span><b>Agent</b>unsafe next action</span> · <span><b>Eval</b>borderline failure</span> · <span><b>Support</b>policy answer</span> · <span><b>Review</b>human signoff</span> · <span><b>Archive</b>portable packet</span> · <span><b>RAG</b>unsupported claim</span> · <span><b>Agent</b>unsafe next action</span> · <span><b>Eval</b>borderline failure</span> · <span><b>Support</b>policy answer</span> · <span><b>Review</b>human signoff</span> · <span><b>Archive</b>portable packet</span>
       </div>
     </div>
 
@@ -213,14 +350,22 @@
         <div class="stage-wrapper">
           <img src="assets/openspark-council.png" alt="OpenCouncil 议院圆桌，13 个 AI 席位同时审议">
           <div class="stage-overlay">
-            <span class="tag">2026-06-10 · Nasdaq 25,678.82</span>
-            <h2>"我现在该不该贷款 100 万<br>抄底纳斯达克？"</h2>
+            <div class="stage-copy">
+              <span class="tag">Sample Case · Support Policy Agent</span>
+              <h2>一条看似正确的客服回答，哪里不能直接发？</h2>
+            </div>
+            <div class="packet-panel" aria-hidden="true">
+              <div class="packet-title"><b>Loop QA Packet</b><span>HOLD</span></div>
+              <div class="packet-row"><code>RADAR</code><span>Judge worthy · 9/10 · 有合同和客服升级风险</span></div>
+              <div class="packet-row"><code>CLAIMS</code><span>8 条主张拆解 · 3 条阻断发布</span></div>
+              <div class="packet-row"><code>VERDICT</code><span>Hold automatic reply until reviewer approval</span></div>
+            </div>
           </div>
         </div>
         <div class="verdict-strip">
-          <div class="vs"><b>DO NOT BORROW</b><span>融合裁决 · 两轮议会方向完全一致</span></div>
-          <div class="vs"><b>11/11 反对</b><span>第一轮全部有效席位反对贷款</span></div>
-          <div class="vs"><b>三档方案</b><span>防御 / 基准 / 进攻 · 分批再平衡</span></div>
+          <div class="vs"><b>HOLD UNTIL SIGNED</b><span>最终裁决：自动回复需暂停，等待 reviewer 签字</span></div>
+          <div class="vs"><b>8 claims</b><span>每条客服承诺都映射到源政策或反证</span></div>
+          <div class="vs"><b>3 blockers</b><span>企业合同、维护期 SLA、Beta 支持三处不能放行</span></div>
         </div>
       </div>
     </section>
@@ -228,36 +373,31 @@
     <!-- STEPS -->
     <section class="steps">
       <div class="wrap">
-        <h2>从一次提问，到一份裁决。</h2>
-        <p>不是看分数，不是读日志。输入一个问题和它的上下文，拿到可以签字转发的结果。</p>
+        <h2>从一次失败输出，到一份责任链。</h2>
+        <p>AI Judge 把 eval 结果、source policy、trace 和 reviewer 判断装进同一个可交付 packet。</p>
         <div class="steps-grid">
-          <div class="sc"><span class="n">01 · 提问</span><h4>一个决策问题</h4><p>用户提交问题 + 持仓数据。55% 纳指 + 15% 标普 + 20% 黄金 + 10% 现金。总持仓 100 万。</p></div>
-          <div class="sc"><span class="n">02 · 审议</span><h4>13 个席位独立表决</h4><p>Gemini 看宏观、DeepSeek 算期望值、Kimi 盯波动率。不串通，不混票，各自给出判断。</p></div>
-          <div class="sc"><span class="n">03 · 裁决</span><h4>融合 26 份意见</h4><p>两轮方向完全重合：降集中度、保现金缓冲、分批再平衡、不加杠杆。</p></div>
-          <div class="sc"><span class="n">04 · 交付</span><h4>可打印的审计报告</h4><p>9 页正式文书。含压力测试表、席位立场拆解、禁止动作清单和 30 天复盘验收表。</p></div>
+          <div class="sc"><span class="n">01 · Radar</span><h4>筛掉普通问答</h4><p>只有真实损失、高频复现、边界模糊、需要证据链和责任人的 case 才进入审计。</p></div>
+          <div class="sc"><span class="n">02 · Contract</span><h4>锁住判断边界</h4><p>明确错判成本、当前 workaround、签字人、验收标准和不能自动发布的红线。</p></div>
+          <div class="sc"><span class="n">03 · Packet</span><h4>逐条 claim 对源</h4><p>每个判断都要落到 source、dissent、置信度、overclaim 和下一步动作。</p></div>
+          <div class="sc"><span class="n">04 · Report</span><h4>交给人签字</h4><p>输出 HTML/JSON/Markdown/GitHub issue 形态，能进入 review queue 和归档系统。</p></div>
         </div>
       </div>
     </section>
 
-    <!-- ALL 13 SEATS SAY NO -->
-    <section class="seats">
+    <!-- CLAIM LEDGER -->
+    <section class="ledger" id="ledger">
       <div class="wrap">
-        <h2>13 个席位，全部反对贷款。</h2>
-        <p>第一轮 · 贷款抄底裁决 · 没有一票赞成</p>
-        <div class="seat-grid" aria-label="13 个 AI 席位表决结果">
-          <div class="sg"><span class="sn">Gemini</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">ChatGPT</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">DeepSeek</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">Qwen</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">Kimi</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">Yuanbao</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">MiMo</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">Doubao</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">MiniMax</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">Zhipu</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">Meta AI</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">Grok</span><span class="sv">0 元</span></div>
-          <div class="sg"><span class="sn">Wenxin</span><span class="sv">0 元</span></div>
+        <h2>不是一个总分，是一张 claim ledger。</h2>
+        <p>样例报告把客服回答拆成 8 条主张。支持、部分支持、缺证据和被源文档推翻，直接决定能不能放行。</p>
+        <div class="ledger-grid" aria-label="Claim ledger sample">
+          <div class="claim"><div class="cid">C1 <span class="status">Supported</span></div><p>30 天退款窗口有直接政策依据，可以保留。</p></div>
+          <div class="claim"><div class="cid">C2 <span class="status warn">Partial</span></div><p>10% credits 条件只适用于数字订阅，不能泛化到所有购买。</p></div>
+          <div class="claim"><div class="cid">C3 <span class="status bad">Unsupported</span></div><p>企业客户不一定走同一退款政策，应回到签署的 MSA。</p></div>
+          <div class="claim"><div class="cid">C4 <span class="status warn">Partial</span></div><p>源文档说的是 4 个工作小时，不是 4 个自然小时。</p></div>
+          <div class="claim"><div class="cid">C5 <span class="status bad">Contradicted</span></div><p>维护期 SLA 不保证，原回答会制造过度承诺。</p></div>
+          <div class="claim"><div class="cid">C6 <span class="status bad">Contradicted</span></div><p>Beta 功能按 as-is 提供，不能承诺完整支持。</p></div>
+          <div class="claim"><div class="cid">C7 <span class="status">Supported</span></div><p>用户可在 dashboard 导出账号数据，有直接依据。</p></div>
+          <div class="claim"><div class="cid">C8 <span class="status warn">Mostly</span></div><p>14 天删除请求大体成立，但 “usually” 改变了承诺强度。</p></div>
         </div>
       </div>
     </section>
@@ -265,28 +405,28 @@
     <!-- DELIVERY -->
     <section class="delivery" id="delivery">
       <div class="wrap">
-        <h2 style="text-align:center;margin:0 0 8px;font-size:clamp(28px,4vw,48px);line-height:1.08;font-weight:760;">一份 JSON · 一份报告。</h2>
-        <p style="text-align:center;color:var(--muted);font-size:15px;margin:0 auto clamp(28px,4vw,40px);max-width:440px;">可以进 GitHub issue、内部 review queue、合规记录，或接入下一轮 agent 控制。</p>
+        <h2 style="text-align:center;margin:0 0 8px;font-size:3rem;line-height:1.08;font-weight:760;letter-spacing:0;">一份 JSON · 一份报告。</h2>
+        <p style="text-align:center;color:var(--muted);font-size:15px;margin:0 auto clamp(28px,4vw,40px);max-width:520px;">可以进 GitHub issue、内部 review queue、合规记录，或接入下一轮 agent 控制。</p>
         <div class="delivery-grid">
           <div class="dc">
             <h4>审计报告（可打印 PDF / HTML）</h4>
-            <p>席位立场拆解、claim ledger、压力测试、禁止动作清单、30 天复盘验收表。</p>
+            <p>Radar 判断、问题契约、claim ledger、异议记录、阻断理由、签字位和归档路径。</p>
             <a class="btn" href="AI_Judge_Audit_Sample_Report.html">打开样例报告</a>
           </div>
           <pre>{
-  "loop_id": "nasdaq-margin-buy",
-  "audit": {
-    "seats": 13,
-    "valid": 11,
-    "loan_against": "11/11"
+  "loop_id": "support-policy-reply",
+  "radar": {
+    "judge_worthy": true,
+    "score": 9,
+    "risk": "contractual_escalation"
   },
   "verdict": {
-    "decision": "do_not_borrow",
-    "reason": "55% exposure already high"
+    "decision": "hold_until_reviewer_approval",
+    "blockers": ["C3", "C5", "C6"]
   },
   "next_run": {
-    "action": "rebalance_with_review",
-    "risk_tiers": ["defensive","baseline","offensive"]
+    "action": "rewrite_with_policy_bounds",
+    "handoff": "support_policy_owner"
   }
 }</pre>
         </div>
@@ -296,12 +436,12 @@
     <!-- ENGINE -->
     <section class="engine" id="engine">
       <div class="wrap">
-        <h2>不是单模型打分。</h2>
-        <p>接在你已经在用的 eval 和 trace 工具后面。把被选中的 case 拆成多席位审议、证据对齐和最终裁决。</p>
+        <h2>不是单模型打分，也不是又一个 eval 面板。</h2>
+        <p>AI Judge 接在你已经有的 eval、trace、RAG observability 后面，只处理那些需要责任链的边界 case。</p>
         <div class="engine-grid">
-          <div class="eg"><span class="elabel">01 · 多席位</span><h4>13 个 AI 独立审议同一个问题</h4><p>Gemini 看宏观、DeepSeek 拆算期望值、Kimi 盯波动率。席位之间互不串通，分歧本身比共识更有价值。</p></div>
-          <div class="eg"><span class="elabel">02 · 证据对齐</span><h4>每条主张对回源文档核查</h4><p>拆成逐条 claim，逐条比对 source。有证据、缺证据、被源文档直接推翻——标进 ledger。</p></div>
-          <div class="eg"><span class="elabel">03 · 可交付裁决</span><h4>一份能进审批流的审计报告</h4><p>不是"faithfulness 偏低"，是"C3 缺证据、C5 与源文档冲突、结论：禁止发布，重写后人工复核"。</p></div>
+          <div class="eg"><span class="elabel">01 · Worth judging</span><h4>先判断这件事配不配审计</h4><p>低风险、低频、没有责任人的普通问答不要进来。AI Judge 只处理错了会付成本的判断。</p></div>
+          <div class="eg"><span class="elabel">02 · Source isolation</span><h4>每条主张必须回到源材料</h4><p>回答拆成 claim，再逐条连接 source、例外、反证和语气强度。模型意见不能替代证据。</p></div>
+          <div class="eg"><span class="elabel">03 · Human signoff</span><h4>裁决要能被人接手</h4><p>输出不是一个分数，而是阻断理由、可发布改写、签字状态和下一轮 agent 控制动作。</p></div>
         </div>
       </div>
     </section>
@@ -309,8 +449,8 @@
     <!-- CLOSING -->
     <section class="closing">
       <div class="wrap">
-        <h2>给我一个失败案例，<br>换回一份审计报告。</h2>
-        <p>一条 RAG 回答、一份 agent 自动回复、一条 eval 判定为不合格的输出——把你已经有的评测结果给我，我把审计包给你。</p>
+        <h2>给我一个失败或边界案例，<br>换回一份审计包。</h2>
+        <p>一条 RAG 回答、一份 agent 自动回复、一条 eval 判定为不合格的输出。你给现有材料，我给可签字、可归档、可复核的 packet。</p>
         <a class="btn primary" href="mailto:reguorider@gmail.com?subject=AI%20Judge%20audit%20case&body=Hi%2C%0A%0AI%20have%20one%20failed%20or%20borderline%20agent%2C%20RAG%2C%20or%20eval%20run%20that%20could%20be%20useful%20for%20an%20AI%20Judge%20audit%20packet%3A%0A">提交一个案例</a>
       </div>
     </section>
@@ -329,7 +469,7 @@
 
     /* scroll reveal */
     const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';obs.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -20px 0px'});
-    document.querySelectorAll('.sc,.eg,.dc,.vs,.sg').forEach((el,i)=>{
+    document.querySelectorAll('.proof-card,.sc,.eg,.dc,.vs,.claim').forEach((el,i)=>{
       el.style.opacity='0';el.style.transform='translateY(26px)';
       el.style.transition='opacity .68s cubic-bezier(.16,1,.3,1),transform .68s cubic-bezier(.16,1,.3,1)';
       el.style.transitionDelay=(i%4)*50+'ms';
